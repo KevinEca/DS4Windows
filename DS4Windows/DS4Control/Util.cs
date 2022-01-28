@@ -104,7 +104,7 @@ namespace DS4Windows
 
             try
             {
-                DEV_BROADCAST_DEVICEINTERFACE devBroadcastDeviceInterface = new DEV_BROADCAST_DEVICEINTERFACE();
+                DEV_BROADCAST_DEVICEINTERFACE devBroadcastDeviceInterface = new();
                 Int32 Size = Marshal.SizeOf(devBroadcastDeviceInterface);
 
                 devBroadcastDeviceInterface.dbcc_size = Size;
@@ -152,8 +152,10 @@ namespace DS4Windows
         {
             if (!Global.IsAdministrator())
             {
-                ProcessStartInfo startInfo = new ProcessStartInfo(path);
-                startInfo.UseShellExecute = true;
+                ProcessStartInfo startInfo = new(path)
+                {
+                    UseShellExecute = true
+                };
                 try
                 {
                     using (Process temp = Process.Start(startInfo))
@@ -175,13 +177,15 @@ namespace DS4Windows
         /// <param name="path">Program path or URL</param>
         public static void StartProcessInExplorer(string path)
         {
-            ProcessStartInfo startInfo = new ProcessStartInfo();
-            startInfo.FileName = "explorer.exe";
-            // Need to place Path/URL in double quotes to allow equals sign to not be
-            // interpreted as a delimiter
-            startInfo.Arguments = $"\"{path}\"";
-            startInfo.WindowStyle = ProcessWindowStyle.Hidden;
-            startInfo.UseShellExecute = true;
+            ProcessStartInfo startInfo = new()
+            {
+                FileName = "explorer.exe",
+                // Need to place Path/URL in double quotes to allow equals sign to not be
+                // interpreted as a delimiter
+                Arguments = $"\"{path}\"",
+                WindowStyle = ProcessWindowStyle.Hidden,
+                UseShellExecute = true
+            };
             try
             {
                 using (Process temp = Process.Start(startInfo)) { }
@@ -206,7 +210,7 @@ namespace DS4Windows
             string tmpPath = Path.Combine(Path.GetTempPath(), "updatercopy.bat");
             //string tmpPath = Path.GetTempFileName();
             // Create temporary bat script that will later be executed
-            using (StreamWriter w = new StreamWriter(new FileStream(tmpPath,
+            using (StreamWriter w = new(new FileStream(tmpPath,
                 FileMode.Create, FileAccess.Write)))
             {
                 w.WriteLine("@echo off"); // Turn off echo
@@ -222,12 +226,14 @@ namespace DS4Windows
             }
 
             // Execute temp batch script with admin privileges
-            ProcessStartInfo startInfo = new ProcessStartInfo();
-            startInfo.FileName = tmpPath;
-            startInfo.WindowStyle = ProcessWindowStyle.Hidden;
-            startInfo.Verb = "runas";
-            startInfo.UseShellExecute = true;
-            startInfo.CreateNoWindow = true;
+            ProcessStartInfo startInfo = new()
+            {
+                FileName = tmpPath,
+                WindowStyle = ProcessWindowStyle.Hidden,
+                Verb = "runas",
+                UseShellExecute = true,
+                CreateNoWindow = true
+            };
             try
             {
                 // Launch process, wait and then save exit code

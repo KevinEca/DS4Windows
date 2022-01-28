@@ -73,7 +73,7 @@ namespace DS4Windows
         private readonly byte[] recvBuffer = new byte[1024];
         private readonly SocketAsyncEventArgs[] argsList;
         private int listInd = 0;
-        private readonly ReaderWriterLockSlim poolLock = new ReaderWriterLockSlim();
+        private readonly ReaderWriterLockSlim poolLock = new();
         private readonly SemaphoreSlim _pool;
         private const int ARG_BUFFER_LEN = 80;
 
@@ -88,7 +88,7 @@ namespace DS4Windows
             argsList = new SocketAsyncEventArgs[ARG_BUFFER_LEN];
             for (int num = 0; num < ARG_BUFFER_LEN; num++)
             {
-                SocketAsyncEventArgs args = new SocketAsyncEventArgs();
+                SocketAsyncEventArgs args = new();
                 args.SetBuffer(new byte[100], 0, 100);
                 args.Completed += SocketEvent_Completed;
                 argsList[num] = args;
@@ -163,7 +163,7 @@ namespace DS4Windows
             }
         }
 
-        private readonly Dictionary<IPEndPoint, ClientRequestTimes> clients = new Dictionary<IPEndPoint, ClientRequestTimes>();
+        private readonly Dictionary<IPEndPoint, ClientRequestTimes> clients = new();
 
         private int BeginPacket(byte[] packetBuf, ushort reqProtocolVersion = MaxProtocolVersion)
         {
@@ -333,7 +333,7 @@ namespace DS4Windows
                     for (byte i = 0; i < numPadRequests; i++)
                     {
                         byte currRequest = localMsg[requestsIdx + i];
-                        DualShockPadMeta padData = new DualShockPadMeta();
+                        DualShockPadMeta padData = new();
                         portInfoGet(currRequest, ref padData);
 
                         int outIdx = 0;

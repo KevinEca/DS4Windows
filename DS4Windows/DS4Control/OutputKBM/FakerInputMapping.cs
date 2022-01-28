@@ -7,7 +7,7 @@ namespace DS4Windows.DS4Control
 {
     public class FakerInputMapping : VirtualKBMMapping
     {
-        private readonly Dictionary<ushort, uint> mappingPairs = new Dictionary<ushort, uint>();
+        private readonly Dictionary<ushort, uint> mappingPairs = new();
 
         /// <summary>
         /// Use to define keys not available in the VMultiDllWrapper. Might not use

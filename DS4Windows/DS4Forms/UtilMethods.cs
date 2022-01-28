@@ -14,9 +14,9 @@ namespace DS4WinWPF.DS4Forms
                 for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
                 {
                     DependencyObject child = VisualTreeHelper.GetChild(depObj, i);
-                    if (child != null && child is T)
+                    if (child != null && child is T t)
                     {
-                        yield return (T)child;
+                        yield return t;
                     }
 
                     foreach (T childOfChild in FindVisualChildren<T>(child))

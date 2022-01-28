@@ -18,8 +18,7 @@ namespace DS4Windows
         public IXbox360Controller cont;
         //public Xbox360FeedbackReceivedEventHandler forceFeedbackCall;
         // Input index, Xbox360FeedbackReceivedEventHandler instance
-        public Dictionary<int, Xbox360FeedbackReceivedEventHandler> forceFeedbacksDict =
-            new Dictionary<int, Xbox360FeedbackReceivedEventHandler>();
+        public Dictionary<int, Xbox360FeedbackReceivedEventHandler> forceFeedbacksDict = new();
 
         public Xbox360OutDevice(ViGEmClient client)
         {

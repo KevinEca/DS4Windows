@@ -124,8 +124,8 @@ namespace DS4WinWPF.DS4Forms
 
         private LatencyWarnMode warnMode;
         private LatencyWarnMode prevWarnMode;
-        private readonly DS4State baseState = new DS4State();
-        private readonly DS4State interState = new DS4State();
+        private readonly DS4State baseState = new();
+        private readonly DS4State interState = new();
         private readonly DS4StateExposed exposeState;
         private const int CANVAS_WIDTH = 130;
         private const int CANVAS_MIDPOINT = CANVAS_WIDTH / 2;
@@ -137,8 +137,10 @@ namespace DS4WinWPF.DS4Forms
             inputContNum.Content = $"#{deviceNum + 1}";
             exposeState = new DS4StateExposed(baseState);
 
-            readingTimer = new NonFormTimer();
-            readingTimer.Interval = 1000 / 60.0;
+            readingTimer = new NonFormTimer
+            {
+                Interval = 1000 / 60.0
+            };
 
             LsDeadXChanged += ChangeLsDeadControls;
             LsDeadYChanged += ChangeLsDeadControls;

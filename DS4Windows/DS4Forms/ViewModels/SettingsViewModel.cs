@@ -149,7 +149,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
                 int temp = DS4Windows.Global.CheckWhen;
                 if (temp > 23)
                 {
-                    temp = temp / 24;
+                    temp /= 24;
                 }
                 return temp;
             }

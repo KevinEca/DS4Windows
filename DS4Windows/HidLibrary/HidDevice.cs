@@ -564,13 +564,13 @@ namespace DS4Windows
                 }
 
                 // String array: \\?\hid#vid_054c&pid_09cc&mi_03#7&1f882A25&0&0001# -> [0]=\\?\hidvid_054c, [1]=pid_09cc, [2]=mi_037, [3]=1f882A25, [4]=0, [5]=0001
-                string[] devPathItems = this.DevicePath.Substring(0, endPos).Replace("#", "").Replace("-", "").Replace("{", "").Replace("}", "").Split('&');
+                string[] devPathItems = this.DevicePath[..endPos].Replace("#", "").Replace("-", "").Replace("{", "").Replace("}", "").Split('&');
 
                 if (devPathItems.Length >= 3)
                 {
-                    MACAddr = devPathItems[devPathItems.Length - 3].ToUpper()                   // 1f882A25
-                              + devPathItems[devPathItems.Length - 2].ToUpper()                 // 0
-                              + devPathItems[devPathItems.Length - 1].TrimStart('0').ToUpper(); // 0001 -> 1
+                    MACAddr = devPathItems[^3].ToUpper()                   // 1f882A25
+                              + devPathItems[^2].ToUpper()                 // 0
+                              + devPathItems[^1].TrimStart('0').ToUpper(); // 0001 -> 1
                 }
                 else if (devPathItems.Length >= 1)
                 {
@@ -578,7 +578,7 @@ namespace DS4Windows
                     // take a number from the last part of the devicePath. Hopefully the last part is a usb port number as it usually should be.
                     MACAddr = this._deviceAttributes.VendorId.ToString("X4")
                               + this._deviceAttributes.ProductId.ToString("X4")
-                              + devPathItems[devPathItems.Length - 1].TrimStart('0').ToUpper();
+                              + devPathItems[^1].TrimStart('0').ToUpper();
                 }
 
                 if (!string.IsNullOrEmpty(MACAddr))

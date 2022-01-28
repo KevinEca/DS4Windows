@@ -207,7 +207,7 @@ namespace DS4WinWPF.DS4Forms
         private void SaveBtn_Click(object sender, RoutedEventArgs e)
         {
             DS4Windows.SpecialAction.ActionTypeId typeId = specialActVM.TypeAssoc[specialActVM.ActionTypeIndex];
-            DS4Windows.SpecialAction tempAct = new DS4Windows.SpecialAction("null", "null", "null", "null");
+            DS4Windows.SpecialAction tempAct = new("null", "null", "null", "null");
             bool valid = specialActVM.IsValid(tempAct);
             if (valid)
             {
@@ -326,7 +326,7 @@ namespace DS4WinWPF.DS4Forms
         private void RecordMacroBtn_Click(object sender, RoutedEventArgs e)
         {
             DS4Windows.DS4ControlSettings settings = macroActVM.PrepareSettings();
-            RecordBoxWindow recordWin = new RecordBoxWindow(specialActVM.DeviceNum, settings);
+            RecordBoxWindow recordWin = new(specialActVM.DeviceNum, settings);
             recordWin.Saved += (sender2, args) =>
             {
                 macroActVM.Macro.Clear();
@@ -373,9 +373,11 @@ namespace DS4WinWPF.DS4Forms
 
         private void BatteryEmptyColorBtn_Click(object sender, RoutedEventArgs e)
         {
-            ColorPickerWindow dialog = new ColorPickerWindow();
-            dialog.Owner = Application.Current.MainWindow;
             Color tempcolor = checkBatteryVM.EmptyColor;
+            ColorPickerWindow dialog = new()
+            {
+                Owner = Application.Current.MainWindow
+            };
             dialog.colorPicker.SelectedColor = tempcolor;
             checkBatteryVM.StartForcedColor(tempcolor, specialActVM.DeviceNum);
             dialog.ColorChanged += (sender2, color) =>
@@ -389,8 +391,10 @@ namespace DS4WinWPF.DS4Forms
 
         private void BatteryFullColorBtn_Click(object sender, RoutedEventArgs e)
         {
-            ColorPickerWindow dialog = new ColorPickerWindow();
-            dialog.Owner = Application.Current.MainWindow;
+            ColorPickerWindow dialog = new()
+            {
+                Owner = Application.Current.MainWindow
+            };
             Color tempcolor = checkBatteryVM.FullColor;
             dialog.colorPicker.SelectedColor = tempcolor;
             checkBatteryVM.StartForcedColor(tempcolor, specialActVM.DeviceNum);
@@ -447,14 +451,16 @@ namespace DS4WinWPF.DS4Forms
 
         private void LaunchProgBrowseBtn_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog dialog = new OpenFileDialog();
-            dialog.Multiselect = false;
-            dialog.AddExtension = true;
-            dialog.DefaultExt = ".exe";
-            dialog.Filter = "Exe (*.exe)|*.exe|Batch (*.bat,*.cmd)|*.bat;*.cmd|All Files (*.*)|*.*";
-            dialog.Title = "Select Program";
+            OpenFileDialog dialog = new()
+            {
+                Multiselect = false,
+                AddExtension = true,
+                DefaultExt = ".exe",
+                Filter = "Exe (*.exe)|*.exe|Batch (*.bat,*.cmd)|*.bat;*.cmd|All Files (*.*)|*.*",
+                Title = "Select Program",
 
-            dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles)
+            };
             if (dialog.ShowDialog() == true)
             {
                 launchProgVM.Filepath = dialog.FileName;
@@ -464,9 +470,11 @@ namespace DS4WinWPF.DS4Forms
         private void PressKeySelectBtn_Click(object sender, RoutedEventArgs e)
         {
             DS4Windows.DS4ControlSettings settings = pressKeyVM.PrepareSettings();
-            BindingWindow window = new BindingWindow(specialActVM.DeviceNum, settings,
-                BindingWindow.ExposeMode.Keyboard);
-            window.Owner = App.Current.MainWindow;
+            BindingWindow window = new(specialActVM.DeviceNum, settings,
+                BindingWindow.ExposeMode.Keyboard)
+            {
+                Owner = App.Current.MainWindow
+            };
             window.ShowDialog();
             pressKeyVM.ReadSettings(settings);
             pressKeyVM.UpdateDescribeText();

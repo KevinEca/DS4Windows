@@ -178,8 +178,10 @@ namespace DS4WinWPF.DS4Forms
             if (File.Exists(DS4Windows.Global.exedirpath + $"\\{installFileName}"))
             {
                 //vigemInstallBtn.Content = Properties.Resources.OpeningInstaller;
-                ProcessStartInfo startInfo = new ProcessStartInfo(DS4Windows.Global.exedirpath + $"\\{installFileName}");
-                startInfo.UseShellExecute = true; // Needed to run program as admin
+                ProcessStartInfo startInfo = new(DS4Windows.Global.exedirpath + $"\\{installFileName}")
+                {
+                    UseShellExecute = true // Needed to run program as admin
+                };
                 monitorProc = Process.Start(startInfo);
                 vigemInstallBtn.Content = Properties.Resources.Installing;
                 success = true;
@@ -294,8 +296,10 @@ namespace DS4WinWPF.DS4Forms
             if (File.Exists(DS4Windows.Global.exedirpath + $"\\{InstHidHideFileNameX64}"))
             {
                 //vigemInstallBtn.Content = Properties.Resources.OpeningInstaller;
-                ProcessStartInfo startInfo = new ProcessStartInfo(DS4Windows.Global.exedirpath + $"\\{InstHidHideFileNameX64}");
-                startInfo.UseShellExecute = true; // Needed to run program as admin
+                ProcessStartInfo startInfo = new(DS4Windows.Global.exedirpath + $"\\{InstHidHideFileNameX64}")
+                {
+                    UseShellExecute = true // Needed to run program as admin
+                };
                 monitorProc = Process.Start(startInfo);
                 hidHideInstallBtn.Content = Properties.Resources.Installing;
                 success = true;
@@ -397,8 +401,10 @@ namespace DS4WinWPF.DS4Forms
             if (File.Exists(DS4Windows.Global.exedirpath + $"\\{instFakerInputFileName}"))
             {
                 //vigemInstallBtn.Content = Properties.Resources.OpeningInstaller;
-                ProcessStartInfo startInfo = new ProcessStartInfo(DS4Windows.Global.exedirpath + $"\\{instFakerInputFileName}");
-                startInfo.UseShellExecute = true; // Needed to run program as admin
+                ProcessStartInfo startInfo = new(DS4Windows.Global.exedirpath + $"\\{instFakerInputFileName}")
+                {
+                    UseShellExecute = true // Needed to run program as admin
+                };
                 monitorProc = Process.Start(startInfo);
                 fakerInputInstallBtn.Content = Properties.Resources.Installing;
                 success = true;

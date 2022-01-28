@@ -15,7 +15,7 @@ namespace DS4WinWPF.DS4Control
             string output_path = Path.Combine(Global.appdatapath, CONFIG_FILENAME);
             if (File.Exists(output_path))
             {
-                XmlDocument m_Xdoc = new XmlDocument();
+                XmlDocument m_Xdoc = new();
                 try { m_Xdoc.Load(output_path); }
                 catch (UnauthorizedAccessException) { }
                 catch (XmlException) { }
@@ -55,7 +55,7 @@ namespace DS4WinWPF.DS4Control
         public static bool WriteConfig(OutputSlotManager slotManager)
         {
             bool result = false;
-            XmlDocument m_Xdoc = new XmlDocument();
+            XmlDocument m_Xdoc = new();
             XmlNode rootNode;
             rootNode = m_Xdoc.CreateXmlDeclaration("1.0", "utf-8", string.Empty);
             m_Xdoc.AppendChild(rootNode);

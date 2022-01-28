@@ -34,8 +34,8 @@ namespace DS4Windows
             {
                 public KeyPress previous, current;
             }
-            public Dictionary<UInt16, KeyPresses> keyPresses = new Dictionary<UInt16, KeyPresses>();
-            public Dictionary<ushort, uint> nativeKeyAlias = new Dictionary<ushort, uint>();
+            public Dictionary<UInt16, KeyPresses> keyPresses = new();
+            public Dictionary<ushort, uint> nativeKeyAlias = new();
 
             public void SaveToPrevious(bool performClear)
             {
@@ -247,7 +247,7 @@ namespace DS4Windows
             public const double DEFAULT_FLICK_SIZE = 0.0;
             public const double DEFAULT_FLICK_ANGLE_REMAINDER = 0.0;
 
-            public OneEuroFilter flickFilter = new OneEuroFilter(DEFAULT_MINCUTOFF, DEFAULT_BETA);
+            public OneEuroFilter flickFilter = new(DEFAULT_MINCUTOFF, DEFAULT_BETA);
             public double flickProgress = DEFAULT_FLICK_PROGRESS;
             public double flickSize = DEFAULT_FLICK_SIZE;
             public double flickAngleRemainder = DEFAULT_FLICK_ANGLE_REMAINDER;
@@ -331,9 +331,9 @@ namespace DS4Windows
             new TwoStageTriggerMappingData(), new TwoStageTriggerMappingData(),
         };
 
-        static readonly ReaderWriterLockSlim syncStateLock = new ReaderWriterLockSlim();
+        static readonly ReaderWriterLockSlim syncStateLock = new();
 
-        public static SyntheticState globalState = new SyntheticState();
+        public static SyntheticState globalState = new();
         public static SyntheticState[] deviceState = new SyntheticState[Global.MAX_DS4_CONTROLLER_COUNT]
             { new SyntheticState(), new SyntheticState(), new SyntheticState(),
               new SyntheticState(), new SyntheticState(), new SyntheticState(), new SyntheticState(), new SyntheticState() };
@@ -376,7 +376,7 @@ namespace DS4Windows
         public static int[] fadetimer = new int[Global.MAX_DS4_CONTROLLER_COUNT] { 0, 0, 0, 0, 0, 0, 0, 0 };
         public static int[] prevFadetimer = new int[Global.MAX_DS4_CONTROLLER_COUNT] { 0, 0, 0, 0, 0, 0, 0, 0 };
         public static DS4Color[] lastColor = new DS4Color[Global.MAX_DS4_CONTROLLER_COUNT];
-        public static List<ActionState> actionDone = new List<ActionState>();
+        public static List<ActionState> actionDone = new();
         public static SpecialAction[] untriggeraction = new SpecialAction[Global.MAX_DS4_CONTROLLER_COUNT];
         public static DateTime[] nowAction = { DateTime.MinValue, DateTime.MinValue, DateTime.MinValue, DateTime.MinValue };
         public static DateTime[] oldnowAction = { DateTime.MinValue, DateTime.MinValue, DateTime.MinValue, DateTime.MinValue };
@@ -646,8 +646,10 @@ namespace DS4Windows
                 }
                 else
                 {
-                    gkp = new SyntheticState.KeyPresses();
-                    gkp.current = kvpValue.current;
+                    gkp = new SyntheticState.KeyPresses
+                    {
+                        current = kvpValue.current
+                    };
                     globalState.keyPresses[kvpKey] = gkp;
                 }
 
@@ -3141,7 +3143,7 @@ namespace DS4Windows
 
                         if (extras[2] == 1)
                         {
-                            DS4Color color = new DS4Color { red = (byte)extras[3], green = (byte)extras[4], blue = (byte)extras[5] };
+                            DS4Color color = new() { red = (byte)extras[3], green = (byte)extras[4], blue = (byte)extras[5] };
                             DS4LightBar.forcedColor[device] = color;
                             DS4LightBar.forcedFlash[device] = (byte)extras[6];
                             DS4LightBar.forcelight[device] = true;
@@ -3641,7 +3643,7 @@ namespace DS4Windows
                                         int pos = action.extra.IndexOf("$hidden", StringComparison.OrdinalIgnoreCase);
                                         if (pos >= 0)
                                         {
-                                            System.Diagnostics.Process specActionLaunchProc = new System.Diagnostics.Process();
+                                            System.Diagnostics.Process specActionLaunchProc = new();
 
                                             // LaunchProgram specAction has $hidden argument to indicate that the child process window should be hidden (especially useful when launching .bat/.cmd batch files).
                                             // Removes the first occurence of $hidden substring from extra argument because it was a special action modifier keyword
@@ -3670,7 +3672,7 @@ namespace DS4Windows
                                         else
                                         {
                                             // No special process modifiers (ie. $hidden wnd keyword). Launch the child process using the default WinOS settings
-                                            using (Process temp = new Process())
+                                            using (Process temp = new())
                                             {
                                                 temp.StartInfo.FileName = action.details;
                                                 temp.StartInfo.Arguments = action.extra;
@@ -3681,7 +3683,7 @@ namespace DS4Windows
                                     }
                                     else
                                     {
-                                        using (Process temp = new Process())
+                                        using (Process temp = new())
                                         {
                                             temp.StartInfo.FileName = action.details;
                                             temp.StartInfo.UseShellExecute = true;
@@ -3896,8 +3898,8 @@ namespace DS4Windows
                                         lastColor[device] = d.LightBarColor;
                                         DS4LightBar.forcelight[device] = true;
                                     }
-                                    DS4Color empty = new DS4Color(byte.Parse(dets[3]), byte.Parse(dets[4]), byte.Parse(dets[5]));
-                                    DS4Color full = new DS4Color(byte.Parse(dets[6]), byte.Parse(dets[7]), byte.Parse(dets[8]));
+                                    DS4Color empty = new(byte.Parse(dets[3]), byte.Parse(dets[4]), byte.Parse(dets[5]));
+                                    DS4Color full = new(byte.Parse(dets[6]), byte.Parse(dets[7]), byte.Parse(dets[8]));
                                     DS4Color trans = GetTransitionedColor(ref empty, ref full, d.Battery);
                                     if (fadetimer[device] < 100)
                                     {
@@ -4330,11 +4332,11 @@ namespace DS4Windows
                 int wait;
                 if (macroLst != null)
                 {
-                    wait = macroLst[macroLst.Count - 1];
+                    wait = macroLst[^1];
                 }
                 else
                 {
-                    wait = macroArr[macroArr.Length - 1];
+                    wait = macroArr[^1];
                 }
 
                 if (wait <= 300 || wait > ushort.MaxValue)
@@ -4509,7 +4511,7 @@ namespace DS4Windows
                 // Lightbar color event
                 if (macroCodeValue > 1000000000)
                 {
-                    string lb = macroCodeValue.ToString().Substring(1);
+                    string lb = macroCodeValue.ToString()[1..];
                     byte r = (byte)(int.Parse(lb[0].ToString()) * 100 + int.Parse(lb[1].ToString()) * 10 + int.Parse(lb[2].ToString()));
                     byte g = (byte)(int.Parse(lb[3].ToString()) * 100 + int.Parse(lb[4].ToString()) * 10 + int.Parse(lb[5].ToString()));
                     byte b = (byte)(int.Parse(lb[6].ToString()) * 100 + int.Parse(lb[7].ToString()) * 10 + int.Parse(lb[8].ToString()));
@@ -4527,7 +4529,7 @@ namespace DS4Windows
             {
                 // Rumble event
                 DS4Device d = Program.rootHub.DS4Controllers[device];
-                string r = macroCodeValue.ToString().Substring(1);
+                string r = macroCodeValue.ToString()[1..];
                 byte heavy = (byte)(int.Parse(r[0].ToString()) * 100 + int.Parse(r[1].ToString()) * 10 + int.Parse(r[2].ToString()));
                 byte light = (byte)(int.Parse(r[3].ToString()) * 100 + int.Parse(r[4].ToString()) * 10 + int.Parse(r[5].ToString()));
                 d.SetRumble(light, heavy);
@@ -5939,10 +5941,10 @@ namespace DS4Windows
 
         private const int C_WHEEL_ANGLE_PRECISION = 10; // Precision of SA angle in 1/10 of degrees
 
-        private static readonly DS4Color calibrationColor_0 = new DS4Color { red = 0xA0, green = 0x00, blue = 0x00 };
-        private static readonly DS4Color calibrationColor_1 = new DS4Color { red = 0xFF, green = 0xFF, blue = 0x00 };
-        private static readonly DS4Color calibrationColor_2 = new DS4Color { red = 0x00, green = 0x50, blue = 0x50 };
-        private static readonly DS4Color calibrationColor_3 = new DS4Color { red = 0x00, green = 0xC0, blue = 0x00 };
+        private static readonly DS4Color calibrationColor_0 = new() { red = 0xA0, green = 0x00, blue = 0x00 };
+        private static readonly DS4Color calibrationColor_1 = new() { red = 0xFF, green = 0xFF, blue = 0x00 };
+        private static readonly DS4Color calibrationColor_2 = new() { red = 0x00, green = 0x50, blue = 0x50 };
+        private static readonly DS4Color calibrationColor_3 = new() { red = 0x00, green = 0xC0, blue = 0x00 };
 
         private static DateTime latestDebugMsgTime;
         private static string latestDebugData;

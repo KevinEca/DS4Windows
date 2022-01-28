@@ -9,8 +9,8 @@ namespace DS4Windows
         private bool loaded;
         private readonly List<MacroStep> macroSteps;
         private readonly int[] inputMacro;
-        private readonly Dictionary<int, bool> keydown = new Dictionary<int, bool>();
-        public static Dictionary<int, string> macroInputNames = new Dictionary<int, string>()
+        private readonly Dictionary<int, bool> keydown = new();
+        public static Dictionary<int, string> macroInputNames = new()
         {
             [256] = "Left Mouse Button",
             [257] = "Right Mouse Button",
@@ -78,7 +78,7 @@ namespace DS4Windows
                 LoadMacro();
             }
 
-            List<string> result = new List<string>();
+            List<string> result = new();
             foreach (MacroStep step in macroSteps)
             {
                 result.Add(step.Name);
@@ -99,7 +99,7 @@ namespace DS4Windows
                 if (value > 1000000000)
                 {
                     type = MacroStep.StepType.ActDown;
-                    string lb = value.ToString().Substring(1);
+                    string lb = value.ToString()[1..];
                     byte r = (byte)(int.Parse(lb[0].ToString()) * 100 + int.Parse(lb[1].ToString()) * 10 + int.Parse(lb[2].ToString()));
                     byte g = (byte)(int.Parse(lb[3].ToString()) * 100 + int.Parse(lb[4].ToString()) * 10 + int.Parse(lb[5].ToString()));
                     byte b = (byte)(int.Parse(lb[6].ToString()) * 100 + int.Parse(lb[7].ToString()) * 10 + int.Parse(lb[8].ToString()));
@@ -117,7 +117,7 @@ namespace DS4Windows
                 if (value > 1000000)
                 {
                     type = MacroStep.StepType.ActDown;
-                    string r = value.ToString().Substring(1);
+                    string r = value.ToString()[1..];
                     byte heavy = (byte)(int.Parse(r[0].ToString()) * 100 + int.Parse(r[1].ToString()) * 10 + int.Parse(r[2].ToString()));
                     byte light = (byte)(int.Parse(r[3].ToString()) * 100 + int.Parse(r[4].ToString()) * 10 + int.Parse(r[5].ToString()));
                     name = $"Rumble {heavy}, {light} ({Math.Round((heavy * .75f + light * .25f) / 2.55f, 1)}%)";
@@ -132,7 +132,7 @@ namespace DS4Windows
             {
                 type = MacroStep.StepType.Wait;
                 outType = MacroStep.StepOutput.None;
-                name = $"Wait {(value - 300).ToString()} ms";
+                name = $"Wait {value - 300} ms";
             }
             else
             {
@@ -167,7 +167,7 @@ namespace DS4Windows
                 }
             }
 
-            MacroStep step = new MacroStep(value, name, type, outType);
+            MacroStep step = new(value, name, type, outType);
             return step;
         }
 

@@ -106,7 +106,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             get
             {
                 ref DS4Color color = ref Global.LightbarSettingsInfo[device].ds4winSettings.m_Led; //ref Global.MainColor[device];
-                return $"#FF{color.red.ToString("X2")}{color.green.ToString("X2")}{color.blue.ToString("X2")}";
+                return $"#FF{color.red:X2}{color.green:X2}{color.blue:X2}";
                 /*return new System.Windows.Media.Color()
                 {
                     A = 255,
@@ -132,7 +132,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
         public string MainColorRString
         {
-            get => $"#{ Global.LightbarSettingsInfo[device].ds4winSettings.m_Led.red.ToString("X2")}FF0000";
+            get => $"#{ Global.LightbarSettingsInfo[device].ds4winSettings.m_Led.red:X2}FF0000";
         }
         public event EventHandler MainColorRStringChanged;
 
@@ -149,7 +149,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
         public string MainColorGString
         {
-            get => $"#{ Global.LightbarSettingsInfo[device].ds4winSettings.m_Led.green.ToString("X2")}00FF00";
+            get => $"#{ Global.LightbarSettingsInfo[device].ds4winSettings.m_Led.green:X2}00FF00";
         }
         public event EventHandler MainColorGStringChanged;
 
@@ -166,7 +166,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
         public string MainColorBString
         {
-            get => $"#{ Global.LightbarSettingsInfo[device].ds4winSettings.m_Led.blue.ToString("X2")}0000FF";
+            get => $"#{ Global.LightbarSettingsInfo[device].ds4winSettings.m_Led.blue:X2}0000FF";
         }
         public event EventHandler MainColorBStringChanged;
 
@@ -175,7 +175,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             get
             {
                 ref DS4Color color = ref Global.LightbarSettingsInfo[device].ds4winSettings.m_LowLed; //ref Global.LowColor[device];
-                return $"#FF{color.red.ToString("X2")}{color.green.ToString("X2")}{color.blue.ToString("X2")}";
+                return $"#FF{color.red:X2}{color.green:X2}{color.blue:X2}";
             }
         }
         public event EventHandler LowColorChanged;
@@ -194,7 +194,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
         public string LowColorRString
         {
-            get => $"#{ Global.LightbarSettingsInfo[device].ds4winSettings.m_LowLed.red.ToString("X2")}FF0000";
+            get => $"#{ Global.LightbarSettingsInfo[device].ds4winSettings.m_LowLed.red:X2}FF0000";
         }
         public event EventHandler LowColorRStringChanged;
 
@@ -212,7 +212,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
         public string LowColorGString
         {
-            get => $"#{ Global.LightbarSettingsInfo[device].ds4winSettings.m_LowLed.green.ToString("X2")}00FF00";
+            get => $"#{ Global.LightbarSettingsInfo[device].ds4winSettings.m_LowLed.green:X2}00FF00";
         }
         public event EventHandler LowColorGStringChanged;
 
@@ -230,7 +230,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
         public string LowColorBString
         {
-            get => $"#{ Global.LightbarSettingsInfo[device].ds4winSettings.m_LowLed.blue.ToString("X2")}0000FF";
+            get => $"#{ Global.LightbarSettingsInfo[device].ds4winSettings.m_LowLed.blue:X2}0000FF";
         }
         public event EventHandler LowColorBStringChanged;
 
@@ -271,7 +271,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
                     color = ref Global.LightbarSettingsInfo[device].ds4winSettings.m_Led;
                 }
 
-                return $"#FF{color.red.ToString("X2")}{color.green.ToString("X2")}{color.blue.ToString("X2")}";
+                return $"#FF{color.red:X2}{color.green:X2}{color.blue:X2}";
             }
         }
         public event EventHandler FlashColorChanged;
@@ -320,7 +320,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             get
             {
                 ref DS4Color color = ref Global.LightbarSettingsInfo[device].ds4winSettings.m_ChargingLed;
-                return $"#FF{color.red.ToString("X2")}{color.green.ToString("X2")}{color.blue.ToString("X2")}";
+                return $"#FF{color.red:X2}{color.green:X2}{color.blue:X2}";
             }
         }
         public event EventHandler ChargingColorChanged;
@@ -3169,8 +3169,8 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
                         if (!String.IsNullOrEmpty(defaultBrowserCmd))
                         {
-                            int iStartPos = (defaultBrowserCmd[0] == '"' ? 1 : 0);
-                            defaultBrowserCmd = defaultBrowserCmd.Substring(iStartPos, defaultBrowserCmd.LastIndexOf(".exe") + 4 - iStartPos);
+                            int iStartPos = defaultBrowserCmd[0] == '"' ? 1 : 0;
+                            defaultBrowserCmd = defaultBrowserCmd[iStartPos..(defaultBrowserCmd.LastIndexOf(".exe") + 4)];
                             if (Path.GetFileName(defaultBrowserCmd) == "launchwinapp.exe")
                             {
                                 defaultBrowserCmd = String.Empty;
@@ -3197,8 +3197,10 @@ namespace DS4WinWPF.DS4Forms.ViewModels
                 }
                 else
                 {
-                    System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo($"{Global.exedirpath}\\BezierCurveEditor\\index.html");
-                    startInfo.UseShellExecute = true;
+                    System.Diagnostics.ProcessStartInfo startInfo = new($"{Global.exedirpath}\\BezierCurveEditor\\index.html")
+                    {
+                        UseShellExecute = true
+                    };
                     using (System.Diagnostics.Process temp = System.Diagnostics.Process.Start(startInfo))
                     {
                     }
@@ -3677,7 +3679,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
                 {
                     object outAct = actionBtns[idx];
                     X360Controls defaultControl = Global.defaultButtonMapping[(int)dsControl];
-                    if (!(outAct is X360Controls) || defaultControl != (X360Controls)outAct)
+                    if (outAct is not X360Controls || defaultControl != (X360Controls)outAct)
                     {
                         setting.UpdateSettings(false, outAct, null, DS4KeyType.None);
                         Global.RefreshActionAlias(setting, false);

@@ -217,7 +217,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
                 {
                     color = Global.LightbarSettingsInfo[devIndex].ds4winSettings.m_Led;
                 }
-                return $"#FF{color.red.ToString("X2")}{color.green.ToString("X2")}{color.blue.ToString("X2")}";
+                return $"#FF{color.red:X2}{color.green:X2}{color.blue:X2}";
             }
         }
 

@@ -17,13 +17,13 @@ namespace DS4Windows.DS4Control
         private const double ABSOLUTE_MOUSE_COOR_MAX = 32767.0;
 
         private readonly FakerInput fakerInput = null;
-        private readonly RelativeMouseReport mouseReport = new RelativeMouseReport();
-        private readonly AbsoluteMouseReport absoluteMouseReport = new AbsoluteMouseReport();
-        private readonly KeyboardReport keyReport = new KeyboardReport();
-        private readonly KeyboardEnhancedReport mediaKeyReport = new KeyboardEnhancedReport();
+        private readonly RelativeMouseReport mouseReport = new();
+        private readonly AbsoluteMouseReport absoluteMouseReport = new();
+        private readonly KeyboardReport keyReport = new();
+        private readonly KeyboardEnhancedReport mediaKeyReport = new();
 
-        private readonly HashSet<KeyboardModifier> modifiers = new HashSet<KeyboardModifier>();
-        private readonly HashSet<KeyboardKey> pressedKeys = new HashSet<KeyboardKey>();
+        private readonly HashSet<KeyboardModifier> modifiers = new();
+        private readonly HashSet<KeyboardKey> pressedKeys = new();
 
         // Flags that will dictate which output report methods to call in Sync method
         private bool syncKeyboard;
@@ -32,7 +32,7 @@ namespace DS4Windows.DS4Control
         private bool syncAbsoluteMouse;
 
         // Used to guard reports and attempt to keep methods thread safe
-        private readonly ReaderWriterLockSlim eventLock = new ReaderWriterLockSlim();
+        private readonly ReaderWriterLockSlim eventLock = new();
 
         public FakerInputHandler()
         {

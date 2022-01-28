@@ -5,7 +5,7 @@ namespace DS4Windows
 {
     public class ControllerSlotManager
     {
-        private readonly ReaderWriterLockSlim collectionLocker = new ReaderWriterLockSlim();
+        private readonly ReaderWriterLockSlim collectionLocker = new();
         public ReaderWriterLockSlim CollectionLocker { get => collectionLocker; }
 
         private List<DS4Device> controllerColl;
@@ -25,7 +25,7 @@ namespace DS4Windows
 
         public void AddController(DS4Device device, int slotIdx)
         {
-            using (WriteLocker locker = new WriteLocker(collectionLocker))
+            using (WriteLocker locker = new(collectionLocker))
             {
                 controllerColl.Add(device);
                 controllerDict.Add(slotIdx, device);
@@ -35,7 +35,7 @@ namespace DS4Windows
 
         public void RemoveController(DS4Device device, int slotIdx)
         {
-            using (WriteLocker locker = new WriteLocker(collectionLocker))
+            using (WriteLocker locker = new(collectionLocker))
             {
                 controllerColl.Remove(device);
                 controllerDict.Remove(slotIdx);
@@ -45,7 +45,7 @@ namespace DS4Windows
 
         public void ClearControllerList()
         {
-            using (WriteLocker locker = new WriteLocker(collectionLocker))
+            using (WriteLocker locker = new(collectionLocker))
             {
                 controllerColl.Clear();
                 controllerDict.Clear();

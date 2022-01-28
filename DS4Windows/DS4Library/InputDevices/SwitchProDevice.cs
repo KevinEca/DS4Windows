@@ -303,10 +303,12 @@ namespace DS4Windows.InputDevices
             else if (ds4Input == null)
             {
                 // Device is open. Create Reader Input thread
-                ds4Input = new Thread(ReadInput);
-                ds4Input.IsBackground = true;
-                ds4Input.Priority = ThreadPriority.AboveNormal;
-                ds4Input.Name = "Switch Pro Reader Thread";
+                ds4Input = new Thread(ReadInput)
+                {
+                    IsBackground = true,
+                    Priority = ThreadPriority.AboveNormal,
+                    Name = "Switch Pro Reader Thread"
+                };
                 ds4Input.Start();
             }
         }
@@ -1159,8 +1161,10 @@ namespace DS4Windows.InputDevices
 
             IntPtr btHandle = IntPtr.Zero;
             bool success = false;
-            NativeMethods.BLUETOOTH_FIND_RADIO_PARAMS p = new NativeMethods.BLUETOOTH_FIND_RADIO_PARAMS();
-            p.dwSize = Marshal.SizeOf(typeof(NativeMethods.BLUETOOTH_FIND_RADIO_PARAMS));
+            NativeMethods.BLUETOOTH_FIND_RADIO_PARAMS p = new NativeMethods.BLUETOOTH_FIND_RADIO_PARAMS
+            {
+                dwSize = Marshal.SizeOf(typeof(NativeMethods.BLUETOOTH_FIND_RADIO_PARAMS))
+            };
             IntPtr searchHandle = NativeMethods.BluetoothFindFirstRadio(ref p, ref btHandle);
             int bytesReturned = 0;
 

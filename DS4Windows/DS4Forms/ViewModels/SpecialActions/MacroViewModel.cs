@@ -67,12 +67,14 @@ namespace DS4WinWPF.DS4Forms.ViewModels.SpecialActions
 
         public void SaveAction(SpecialAction action, bool edit = false)
         {
-            List<string> extrasList = new List<string>();
-            extrasList.Add(useScanCode ? "Scan Code" : null);
-            extrasList.Add(runTriggerRelease ? "RunOnRelease" : null);
-            extrasList.Add(syncRun ? "Sync" : null);
-            extrasList.Add(keepKeyState ? "KeepKeyState" : null);
-            extrasList.Add(repeatHeld ? "Repeat" : null);
+            List<string> extrasList = new List<string>
+            {
+                useScanCode ? "Scan Code" : null,
+                runTriggerRelease ? "RunOnRelease" : null,
+                syncRun ? "Sync" : null,
+                keepKeyState ? "KeepKeyState" : null,
+                repeatHeld ? "Repeat" : null
+            };
             Global.SaveAction(action.name, action.controls, 1, string.Join("/", macro), edit,
                 string.Join("/", extrasList.Where(s => !string.IsNullOrEmpty(s))));
         }

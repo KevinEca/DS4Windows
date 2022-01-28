@@ -75,11 +75,11 @@ namespace DS4Windows
                 {
                     if (found)
                     {
-                        AppLogger.LogToGui($"HID#{iEnumeratedDevCount} CONNECTING to {x.Description}  VID={tempDev.Attributes.VendorHexId}  PID={tempDev.Attributes.ProductHexId}  Usage=0x{tempDev.Capabilities.Usage.ToString("X")}  Version=0x{tempDev.Attributes.Version.ToString("X")}  Path={x.Path}", false);
+                        AppLogger.LogToGui($"HID#{iEnumeratedDevCount} CONNECTING to {x.Description}  VID={tempDev.Attributes.VendorHexId}  PID={tempDev.Attributes.ProductHexId}  Usage=0x{tempDev.Capabilities.Usage:X}  Version=0x{tempDev.Attributes.Version:X}  Path={x.Path}", false);
                     }
                     else
                     {
-                        AppLogger.LogToGui($"HID#{iEnumeratedDevCount} Unknown device {x.Description}  VID={tempDev.Attributes.VendorHexId}  PID={tempDev.Attributes.ProductHexId}  Usage=0x{tempDev.Capabilities.Usage.ToString("X")}  Version=0x{tempDev.Attributes.Version.ToString("X")}  Path={x.Path}", false);
+                        AppLogger.LogToGui($"HID#{iEnumeratedDevCount} Unknown device {x.Description}  VID={tempDev.Attributes.VendorHexId}  PID={tempDev.Attributes.ProductHexId}  Usage=0x{tempDev.Capabilities.Usage:X}  Version=0x{tempDev.Attributes.Version:X}  Path={x.Path}", false);
                     }
                 }
             }

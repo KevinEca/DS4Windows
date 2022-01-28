@@ -9,7 +9,7 @@ namespace DS4Windows.DS4Control
 
         public bool fakeKeyRepeat = false;
 
-        public Version version = new Version("0.0.0.0");
+        public Version version = new("0.0.0.0");
         public string Version
         {
             get => version.ToString();

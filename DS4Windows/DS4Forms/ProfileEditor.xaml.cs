@@ -35,11 +35,10 @@ namespace DS4WinWPF.DS4Forms
         public delegate void CreatedProfileHandler(ProfileEditor sender, string profile);
         public event CreatedProfileHandler CreatedProfile;
 
-        private readonly Dictionary<Button, ImageBrush> hoverImages =
-            new Dictionary<Button, ImageBrush>();
-        private readonly Dictionary<Button, HoverImageInfo> hoverLocations = new Dictionary<Button, HoverImageInfo>();
-        private readonly Dictionary<Button, int> hoverIndexes = new Dictionary<Button, int>();
-        private readonly Dictionary<int, Button> reverseHoverIndexes = new Dictionary<int, Button>();
+        private readonly Dictionary<Button, ImageBrush> hoverImages = new();
+        private readonly Dictionary<Button, HoverImageInfo> hoverLocations = new();
+        private readonly Dictionary<Button, int> hoverIndexes = new();
+        private readonly Dictionary<int, Button> reverseHoverIndexes = new();
 
         private bool keepsize;
         private bool controllerReadingsTabActive = false;
@@ -429,126 +428,126 @@ namespace DS4WinWPF.DS4Forms
 
         private void PopulateHoverImages()
         {
-            ImageSourceConverter sourceConverter = new ImageSourceConverter();
+            ImageSourceConverter sourceConverter = new();
 
             ImageSource temp = sourceConverter.
                 ConvertFromString($"{Global.ASSEMBLY_RESOURCE_PREFIX}component/Resources/DS4-Config_Cross.png") as ImageSource;
-            ImageBrush crossHover = new ImageBrush(temp);
+            ImageBrush crossHover = new(temp);
 
             temp = sourceConverter.
                 ConvertFromString($"{Global.ASSEMBLY_RESOURCE_PREFIX}component/Resources/DS4-Config_Circle.png") as ImageSource;
-            ImageBrush circleHover = new ImageBrush(temp);
+            ImageBrush circleHover = new(temp);
 
             temp = sourceConverter.
                 ConvertFromString($"{Global.ASSEMBLY_RESOURCE_PREFIX}component/Resources/DS4-Config_Square.png") as ImageSource;
-            ImageBrush squareHover = new ImageBrush(temp);
+            ImageBrush squareHover = new(temp);
 
             temp = sourceConverter.
                 ConvertFromString($"{Global.ASSEMBLY_RESOURCE_PREFIX}component/Resources/DS4-Config_Triangle.png") as ImageSource;
-            ImageBrush triangleHover = new ImageBrush(temp);
+            ImageBrush triangleHover = new(temp);
 
             temp = sourceConverter.
                 ConvertFromString($"{Global.ASSEMBLY_RESOURCE_PREFIX}component/Resources/DS4-Config_L1.png") as ImageSource;
-            ImageBrush l1Hover = new ImageBrush(temp);
+            ImageBrush l1Hover = new(temp);
 
             temp = sourceConverter.
                 ConvertFromString($"{Global.ASSEMBLY_RESOURCE_PREFIX}component/Resources/DS4-Config_R1.png") as ImageSource;
-            ImageBrush r1Hover = new ImageBrush(temp);
+            ImageBrush r1Hover = new(temp);
 
             temp = sourceConverter.
                 ConvertFromString($"{Global.ASSEMBLY_RESOURCE_PREFIX}component/Resources/DS4-Config_L2.png") as ImageSource;
-            ImageBrush l2Hover = new ImageBrush(temp);
+            ImageBrush l2Hover = new(temp);
 
             temp = sourceConverter.
                 ConvertFromString($"{Global.ASSEMBLY_RESOURCE_PREFIX}component/Resources/DS4-Config_R2.png") as ImageSource;
-            ImageBrush r2Hover = new ImageBrush(temp);
+            ImageBrush r2Hover = new(temp);
 
             temp = sourceConverter.
                 ConvertFromString($"{Global.ASSEMBLY_RESOURCE_PREFIX}component/Resources/DS4-Config_Share.png") as ImageSource;
-            ImageBrush shareHover = new ImageBrush(temp);
+            ImageBrush shareHover = new(temp);
 
             temp = sourceConverter.
                 ConvertFromString($"{Global.ASSEMBLY_RESOURCE_PREFIX}component/Resources/DS4-Config_options.png") as ImageSource;
-            ImageBrush optionsHover = new ImageBrush(temp);
+            ImageBrush optionsHover = new(temp);
 
             temp = sourceConverter.
                 ConvertFromString($"{Global.ASSEMBLY_RESOURCE_PREFIX}component/Resources/DS4-Config_PS.png") as ImageSource;
-            ImageBrush guideHover = new ImageBrush(temp);
+            ImageBrush guideHover = new(temp);
 
             temp = sourceConverter.
                 ConvertFromString($"{Global.ASSEMBLY_RESOURCE_PREFIX}component/Resources/DS4-Config_TouchLeft.png") as ImageSource;
-            ImageBrush leftTouchHover = new ImageBrush(temp);
+            ImageBrush leftTouchHover = new(temp);
 
             temp = sourceConverter.
                 ConvertFromString($"{Global.ASSEMBLY_RESOURCE_PREFIX}component/Resources/DS4-Config_TouchMulti.png") as ImageSource;
-            ImageBrush multiTouchTouchHover = new ImageBrush(temp);
+            ImageBrush multiTouchTouchHover = new(temp);
 
             temp = sourceConverter.
                 ConvertFromString($"{Global.ASSEMBLY_RESOURCE_PREFIX}component/Resources/DS4-Config_TouchRight.png") as ImageSource;
-            ImageBrush rightTouchHover = new ImageBrush(temp);
+            ImageBrush rightTouchHover = new(temp);
 
             temp = sourceConverter.
                 ConvertFromString($"{Global.ASSEMBLY_RESOURCE_PREFIX}component/Resources/DS4-Config_TouchUpper.png") as ImageSource;
-            ImageBrush topTouchHover = new ImageBrush(temp);
+            ImageBrush topTouchHover = new(temp);
 
 
             temp = sourceConverter.
                 ConvertFromString($"{Global.ASSEMBLY_RESOURCE_PREFIX}component/Resources/DS4-Config_LS.png") as ImageSource;
-            ImageBrush l3Hover = new ImageBrush(temp);
+            ImageBrush l3Hover = new(temp);
 
             temp = sourceConverter.
                 ConvertFromString($"{Global.ASSEMBLY_RESOURCE_PREFIX}component/Resources/DS4-Config_LS.png") as ImageSource;
-            ImageBrush lsuHover = new ImageBrush(temp);
+            ImageBrush lsuHover = new(temp);
 
             temp = sourceConverter.
                 ConvertFromString($"{Global.ASSEMBLY_RESOURCE_PREFIX}component/Resources/DS4-Config_LS.png") as ImageSource;
-            ImageBrush lsrHover = new ImageBrush(temp);
+            ImageBrush lsrHover = new(temp);
 
             temp = sourceConverter.
                 ConvertFromString($"{Global.ASSEMBLY_RESOURCE_PREFIX}component/Resources/DS4-Config_LS.png") as ImageSource;
-            ImageBrush lsdHover = new ImageBrush(temp);
+            ImageBrush lsdHover = new(temp);
 
             temp = sourceConverter.
                 ConvertFromString($"{Global.ASSEMBLY_RESOURCE_PREFIX}component/Resources/DS4-Config_LS.png") as ImageSource;
-            ImageBrush lslHover = new ImageBrush(temp);
+            ImageBrush lslHover = new(temp);
 
 
             temp = sourceConverter.
                 ConvertFromString($"{Global.ASSEMBLY_RESOURCE_PREFIX}component/Resources/DS4-Config_RS.png") as ImageSource;
-            ImageBrush r3Hover = new ImageBrush(temp);
+            ImageBrush r3Hover = new(temp);
 
             temp = sourceConverter.
                 ConvertFromString($"{Global.ASSEMBLY_RESOURCE_PREFIX}component/Resources/DS4-Config_RS.png") as ImageSource;
-            ImageBrush rsuHover = new ImageBrush(temp);
+            ImageBrush rsuHover = new(temp);
 
             temp = sourceConverter.
                 ConvertFromString($"{Global.ASSEMBLY_RESOURCE_PREFIX}component/Resources/DS4-Config_RS.png") as ImageSource;
-            ImageBrush rsrHover = new ImageBrush(temp);
+            ImageBrush rsrHover = new(temp);
 
             temp = sourceConverter.
                 ConvertFromString($"{Global.ASSEMBLY_RESOURCE_PREFIX}component/Resources/DS4-Config_RS.png") as ImageSource;
-            ImageBrush rsdHover = new ImageBrush(temp);
+            ImageBrush rsdHover = new(temp);
 
             temp = sourceConverter.
                 ConvertFromString($"{Global.ASSEMBLY_RESOURCE_PREFIX}component/Resources/DS4-Config_RS.png") as ImageSource;
-            ImageBrush rslHover = new ImageBrush(temp);
+            ImageBrush rslHover = new(temp);
 
 
             temp = sourceConverter.
                 ConvertFromString($"{Global.ASSEMBLY_RESOURCE_PREFIX}component/Resources/DS4-Config_Up.png") as ImageSource;
-            ImageBrush upHover = new ImageBrush(temp);
+            ImageBrush upHover = new(temp);
 
             temp = sourceConverter.
                 ConvertFromString($"{Global.ASSEMBLY_RESOURCE_PREFIX}component/Resources/DS4-Config_Right.png") as ImageSource;
-            ImageBrush rightHover = new ImageBrush(temp);
+            ImageBrush rightHover = new(temp);
 
             temp = sourceConverter.
                 ConvertFromString($"{Global.ASSEMBLY_RESOURCE_PREFIX}component/Resources/DS4-Config_Down.png") as ImageSource;
-            ImageBrush downHover = new ImageBrush(temp);
+            ImageBrush downHover = new(temp);
 
             temp = sourceConverter.
                 ConvertFromString($"{Global.ASSEMBLY_RESOURCE_PREFIX}component/Resources/DS4-Config_Left.png") as ImageSource;
-            ImageBrush leftHover = new ImageBrush(temp);
+            ImageBrush leftHover = new(temp);
 
             hoverImages[crossConBtn] = crossHover;
             hoverImages[circleConBtn] = circleHover;
@@ -608,7 +607,7 @@ namespace DS4WinWPF.DS4Forms
             else
             {
                 currentProfile = null;
-                PresetOptionWindow presetWin = new PresetOptionWindow();
+                PresetOptionWindow presetWin = new();
                 presetWin.SetupData(deviceNum);
                 presetWin.ShowDialog();
                 if (presetWin.Result == MessageBoxResult.Cancel)
@@ -740,8 +739,10 @@ namespace DS4WinWPF.DS4Forms
         private void HoverConBtn_Click(object sender, RoutedEventArgs e)
         {
             MappedControl mpControl = mappingListVM.Mappings[mappingListVM.SelectedIndex];
-            BindingWindow window = new BindingWindow(deviceNum, mpControl.Setting);
-            window.Owner = App.Current.MainWindow;
+            BindingWindow window = new(deviceNum, mpControl.Setting)
+            {
+                Owner = App.Current.MainWindow
+            };
             window.ShowDialog();
             mpControl.UpdateMappingName();
             UpdateHighlightLabel(mpControl);
@@ -898,7 +899,7 @@ namespace DS4WinWPF.DS4Forms
         private void KeepSizeBtn_Click(object sender, RoutedEventArgs e)
         {
             keepsize = true;
-            ImageSourceConverter c = new ImageSourceConverter();
+            ImageSourceConverter c = new();
             sizeImage.Source = c.ConvertFromString($"{Global.ASSEMBLY_RESOURCE_PREFIX}component/Resources/checked.png") as ImageSource;
         }
 
@@ -934,8 +935,10 @@ namespace DS4WinWPF.DS4Forms
 
         private void FlashColorBtn_Click(object sender, RoutedEventArgs e)
         {
-            ColorPickerWindow dialog = new ColorPickerWindow();
-            dialog.Owner = Application.Current.MainWindow;
+            ColorPickerWindow dialog = new()
+            {
+                Owner = Application.Current.MainWindow
+            };
             Color tempcolor = profileSettingsVM.FlashColorMedia;
             dialog.colorPicker.SelectedColor = tempcolor;
             profileSettingsVM.StartForcedColor(tempcolor);
@@ -950,8 +953,10 @@ namespace DS4WinWPF.DS4Forms
 
         private void LowColorBtn_Click(object sender, RoutedEventArgs e)
         {
-            ColorPickerWindow dialog = new ColorPickerWindow();
-            dialog.Owner = Application.Current.MainWindow;
+            ColorPickerWindow dialog = new()
+            {
+                Owner = Application.Current.MainWindow
+            };
             Color tempcolor = profileSettingsVM.LowColorMedia;
             dialog.colorPicker.SelectedColor = tempcolor;
             profileSettingsVM.StartForcedColor(tempcolor);
@@ -1053,14 +1058,16 @@ namespace DS4WinWPF.DS4Forms
 
         private void LaunchProgBrowseBtn_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog dialog = new OpenFileDialog();
-            dialog.Multiselect = false;
-            dialog.AddExtension = true;
-            dialog.DefaultExt = ".exe";
-            dialog.Filter = "Program (*.exe)|*.exe";
-            dialog.Title = "Select Program";
+            OpenFileDialog dialog = new()
+            {
+                Multiselect = false,
+                AddExtension = true,
+                DefaultExt = ".exe",
+                Filter = "Program (*.exe)|*.exe",
+                Title = "Select Program",
 
-            dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles)
+            };
             if (dialog.ShowDialog() == true)
             {
                 profileSettingsVM.UpdateLaunchProgram(dialog.FileName);
@@ -1096,8 +1103,10 @@ namespace DS4WinWPF.DS4Forms
 
         private void ChargingColorBtn_Click(object sender, RoutedEventArgs e)
         {
-            ColorPickerWindow dialog = new ColorPickerWindow();
-            dialog.Owner = Application.Current.MainWindow;
+            ColorPickerWindow dialog = new()
+            {
+                Owner = Application.Current.MainWindow
+            };
             Color tempcolor = profileSettingsVM.ChargingColorMedia;
             dialog.colorPicker.SelectedColor = tempcolor;
             profileSettingsVM.StartForcedColor(tempcolor);
@@ -1117,9 +1126,9 @@ namespace DS4WinWPF.DS4Forms
                 DS4Windows.DS4Device d = App.rootHub.DS4Controllers[profileSettingsVM.FuncDevNum];
                 if (d != null)
                 {
-                    System.Drawing.Point origWheelCenterPoint = new System.Drawing.Point(d.wheelCenterPoint.X, d.wheelCenterPoint.Y);
-                    System.Drawing.Point origWheel90DegPointLeft = new System.Drawing.Point(d.wheel90DegPointLeft.X, d.wheel90DegPointLeft.Y);
-                    System.Drawing.Point origWheel90DegPointRight = new System.Drawing.Point(d.wheel90DegPointRight.X, d.wheel90DegPointRight.Y);
+                    System.Drawing.Point origWheelCenterPoint = new(d.wheelCenterPoint.X, d.wheelCenterPoint.Y);
+                    System.Drawing.Point origWheel90DegPointLeft = new(d.wheel90DegPointLeft.X, d.wheel90DegPointLeft.Y);
+                    System.Drawing.Point origWheel90DegPointRight = new(d.wheel90DegPointRight.X, d.wheel90DegPointRight.Y);
 
                     d.WheelRecalibrateActiveState = 1;
 
@@ -1204,7 +1213,7 @@ namespace DS4WinWPF.DS4Forms
         {
             baseSpeActPanel.Visibility = Visibility.Collapsed;
             ProfileList profList = (Application.Current.MainWindow as MainWindow).ProfileListHolder;
-            SpecialActionEditor actEditor = new SpecialActionEditor(deviceNum, profList, null);
+            SpecialActionEditor actEditor = new(deviceNum, profList, null);
             specialActionDockPanel.Children.Add(actEditor);
             actEditor.Visibility = Visibility.Visible;
             actEditor.Cancel += (sender2, args) =>
@@ -1239,7 +1248,7 @@ namespace DS4WinWPF.DS4Forms
                 //SpecialActionItem item = specialActionsVM.ActionCol[currentIndex];
                 baseSpeActPanel.Visibility = Visibility.Collapsed;
                 ProfileList profList = (Application.Current.MainWindow as MainWindow).ProfileListHolder;
-                SpecialActionEditor actEditor = new SpecialActionEditor(deviceNum, profList, item.SpecialAction);
+                SpecialActionEditor actEditor = new(deviceNum, profList, item.SpecialAction);
                 specialActionDockPanel.Children.Add(actEditor);
                 actEditor.Visibility = Visibility.Visible;
                 actEditor.Cancel += (sender2, args) =>
@@ -1291,8 +1300,10 @@ namespace DS4WinWPF.DS4Forms
 
         private void Ds4LightbarColorBtn_Click(object sender, RoutedEventArgs e)
         {
-            ColorPickerWindow dialog = new ColorPickerWindow();
-            dialog.Owner = Application.Current.MainWindow;
+            ColorPickerWindow dialog = new()
+            {
+                Owner = Application.Current.MainWindow
+            };
             Color tempcolor = profileSettingsVM.MainColor;
             dialog.colorPicker.SelectedColor = tempcolor;
             profileSettingsVM.StartForcedColor(tempcolor);
@@ -1394,8 +1405,10 @@ namespace DS4WinWPF.DS4Forms
         private void ShowControlBindingWindow()
         {
             MappedControl mpControl = mappingListVM.Mappings[mappingListVM.SelectedIndex];
-            BindingWindow window = new BindingWindow(deviceNum, mpControl.Setting);
-            window.Owner = App.Current.MainWindow;
+            BindingWindow window = new(deviceNum, mpControl.Setting)
+            {
+                Owner = App.Current.MainWindow
+            };
             window.ShowDialog();
             mpControl.UpdateMappingName();
             UpdateHighlightLabel(mpControl);
@@ -1429,8 +1442,10 @@ namespace DS4WinWPF.DS4Forms
             Button btn = sender as Button;
             DS4Controls control = (DS4Controls)Convert.ToInt32(btn.Tag);
             MappedControl mpControl = mappingListVM.ControlMap[control];
-            BindingWindow window = new BindingWindow(deviceNum, mpControl.Setting);
-            window.Owner = App.Current.MainWindow;
+            BindingWindow window = new(deviceNum, mpControl.Setting)
+            {
+                Owner = App.Current.MainWindow
+            };
             window.ShowDialog();
             mpControl.UpdateMappingName();
             UpdateHighlightLabel(mpControl);
@@ -1442,8 +1457,10 @@ namespace DS4WinWPF.DS4Forms
             Button btn = sender as Button;
             DS4Controls control = (DS4Controls)Convert.ToInt32(btn.Tag);
             MappedControl mpControl = mappingListVM.ControlMap[control];
-            BindingWindow window = new BindingWindow(deviceNum, mpControl.Setting);
-            window.Owner = App.Current.MainWindow;
+            BindingWindow window = new(deviceNum, mpControl.Setting)
+            {
+                Owner = App.Current.MainWindow
+            };
             window.ShowDialog();
             mpControl.UpdateMappingName();
             UpdateHighlightLabel(mpControl);
@@ -1486,7 +1503,7 @@ namespace DS4WinWPF.DS4Forms
         {
             sidebarTabControl.SelectedIndex = 0;
 
-            PresetOptionWindow presetWin = new PresetOptionWindow();
+            PresetOptionWindow presetWin = new();
             presetWin.SetupData(deviceNum);
             presetWin.ToPresetsScreen();
             presetWin.DelayPresetApply = true;
@@ -1517,8 +1534,10 @@ namespace DS4WinWPF.DS4Forms
 
             //DS4ControlSettings setting = Global.getDS4CSetting(tag, ds4control);
             MappedControl mpControl = mappingListVM.ControlMap[ds4control];
-            BindingWindow window = new BindingWindow(deviceNum, mpControl.Setting);
-            window.Owner = App.Current.MainWindow;
+            BindingWindow window = new(deviceNum, mpControl.Setting)
+            {
+                Owner = App.Current.MainWindow
+            };
             window.ShowDialog();
             mpControl.UpdateMappingName();
             Global.CacheProfileCustomsFlags(profileSettingsVM.Device);
@@ -1558,8 +1577,10 @@ namespace DS4WinWPF.DS4Forms
             Button btn = sender as Button;
             DS4Controls control = (DS4Controls)Convert.ToInt32(btn.Tag);
             MappedControl mpControl = mappingListVM.ControlMap[control];
-            BindingWindow window = new BindingWindow(deviceNum, mpControl.Setting);
-            window.Owner = App.Current.MainWindow;
+            BindingWindow window = new(deviceNum, mpControl.Setting)
+            {
+                Owner = App.Current.MainWindow
+            };
             window.ShowDialog();
             mpControl.UpdateMappingName();
             Global.CacheProfileCustomsFlags(profileSettingsVM.Device);
@@ -1591,8 +1612,10 @@ namespace DS4WinWPF.DS4Forms
 
             //DS4ControlSettings setting = Global.getDS4CSetting(tag, ds4control);
             MappedControl mpControl = mappingListVM.ControlMap[ds4control];
-            BindingWindow window = new BindingWindow(deviceNum, mpControl.Setting);
-            window.Owner = App.Current.MainWindow;
+            BindingWindow window = new(deviceNum, mpControl.Setting)
+            {
+                Owner = App.Current.MainWindow
+            };
             window.ShowDialog();
             mpControl.UpdateMappingName();
             Global.CacheProfileCustomsFlags(profileSettingsVM.Device);

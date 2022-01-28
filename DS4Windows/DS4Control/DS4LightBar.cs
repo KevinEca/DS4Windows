@@ -47,7 +47,7 @@ namespace DS4Windows
 
         public static void UpdateLightBar(DS4Device device, int deviceNum)
         {
-            DS4Color color = new DS4Color();
+            DS4Color color = new();
             bool useForceLight = forcelight[deviceNum];
             LightbarSettingInfo lightbarSettingInfo = GetLightbarSettingsInfo(deviceNum);
             LightbarDS4WinInfo lightModeInfo = lightbarSettingInfo.ds4winSettings;
@@ -152,7 +152,7 @@ namespace DS4Windows
                             {
                                 if (elapsed < PULSE_FLASH_DURATION)
                                 {
-                                    elapsed = elapsed / 40;
+                                    elapsed /= 40;
                                     ratio = 100.0 * (elapsed / PULSE_FLASH_SEGMENTS);
                                 }
                                 else
@@ -165,7 +165,7 @@ namespace DS4Windows
                             {
                                 if (elapsed < PULSE_FLASH_DURATION)
                                 {
-                                    elapsed = elapsed / 40;
+                                    elapsed /= 40;
                                     ratio = (0 - 100.0) * (elapsed / PULSE_FLASH_SEGMENTS) + 100.0;
                                 }
                                 else
@@ -176,7 +176,7 @@ namespace DS4Windows
                             }
                         }
 
-                        DS4Color tempCol = new DS4Color(0, 0, 0);
+                        DS4Color tempCol = new(0, 0, 0);
                         color = GetTransitionedColor(ref color, ref tempCol, ratio);
                     }
                 }
@@ -186,19 +186,17 @@ namespace DS4Windows
                     (!device.IsCharging() || device.GetBattery() >= 100))
                 {
                     // Fade lightbar by idle time
-                    TimeSpan timeratio = new TimeSpan(DateTime.UtcNow.Ticks - device.lastActive.Ticks);
+                    TimeSpan timeratio = new(DateTime.UtcNow.Ticks - device.lastActive.Ticks);
                     double botratio = timeratio.TotalMilliseconds;
                     double topratio = TimeSpan.FromSeconds(idleDisconnectTimeout).TotalMilliseconds;
                     double ratio = 100.0 * (botratio / topratio), elapsed = ratio;
+                    DS4Color emptyCol = new(0, 0, 0);
                     if (ratio >= 50.0 && ratio < 100.0)
                     {
-                        DS4Color emptyCol = new DS4Color(0, 0, 0);
-                        color = GetTransitionedColor(ref color, ref emptyCol,
-                            (uint)(-100.0 * (elapsed = 0.02 * (ratio - 50.0)) * (elapsed - 2.0)));
+                        color = GetTransitionedColor(ref color, ref emptyCol, (uint)(-100.0 * (elapsed = 0.02 * (ratio - 50.0)) * (elapsed - 2.0)));
                     }
                     else if (ratio >= 100.0)
                     {
-                        DS4Color emptyCol = new DS4Color(0, 0, 0);
                         color = GetTransitionedColor(ref color, ref emptyCol, 100.0);
                     }
 
@@ -227,7 +225,7 @@ namespace DS4Windows
                                     {
                                         if (elapsed < PULSE_CHARGING_DURATION)
                                         {
-                                            elapsed = elapsed / 40;
+                                            elapsed /= 40;
                                             if (elapsed > PULSE_CHARGING_SEGMENTS)
                                             {
                                                 elapsed = (long)PULSE_CHARGING_SEGMENTS;
@@ -245,7 +243,7 @@ namespace DS4Windows
                                     {
                                         if (elapsed < PULSE_CHARGING_DURATION)
                                         {
-                                            elapsed = elapsed / 40;
+                                            elapsed /= 40;
                                             if (elapsed > PULSE_CHARGING_SEGMENTS)
                                             {
                                                 elapsed = (long)PULSE_CHARGING_SEGMENTS;
@@ -261,7 +259,7 @@ namespace DS4Windows
                                     }
                                 }
 
-                                DS4Color emptyCol = new DS4Color(0, 0, 0);
+                                DS4Color emptyCol = new(0, 0, 0);
                                 color = GetTransitionedColor(ref color, ref emptyCol, ratio);
                                 break;
                             }
@@ -311,20 +309,16 @@ namespace DS4Windows
                     // Thing I did for Distance
                     float rumble = device.GetLeftHeavySlowRumble() / 2.55f;
                     byte max = Max(color.red, Max(color.green, color.blue));
+                    DS4Color maxCol = new(max, max, 0);
+                    DS4Color redCol = new(255, 0, 0);
                     if (device.GetLeftHeavySlowRumble() > 100)
                     {
-                        DS4Color maxCol = new DS4Color(max, max, 0);
-                        DS4Color redCol = new DS4Color(255, 0, 0);
                         color = GetTransitionedColor(ref maxCol, ref redCol, rumble);
                     }
                     else
                     {
-                        DS4Color maxCol = new DS4Color(max, max, 0);
-                        DS4Color redCol = new DS4Color(255, 0, 0);
-                        DS4Color tempCol = GetTransitionedColor(ref maxCol,
-                            ref redCol, 39.6078f);
-                        color = GetTransitionedColor(ref color, ref tempCol,
-                            device.GetLeftHeavySlowRumble());
+                        DS4Color tempCol = GetTransitionedColor(ref maxCol, ref redCol, 39.6078f);
+                        color = GetTransitionedColor(ref color, ref tempCol, device.GetLeftHeavySlowRumble());
                     }
                 }
 
@@ -333,7 +327,7 @@ namespace DS4Windows
                     LightBarColor = color
                 };
                 */
-                DS4LightbarState lightState = new DS4LightbarState
+                DS4LightbarState lightState = new()
                 {
                     LightBarColor = color,
                 };

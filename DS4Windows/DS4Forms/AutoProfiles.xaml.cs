@@ -258,7 +258,7 @@ namespace DS4WinWPF.DS4Forms
         private void BrowseProgsMenuItem_Click(object sender, RoutedEventArgs e)
         {
             this.IsEnabled = false;
-            VistaFolderBrowserDialog dialog = new VistaFolderBrowserDialog();
+            VistaFolderBrowserDialog dialog = new();
             if (dialog.ShowDialog() == true)
             {
                 //browseProgsMenuItem.Visibility = Visibility.Collapsed;
@@ -341,14 +341,16 @@ namespace DS4WinWPF.DS4Forms
         private void BrowseAddProgMenuItem_Click(object sender, RoutedEventArgs e)
         {
             this.IsEnabled = false;
-            OpenFileDialog dialog = new OpenFileDialog();
-            dialog.Multiselect = false;
-            dialog.AddExtension = true;
-            dialog.DefaultExt = ".exe";
-            dialog.Filter = "Program (*.exe)|*.exe";
-            dialog.Title = "Select Program";
+            OpenFileDialog dialog = new()
+            {
+                Multiselect = false,
+                AddExtension = true,
+                DefaultExt = ".exe",
+                Filter = "Program (*.exe)|*.exe",
+                Title = "Select Program",
 
-            dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles)
+            };
             if (dialog.ShowDialog() == true)
             {
                 programListLV.ItemsSource = null;

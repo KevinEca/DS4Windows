@@ -16,8 +16,8 @@ namespace DS4Windows
 
         public ProfileMigration(string filePath)
         {
-            FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
-            StreamReader innerStreamReader = new StreamReader(fileStream);
+            FileStream fileStream = new(filePath, FileMode.Open, FileAccess.Read);
+            StreamReader innerStreamReader = new(fileStream);
             currentMigrationText = innerStreamReader.ReadToEnd();
             innerStreamReader.Dispose();
 
@@ -97,7 +97,7 @@ namespace DS4Windows
             profileReader.Dispose();
 
             currentMigrationText = migratedText;
-            StringReader stringReader = new StringReader(currentMigrationText);
+            StringReader stringReader = new(currentMigrationText);
             profileReader = XmlReader.Create(stringReader);
         }
 
@@ -163,7 +163,7 @@ namespace DS4Windows
 
         private string Version0004Migration()
         {
-            MigrationSettings0004 gyroSmoothSettings = new MigrationSettings0004()
+            MigrationSettings0004 gyroSmoothSettings = new()
             {
                 gyroMouseSmoothingWeight = MigrationSettings0004.DEFAULT_SMOOTH_WEIGHT,
                 gyroMouseStickSmoothingWeight = MigrationSettings0004.DEFAULT_SMOOTH_WEIGHT,
@@ -217,7 +217,7 @@ namespace DS4Windows
                 xmlWriter.WriteEndElement();
             }
 
-            StringWriter stringWrite = new StringWriter();
+            StringWriter stringWrite = new();
             XmlWriter tempWriter = XmlWriter.Create(stringWrite, new XmlWriterSettings()
             {
                 Encoding = Encoding.UTF8,
@@ -291,7 +291,7 @@ namespace DS4Windows
             profileReader.Dispose();
 
             // Prepare for second pass
-            StringReader stringReader = new StringReader(currentMigrationText);
+            StringReader stringReader = new(currentMigrationText);
             profileReader = XmlReader.Create(stringReader);
             // Move stream to root element
             profileReader.MoveToContent();
@@ -354,7 +354,7 @@ namespace DS4Windows
 
         private string Version0002Migration()
         {
-            StringWriter stringWrite = new StringWriter();
+            StringWriter stringWrite = new();
             XmlWriter tempWriter = XmlWriter.Create(stringWrite, new XmlWriterSettings()
             {
                 Encoding = Encoding.UTF8,
@@ -422,7 +422,7 @@ namespace DS4Windows
 
         private string Version0005Migration()
         {
-            StringWriter stringWrite = new StringWriter();
+            StringWriter stringWrite = new();
             XmlWriter tempWriter = XmlWriter.Create(stringWrite, new XmlWriterSettings()
             {
                 Encoding = Encoding.UTF8,

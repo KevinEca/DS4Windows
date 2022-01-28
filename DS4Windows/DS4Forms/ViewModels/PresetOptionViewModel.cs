@@ -59,13 +59,15 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
         public PresetOptionViewModel()
         {
-            presetList = new List<PresetOption>();
-            presetList.Add(new GamepadPreset());
-            presetList.Add(new GamepadGyroCamera());
-            presetList.Add(new MixedPreset());
-            presetList.Add(new MixedGyroMousePreset());
-            presetList.Add(new KBMPreset());
-            presetList.Add(new KBMGyroMouse());
+            presetList = new List<PresetOption>
+            {
+                new GamepadPreset(),
+                new GamepadGyroCamera(),
+                new MixedPreset(),
+                new MixedGyroMousePreset(),
+                new KBMPreset(),
+                new KBMGyroMouse()
+            };
 
             PresetIndexChanged += PresetOptionViewModel_PresetIndexChanged;
         }

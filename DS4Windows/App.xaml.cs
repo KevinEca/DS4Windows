@@ -64,8 +64,7 @@ namespace DS4WinWPF
         private MemoryMappedFile ipcResultDataMMF = null; // MemoryMappedFile for inter-process communication used to exchange string result data between cmdline client process and the background running DS4Windows app
         private MemoryMappedViewAccessor ipcResultDataMMA = null;
 
-        private static readonly Dictionary<DS4Windows.AppThemeChoice, string> themeLocs = new
-            Dictionary<DS4Windows.AppThemeChoice, string>()
+        private static readonly Dictionary<DS4Windows.AppThemeChoice, string> themeLocs = new()
         {
             [DS4Windows.AppThemeChoice.Default] = "DS4Forms/Themes/DefaultTheme.xaml",
             [DS4Windows.AppThemeChoice.Dark] = "DS4Forms/Themes/DarkTheme.xaml",
@@ -75,7 +74,7 @@ namespace DS4WinWPF
 
         private static EventWaitHandle CreateAndReplaceHandle(SafeWaitHandle replacementHandle)
         {
-            EventWaitHandle eventWaitHandle = new EventWaitHandle(default, default);
+            EventWaitHandle eventWaitHandle = new(default, default);
 
             SafeWaitHandle old = eventWaitHandle.SafeWaitHandle;
             eventWaitHandle.SafeWaitHandle = replacementHandle;
@@ -89,7 +88,7 @@ namespace DS4WinWPF
             runShutdown = true;
             skipSave = true;
 
-            ArgumentParser parser = new ArgumentParser();
+            ArgumentParser parser = new();
             parser.Parse(e.Args);
             CheckOptions(parser);
 
@@ -100,18 +99,17 @@ namespace DS4WinWPF
 
             try
             {
-                Process.GetCurrentProcess().PriorityClass =
-                    ProcessPriorityClass.High;
+                Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.High;
             }
             catch { } // Ignore problems raising the priority.
 
             // Force Normal IO Priority
-            IntPtr ioPrio = new IntPtr(2);
+            IntPtr ioPrio = new(2);
             DS4Windows.Util.NtSetInformationProcess(Process.GetCurrentProcess().Handle,
                 DS4Windows.Util.PROCESS_INFORMATION_CLASS.ProcessIoPriority, ref ioPrio, 4);
 
             // Force Normal Page Priority
-            IntPtr pagePrio = new IntPtr(5);
+            IntPtr pagePrio = new(5);
             DS4Windows.Util.NtSetInformationProcess(Process.GetCurrentProcess().Handle,
                 DS4Windows.Util.PROCESS_INFORMATION_CLASS.ProcessPagePriority, ref pagePrio, 4);
 
@@ -146,8 +144,7 @@ namespace DS4WinWPF
             bool firstRun = DS4Windows.Global.firstRun;
             if (firstRun)
             {
-                DS4Forms.SaveWhere savewh =
-                    new DS4Forms.SaveWhere(DS4Windows.Global.multisavespots);
+                DS4Forms.SaveWhere savewh = new(DS4Windows.Global.multisavespots);
                 savewh.ShowDialog();
             }
 
@@ -207,7 +204,7 @@ namespace DS4WinWPF
             }
 
             DS4Windows.Global.LoadLinkedProfiles();
-            DS4Forms.MainWindow window = new DS4Forms.MainWindow(parser);
+            DS4Forms.MainWindow window = new(parser);
             MainWindow = window;
             window.Show();
             HwndSource source = PresentationSource.FromVisual(window) as HwndSource;
@@ -341,7 +338,7 @@ namespace DS4WinWPF
                 DS4Windows.Global.RefreshViGEmBusInfo();
 
                 CreateBaseThread();
-                DS4Forms.WelcomeDialog dialog = new DS4Forms.WelcomeDialog(true);
+                DS4Forms.WelcomeDialog dialog = new(true);
                 dialog.ShowDialog();
                 runShutdown = false;
                 exitApp = true;
@@ -459,7 +456,6 @@ namespace DS4WinWPF
         {
             controlThread = new Thread(() =>
             {
-
                 if (!DS4Windows.Global.IsWin8OrGreater())
                 {
                     ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;
@@ -510,9 +506,11 @@ namespace DS4WinWPF
 
         private void CreateTempWorkerThread()
         {
-            testThread = new Thread(SingleAppComThread_DoWork);
-            testThread.Priority = ThreadPriority.Lowest;
-            testThread.IsBackground = true;
+            testThread = new Thread(SingleAppComThread_DoWork)
+            {
+                Priority = ThreadPriority.Lowest,
+                IsBackground = true
+            };
             testThread.Start();
         }
 
@@ -548,7 +546,7 @@ namespace DS4WinWPF
 
             try
             {
-                StringBuilder wndClassNameStr = new StringBuilder(128);
+                StringBuilder wndClassNameStr = new(128);
                 if (GetClassName(hWnd, wndClassNameStr, wndClassNameStr.Capacity) != 0 && wndClassNameStr.Length > 0)
                 {
                     byte[] buffer = ASCIIEncoding.ASCII.GetBytes(wndClassNameStr.ToString());

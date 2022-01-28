@@ -658,7 +658,7 @@ namespace DS4Windows
 
             if (this.FeatureSet != VidPidFeatureSet.DefaultDS4)
             {
-                AppLogger.LogToGui($"The gamepad {displayName} ({conType}) uses custom feature set ({this.FeatureSet.ToString("F")})", false);
+                AppLogger.LogToGui($"The gamepad {displayName} ({conType}) uses custom feature set ({this.FeatureSet:F})", false);
             }
 
             Mac = hDevice.ReadSerial(SerialReportID);
@@ -766,11 +766,11 @@ namespace DS4Windows
             };
 
             byte finalReport = 0x00;
-            foreach (var element in reportIds)
+            foreach (var (IdElement, LengthElement) in reportIds)
             {
-                int len = element.Length;
-                byte[] outputBuffer = new byte[element.Length];
-                outputBuffer[0] = element.Id;
+                int len = LengthElement;
+                byte[] outputBuffer = new byte[LengthElement];
+                outputBuffer[0] = IdElement;
                 //outputBuffer[1] = (byte)(0xC0 | 0x04);
                 outputBuffer[2] = 0xA0;
 
@@ -784,8 +784,8 @@ namespace DS4Windows
 
                 if (WriteOutput(outputBuffer))
                 {
-                    finalReport = element.Id;
-                    knownGoodBTOutputReportType = element.Id;
+                    finalReport = IdElement;
+                    knownGoodBTOutputReportType = IdElement;
                     outputReport = new byte[len];
                     outReportBuffer = new byte[len];
                     break;
@@ -852,7 +852,7 @@ namespace DS4Windows
                 if (hDevice.Attributes.ProductId == 0x5C4 && hDevice.Attributes.VendorId == 0x054C &&
                     sixAxis.FixupInvertedGyroAxis())
                 {
-                    AppLogger.LogToGui($"Automatically fixed inverted YAW gyro axis in DS4 v.1 BT gamepad ({Mac.ToString()})", false);
+                    AppLogger.LogToGui($"Automatically fixed inverted YAW gyro axis in DS4 v.1 BT gamepad ({Mac})", false);
                 }
             }
             else
@@ -872,32 +872,40 @@ namespace DS4Windows
                 {
                     if (btOutputMethod == BTOutputReportMethod.HidD_SetOutputReport)
                     {
-                        ds4Output = new Thread(PerformDs4Output);
-                        ds4Output.Priority = ThreadPriority.Normal;
-                        ds4Output.Name = "DS4 Output thread: " + Mac;
-                        ds4Output.IsBackground = true;
+                        ds4Output = new Thread(PerformDs4Output)
+                        {
+                            Priority = ThreadPriority.Normal,
+                            Name = "DS4 Output thread: " + Mac,
+                            IsBackground = true
+                        };
                         ds4Output.Start();
                     }
 
-                    timeoutCheckThread = new Thread(TimeoutTestThread);
-                    timeoutCheckThread.Priority = ThreadPriority.BelowNormal;
-                    timeoutCheckThread.Name = "DS4 Timeout thread: " + Mac;
-                    timeoutCheckThread.IsBackground = true;
+                    timeoutCheckThread = new Thread(TimeoutTestThread)
+                    {
+                        Priority = ThreadPriority.BelowNormal,
+                        Name = "DS4 Timeout thread: " + Mac,
+                        IsBackground = true
+                    };
                     timeoutCheckThread.Start();
                 }
                 else
                 {
-                    ds4Output = new Thread(OutReportCopy);
-                    ds4Output.Priority = ThreadPriority.Normal;
-                    ds4Output.Name = "DS4 Arr Copy thread: " + Mac;
-                    ds4Output.IsBackground = true;
+                    ds4Output = new Thread(OutReportCopy)
+                    {
+                        Priority = ThreadPriority.Normal,
+                        Name = "DS4 Arr Copy thread: " + Mac,
+                        IsBackground = true
+                    };
                     ds4Output.Start();
                 }
 
-                ds4Input = new Thread(PerformDs4Input);
-                ds4Input.Priority = ThreadPriority.AboveNormal;
-                ds4Input.Name = "DS4 Input thread: " + Mac;
-                ds4Input.IsBackground = true;
+                ds4Input = new Thread(PerformDs4Input)
+                {
+                    Priority = ThreadPriority.AboveNormal,
+                    Name = "DS4 Input thread: " + Mac,
+                    IsBackground = true
+                };
                 ds4Input.Start();
             }
             else
@@ -1212,7 +1220,7 @@ namespace DS4Windows
                                 // If the incoming data packet does not have the native DS4 type or CRC-32 checks keep failing. Fail out and disconnect controller.
                                 if (this.inputReportErrorCount >= CRC32_NUM_ATTEMPTS)
                                 {
-                                    AppLogger.LogToGui($"{Mac.ToString()} failed CRC-32 checks {CRC32_NUM_ATTEMPTS} times. Disconnecting", false);
+                                    AppLogger.LogToGui($"{Mac} failed CRC-32 checks {CRC32_NUM_ATTEMPTS} times. Disconnecting", false);
 
                                     readWaitEv.Reset();
                                     SendOutputReport(true, true); // Kick Windows into noticing the disconnection.
@@ -1585,10 +1593,7 @@ namespace DS4Windows
                         }
                     }
 
-                    if (Report != null)
-                    {
-                        Report(this, EventArgs.Empty);
-                    }
+                    Report?.Invoke(this, EventArgs.Empty);
 
                     SendOutputReport(syncWriteReport, forceWrite);
                     forceWrite = false;
@@ -1914,8 +1919,10 @@ namespace DS4Windows
 
                 lock (outputReport)
                 {
-                    NativeMethods.BLUETOOTH_FIND_RADIO_PARAMS p = new NativeMethods.BLUETOOTH_FIND_RADIO_PARAMS();
-                    p.dwSize = Marshal.SizeOf(typeof(NativeMethods.BLUETOOTH_FIND_RADIO_PARAMS));
+                    NativeMethods.BLUETOOTH_FIND_RADIO_PARAMS p = new()
+                    {
+                        dwSize = Marshal.SizeOf(typeof(NativeMethods.BLUETOOTH_FIND_RADIO_PARAMS))
+                    };
                     IntPtr searchHandle = NativeMethods.BluetoothFindFirstRadio(ref p, ref btHandle);
                     int bytesReturned = 0;
 

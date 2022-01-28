@@ -25,8 +25,7 @@ namespace DS4WinWPF.DS4Forms
 
         private void ChangeActiveDeviceTab(object sender, EventArgs e)
         {
-            TabItem currentTab = deviceSettingsTabControl.SelectedItem as TabItem;
-            if (currentTab != null)
+            if (deviceSettingsTabControl.SelectedItem is TabItem currentTab)
             {
                 currentTab.DataContext = null;
             }

@@ -36,8 +36,8 @@ namespace DS4Windows
             }
         }
 
-        private readonly Dictionary<int, OutputDevice> deviceDict = new Dictionary<int, OutputDevice>();
-        private readonly Dictionary<OutputDevice, int> revDeviceDict = new Dictionary<OutputDevice, int>();
+        private readonly Dictionary<int, OutputDevice> deviceDict = new();
+        private readonly Dictionary<OutputDevice, int> revDeviceDict = new();
         private readonly OutputDevice[] outputDevices = new OutputDevice[ControlService.CURRENT_DS4_CONTROLLER_LIMIT];
 
         private int queuedTasks = 0;

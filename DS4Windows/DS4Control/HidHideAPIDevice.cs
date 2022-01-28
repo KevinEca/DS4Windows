@@ -76,7 +76,7 @@ namespace DS4WinWPF.DS4Control
 
         public List<string> GetBlacklist()
         {
-            List<string> instances = new List<string>();
+            List<string> instances = new();
 
             int bytesReturned = 0;
             bool result = NativeMethods.DeviceIoControl(hidHideHandle.DangerousGetHandle(),
@@ -141,7 +141,7 @@ namespace DS4WinWPF.DS4Control
 
         public List<string> GetWhitelist()
         {
-            List<string> instances = new List<string>();
+            List<string> instances = new();
 
             int bytesReturned = 0;
             bool result = NativeMethods.DeviceIoControl(hidHideHandle.DangerousGetHandle(),

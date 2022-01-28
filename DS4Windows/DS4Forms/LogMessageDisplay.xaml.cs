@@ -19,10 +19,10 @@ namespace DS4WinWPF.DS4Forms
 
         public LogMessageDisplay(string message) : this()
         {
-            Regex urlReg = new Regex(@"http(s)?://([\w-]+.)+[\w-]+(/[\w- ./?%&=])?");
+            Regex urlReg = new(@"http(s)?://([\w-]+.)+[\w-]+(/[\w- ./?%&=])?");
             message = urlReg.Replace(message, "[$0]($0)");
 
-            MarkdownEngine engine = new MarkdownEngine();
+            MarkdownEngine engine = new();
             FlowDocument tmpDoc = engine.Transform(message);
             tmpDoc.TextAlignment = TextAlignment.Center;
 
@@ -30,7 +30,7 @@ namespace DS4WinWPF.DS4Forms
                 NavigationCommands.GoToPage,
                 (sender, e) =>
                 {
-                    Process proc = new Process();
+                    Process proc = new();
                     proc.StartInfo.UseShellExecute = true;
                     proc.StartInfo.FileName = (string)e.Parameter;
 

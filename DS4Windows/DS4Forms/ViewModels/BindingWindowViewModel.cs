@@ -42,8 +42,10 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             use360Mode = Global.outDevTypeTemp[deviceNum] == OutContType.X360;
             this.settings = settings;
             currentOutBind = new OutBinding();
-            shiftOutBind = new OutBinding();
-            shiftOutBind.shiftBind = true;
+            shiftOutBind = new OutBinding
+            {
+                shiftBind = true
+            };
             PopulateCurrentBinds();
         }
 
@@ -286,7 +288,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
         {
             get
             {
-                string temp = $"#{extrasColor.red.ToString("X2")}FF0000";
+                string temp = $"#{extrasColor.red:X2}FF0000";
                 return temp;
             }
         }
@@ -306,7 +308,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
         {
             get
             {
-                string temp = $"#{ extrasColor.green.ToString("X2")}00FF00";
+                string temp = $"#{ extrasColor.green:X2}00FF00";
                 return temp;
             }
         }
@@ -327,7 +329,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
         {
             get
             {
-                string temp = $"#{extrasColor.blue.ToString("X2")}0000FF";
+                string temp = $"#{extrasColor.blue:X2}0000FF";
                 return temp;
             }
         }
@@ -335,7 +337,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
         public string ExtrasColorString
         {
-            get => $"#FF{extrasColor.red.ToString("X2")}{extrasColor.green.ToString("X2")}{extrasColor.blue.ToString("X2")}";
+            get => $"#FF{extrasColor.red:X2}{extrasColor.green:X2}{extrasColor.blue:X2}";
         }
         public event EventHandler ExtrasColorStringChanged;
 

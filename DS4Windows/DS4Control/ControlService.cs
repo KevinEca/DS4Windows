@@ -38,7 +38,7 @@ namespace DS4Windows
         private readonly DS4State[] PreviousState = new DS4State[MAX_DS4_CONTROLLER_COUNT];
         private readonly DS4State[] TempState = new DS4State[MAX_DS4_CONTROLLER_COUNT];
         public DS4StateExposed[] ExposedState = new DS4StateExposed[MAX_DS4_CONTROLLER_COUNT];
-        public ControllerSlotManager slotManager = new ControllerSlotManager();
+        public ControllerSlotManager slotManager = new();
         public bool recordingMacro = false;
         public event EventHandler<DebugEventArgs> Debug = null;
 
@@ -65,8 +65,8 @@ namespace DS4Windows
         private UdpServer _udpServer;
         private readonly OutputSlotManager outputslotMan;
 
-        private readonly HashSet<string> hidDeviceHidingAffectedDevs = new HashSet<string>();
-        private readonly HashSet<string> hidDeviceHidingExemptedDevs = new HashSet<string>();
+        private readonly HashSet<string> hidDeviceHidingAffectedDevs = new();
+        private readonly HashSet<string> hidDeviceHidingExemptedDevs = new();
         private bool hidDeviceHidingForced = false;
         private bool hidDeviceHidingEnabled = false;
 
@@ -174,10 +174,10 @@ namespace DS4Windows
             //return meta;
         }
 
-        private readonly object busThrLck = new object();
+        private readonly object busThrLck = new();
         private bool busThrRunning = false;
-        private readonly Queue<Action> busEvtQueue = new Queue<Action>();
-        private readonly object busEvtQueueLock = new object();
+        private readonly Queue<Action> busEvtQueue = new();
+        private readonly object busEvtQueueLock = new();
         public ControlService(DS4WinWPF.ArgumentParser cmdParser)
         {
             this.cmdParser = cmdParser;
@@ -408,7 +408,7 @@ namespace DS4Windows
             string temp = Global.GetDeviceProperty(deviceInstanceId,
                 NativeMethods.DEVPKEY_Device_UINumber);
 
-            CheckVirtualInfo info = new CheckVirtualInfo()
+            CheckVirtualInfo info = new()
             {
                 PropertyValue = temp,
                 DeviceInstanceId = deviceInstanceId,
@@ -434,11 +434,12 @@ namespace DS4Windows
         private void DS4Devices_RequestElevation(RequestElevationArgs args)
         {
             // Launches an elevated child process to re-enable device
-            ProcessStartInfo startInfo =
-                new ProcessStartInfo(Global.exelocation);
-            startInfo.Verb = "runas";
-            startInfo.Arguments = "re-enabledevice " + args.InstanceId;
-            startInfo.UseShellExecute = true;
+            ProcessStartInfo startInfo = new(Global.exelocation)
+            {
+                Verb = "runas",
+                Arguments = "re-enabledevice " + args.InstanceId,
+                UseShellExecute = true
+            };
 
             try
             {
@@ -461,7 +462,7 @@ namespace DS4Windows
             if (Global.hidHideInstalled)
             {
                 LogDebug("HidHide control device found");
-                using (HidHideAPIDevice hidHideDevice = new HidHideAPIDevice())
+                using (HidHideAPIDevice hidHideDevice = new())
                 {
                     if (!hidHideDevice.IsOpen())
                     {
@@ -471,7 +472,7 @@ namespace DS4Windows
                     List<string> dosPaths = hidHideDevice.GetWhitelist();
 
                     int maxPathCheckLength = 512;
-                    StringBuilder sb = new StringBuilder(maxPathCheckLength);
+                    StringBuilder sb = new(maxPathCheckLength);
                     string driveLetter = Path.GetPathRoot(Global.exelocation).Replace("\\", "");
                     uint _ = NativeMethods.QueryDosDevice(driveLetter, sb, maxPathCheckLength);
                     //int error = Marshal.GetLastWin32Error();
@@ -512,7 +513,7 @@ namespace DS4Windows
                 hidDeviceHidingForced = false; // No known equivalent in HidHide
                 hidDeviceHidingEnabled = false;
 
-                using (HidHideAPIDevice hidHideDevice = new HidHideAPIDevice())
+                using (HidHideAPIDevice hidHideDevice = new())
                 {
                     if (!hidHideDevice.IsOpen())
                     {
@@ -557,7 +558,7 @@ namespace DS4Windows
 
         private List<DS4Controls> GetKnownExtraButtons(DS4Device dev)
         {
-            List<DS4Controls> result = new List<DS4Controls>();
+            List<DS4Controls> result = new();
             switch (dev.DeviceType)
             {
                 case InputDevices.InputDeviceType.JoyConL:
@@ -1242,7 +1243,7 @@ namespace DS4Windows
                             ChangeExclusiveStatus(device);
                         }
 
-                        Task task = new Task(() => { Thread.Sleep(5); WarnExclusiveModeFailure(device); });
+                        Task task = new(() => { Thread.Sleep(5); WarnExclusiveModeFailure(device); });
                         task.Start();
 
                         PrepareDS4DeviceSettingHooks(device);
@@ -1441,7 +1442,7 @@ namespace DS4Windows
             int tempIdx = index;
             DS4Device.ReportHandler<EventArgs> tempEvnt = (sender, args) =>
             {
-                DualShockPadMeta padDetail = new DualShockPadMeta();
+                DualShockPadMeta padDetail = new();
                 GetPadDetailForIdx(tempIdx, ref padDetail);
                 DS4State stateForUdp = TempState[tempIdx];
 
@@ -1678,7 +1679,7 @@ namespace DS4Windows
                                 ChangeExclusiveStatus(device);
                             }
 
-                            Task task = new Task(() => { Thread.Sleep(5); WarnExclusiveModeFailure(device); });
+                            Task task = new(() => { Thread.Sleep(5); WarnExclusiveModeFailure(device); });
                             task.Start();
 
                             PrepareDS4DeviceSettingHooks(device);
@@ -1918,10 +1919,10 @@ namespace DS4Windows
 
                 if (!procFound)
                 {
-                    Task processTask = new Task(() =>
+                    Task processTask = new(() =>
                     {
                         Thread.Sleep(5000);
-                        System.Diagnostics.Process tempProcess = new System.Diagnostics.Process();
+                        System.Diagnostics.Process tempProcess = new();
                         tempProcess.StartInfo.FileName = programPath;
                         tempProcess.StartInfo.WorkingDirectory = new FileInfo(programPath).Directory.ToString();
                         //tempProcess.StartInfo.UseShellExecute = false;
@@ -1939,7 +1940,7 @@ namespace DS4Windows
             ResetUdpSmoothingFilters(ind);
 
             // Set up filter for new input device
-            OneEuroFilter tempFilter = new OneEuroFilter(OneEuroFilterPair.DEFAULT_WHEEL_CUTOFF,
+            OneEuroFilter tempFilter = new(OneEuroFilterPair.DEFAULT_WHEEL_CUTOFF,
                 OneEuroFilterPair.DEFAULT_WHEEL_BETA);
             Mapping.wheelFilters[ind] = tempFilter;
 
@@ -2033,11 +2034,12 @@ namespace DS4Windows
             if (d != null)
             {
                 string battery;
+                /* KEE - ne sert pas
                 if (!d.IsAlive())
                 {
                     battery = "...";
                 }
-
+                */
                 if (d.IsCharging())
                 {
                     if (d.GetBattery() >= 100)
@@ -2403,7 +2405,7 @@ namespace DS4Windows
                 LogDebug(string.Format(DS4WinWPF.Properties.Resources.LatencyOverTen, (ind + 1), device.Latency), true);
                 if (GetFlashWhenLate())
                 {
-                    DS4Color color = new DS4Color { red = 50, green = 0, blue = 0 };
+                    DS4Color color = new() { red = 50, green = 0, blue = 0 };
                     DS4LightBar.forcedColor[ind] = color;
                     DS4LightBar.forcedFlash[ind] = 2;
                     DS4LightBar.forcelight[ind] = true;
@@ -2620,17 +2622,14 @@ namespace DS4Windows
             //Console.WriteLine(System.DateTime.Now.ToString("G") + "> " + Data);
             if (Debug != null)
             {
-                DebugEventArgs args = new DebugEventArgs(Data, warning);
+                DebugEventArgs args = new(Data, warning);
                 OnDebug(this, args);
             }
         }
 
         public virtual void OnDebug(object sender, DebugEventArgs args)
         {
-            if (Debug != null)
-            {
-                Debug(this, args);
-            }
+            Debug?.Invoke(this, args);
         }
 
         // sets the rumble adjusted with rumble boost. General use method

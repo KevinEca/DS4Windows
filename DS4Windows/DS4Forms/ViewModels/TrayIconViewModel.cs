@@ -31,7 +31,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
                 string temp = value;
                 if (value.Length > 63)
                 {
-                    temp = value.Substring(0, 63);
+                    temp = value[..63];
                 }
 
                 if (tooltipText == temp)
@@ -242,8 +242,10 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
         private void OpenProgramFolderItem_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            ProcessStartInfo startInfo = new ProcessStartInfo(Global.exedirpath);
-            startInfo.UseShellExecute = true;
+            ProcessStartInfo startInfo = new ProcessStartInfo(Global.exedirpath)
+            {
+                UseShellExecute = true
+            };
             using (Process temp = Process.Start(startInfo))
             {
             }
@@ -314,8 +316,10 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
         private void PopulateToolText()
         {
-            List<string> items = new List<string>();
-            items.Add(trayTitle);
+            List<string> items = new List<string>
+            {
+                trayTitle
+            };
             //IEnumerable<DS4Device> devices = DS4Devices.getDS4Controllers();
             int idx = 1;
             //foreach (DS4Device currentDev in devices)

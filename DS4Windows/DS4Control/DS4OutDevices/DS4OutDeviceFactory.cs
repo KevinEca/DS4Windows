@@ -5,7 +5,7 @@ namespace DS4Windows
 {
     static class DS4OutDeviceFactory
     {
-        private static readonly Version extAPIMinVersion = new Version("1.17.333.0");
+        private static readonly Version extAPIMinVersion = new("1.17.333.0");
 
         public static DS4OutDevice CreateDS4Device(ViGEmClient client,
             Version driverVersion)

@@ -7,7 +7,7 @@ namespace DS4Windows
     {
         protected DateTime pastTime, firstTap, TimeofEnd;
         protected Touch firstTouch, secondTouch;
-        private DS4State s = new DS4State();
+        private DS4State s = new();
         protected int deviceNum;
         private readonly DS4Device dev = null;
         private readonly MouseCursor cursor;
@@ -358,7 +358,7 @@ namespace DS4Windows
             }
         }
 
-        private OneEuroFilterPair filterPair = new OneEuroFilterPair();
+        private OneEuroFilterPair filterPair = new();
 
         public void ReplaceOneEuroFilterPair()
         {

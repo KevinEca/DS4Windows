@@ -13,13 +13,10 @@ namespace DS4WinWPF.DS4Forms
     /// </summary>
     public partial class BindingWindow : Window
     {
-        private readonly Dictionary<Button, BindAssociation> associatedBindings =
-            new Dictionary<Button, BindAssociation>();
-        private readonly Dictionary<int, Button> keyBtnMap = new Dictionary<int, Button>();
-        private readonly Dictionary<DS4Windows.X360Controls, Button> conBtnMap =
-            new Dictionary<DS4Windows.X360Controls, Button>();
-        private readonly Dictionary<DS4Windows.X360Controls, Button> mouseBtnMap =
-            new Dictionary<DS4Windows.X360Controls, Button>();
+        private readonly Dictionary<Button, BindAssociation> associatedBindings = new();
+        private readonly Dictionary<int, Button> keyBtnMap = new();
+        private readonly Dictionary<DS4Windows.X360Controls, Button> conBtnMap = new();
+        private readonly Dictionary<DS4Windows.X360Controls, Button> mouseBtnMap = new();
         private readonly BindingWindowViewModel bindingVM;
         private Button highlightBtn;
         private readonly ExposeMode expose;
@@ -728,7 +725,7 @@ namespace DS4WinWPF.DS4Forms
 
         private void InitDS4Canvas()
         {
-            ImageSourceConverter sourceConverter = new ImageSourceConverter();
+            ImageSourceConverter sourceConverter = new();
             ImageSource temp = sourceConverter.
                 ConvertFromString($"{DS4Windows.Global.ASSEMBLY_RESOURCE_PREFIX}component/Resources/{App.Current.FindResource("DS4ConfigImg")}") as ImageSource;
             conImageBrush.ImageSource = temp;
@@ -832,8 +829,10 @@ namespace DS4WinWPF.DS4Forms
 
         private void ExtrasColorChoosebtn_Click(object sender, RoutedEventArgs e)
         {
-            ColorPickerWindow dialog = new ColorPickerWindow();
-            dialog.Owner = Application.Current.MainWindow;
+            ColorPickerWindow dialog = new()
+            {
+                Owner = Application.Current.MainWindow
+            };
             OutBinding actBind = bindingVM.ActionBinding;
             Color tempcolor = actBind.ExtrasColorMedia;
             dialog.colorPicker.SelectedColor = tempcolor;
@@ -874,9 +873,11 @@ namespace DS4WinWPF.DS4Forms
 
         private void RecordMacroBtn_Click(object sender, RoutedEventArgs e)
         {
-            RecordBox box = new RecordBox(bindingVM.DeviceNum, bindingVM.Settings,
-                bindingVM.ActionBinding.IsShift());
-            box.Visibility = Visibility.Visible;
+            RecordBox box = new(bindingVM.DeviceNum, bindingVM.Settings,
+                bindingVM.ActionBinding.IsShift())
+            {
+                Visibility = Visibility.Visible
+            };
             mapBindingPanel.Visibility = Visibility.Collapsed;
             extrasGB.IsEnabled = false;
             fullPanel.Children.Add(box);

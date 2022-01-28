@@ -16,7 +16,7 @@ namespace DS4WinWPF
         private uint prevForegroundProcessID;
         private string prevForegroundProcessName = string.Empty;
         private string prevForegroundWndTitleName = string.Empty;
-        private readonly StringBuilder autoProfileCheckTextBuilder = new StringBuilder(1000);
+        private readonly StringBuilder autoProfileCheckTextBuilder = new(1000);
         private int autoProfileDebugLogLevel = 0;
         private bool turnOffTemp;
         private AutoProfileEntity tempAutoProfile;
@@ -35,11 +35,11 @@ namespace DS4WinWPF
 
         public void Process()
         {
-            string topProcessName, topWindowTitle;
+            string topWindowTitle;
             bool turnOffDS4WinApp = false;
             AutoProfileEntity matchedProfileEntity = null;
 
-            if (GetTopWindowName(out topProcessName, out topWindowTitle))
+            if (GetTopWindowName(out string topProcessName, out topWindowTitle))
             {
                 // Find a profile match based on autoprofile program path and wnd title list.
                 // The same program may set different profiles for each of the controllers, so we need an array of newProfileName[controllerIdx] values.
@@ -192,8 +192,7 @@ namespace DS4WinWPF
             prevForegroundWnd = hWnd;
 
             IntPtr hProcess = IntPtr.Zero;
-            uint lpdwProcessId = 0;
-            GetWindowThreadProcessId(hWnd, out lpdwProcessId);
+            GetWindowThreadProcessId(hWnd, out uint lpdwProcessId);
 
             if (lpdwProcessId == prevForegroundProcessID)
             {
@@ -242,7 +241,7 @@ namespace DS4WinWPF
 
                 // Wait until DS4Win app service is running or stopped (as requested by serviceRunningStatus value) or timeout.
                 // LoadProfile call fails if a new profile is loaded while DS4Win service is still in stopped state (ie the loaded temp profile doesn't do anything).
-                Stopwatch sw = new Stopwatch();
+                Stopwatch sw = new();
                 sw.Start();
                 while (App.rootHub.running != serviceRunningStatus && sw.Elapsed.TotalSeconds < 10)
                 {

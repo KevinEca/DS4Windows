@@ -80,10 +80,10 @@ namespace DS4Windows
         public DS4KeyType keyType = DS4KeyType.None;
         public enum ActionType : byte { Default, Key, Button, Macro };
         public ActionType actionType = ActionType.Default;
-        public ControlActionData action = new ControlActionData();
+        public ControlActionData action = new();
 
         public ActionType shiftActionType = ActionType.Default;
-        public ControlActionData shiftAction = new ControlActionData();
+        public ControlActionData shiftAction = new();
         public int shiftTrigger = 0;
         public string shiftExtras = null;
         public DS4KeyType shiftKeyType = DS4KeyType.None;
@@ -101,14 +101,16 @@ namespace DS4Windows
             extras = null;
             keyType = DS4KeyType.None;
             actionType = ActionType.Default;
-            action = new ControlActionData();
-            action.actionAlias = 0;
-            //actionAlias = 0;
+            action = new ControlActionData
+            {
+                actionAlias = 0
+            };
 
             shiftActionType = ActionType.Default;
-            shiftAction = new ControlActionData();
-            shiftAction.actionAlias = 0;
-            //shiftActionAlias = 0;
+            shiftAction = new ControlActionData
+            {
+                actionAlias = 0
+            };
             shiftTrigger = 0;
             shiftExtras = null;
             shiftKeyType = DS4KeyType.None;
@@ -140,10 +142,10 @@ namespace DS4Windows
                         Enum.TryParse(act.ToString(), out action.actionBtn);
                     }
                 }
-                else if (act is int[])
+                else if (act is int[] v)
                 {
                     actionType = ActionType.Macro;
-                    action.actionMacro = (int[])act;
+                    action.actionMacro = v;
                 }
                 else
                 {
@@ -164,9 +166,9 @@ namespace DS4Windows
                 else if (act is string || act is X360Controls)
                 {
                     shiftActionType = ActionType.Button;
-                    if (act is X360Controls)
+                    if (act is X360Controls controls)
                     {
-                        shiftAction.actionBtn = (X360Controls)act;
+                        shiftAction.actionBtn = controls;
                     }
                     else
                     {
@@ -193,8 +195,8 @@ namespace DS4Windows
 
     public class ControlSettingsGroup
     {
-        public List<DS4ControlSettings> LS = new List<DS4ControlSettings>();
-        public List<DS4ControlSettings> RS = new List<DS4ControlSettings>();
+        public List<DS4ControlSettings> LS = new();
+        public List<DS4ControlSettings> RS = new();
         public DS4ControlSettings L2;
         public DS4ControlSettings L2FullPull;
         public DS4ControlSettings R2;
@@ -205,11 +207,9 @@ namespace DS4Windows
         public DS4ControlSettings GyroSwipeUp;
         public DS4ControlSettings GyroSwipeDown;
 
-        public List<DS4ControlSettings> ControlButtons =
-            new List<DS4ControlSettings>();
+        public List<DS4ControlSettings> ControlButtons = new();
 
-        public List<DS4ControlSettings> ExtraDeviceButtons =
-            new List<DS4ControlSettings>();
+        public List<DS4ControlSettings> ExtraDeviceButtons = new();
 
         private readonly List<DS4ControlSettings> settingsList;
 
@@ -408,8 +408,8 @@ namespace DS4Windows
         public const double DEFAULT_WHEEL_CUTOFF = 0.1;
         public const double DEFAULT_WHEEL_BETA = 0.1;
 
-        public OneEuroFilter axis1Filter = new OneEuroFilter(minCutoff: DEFAULT_WHEEL_CUTOFF, beta: DEFAULT_WHEEL_BETA);
-        public OneEuroFilter axis2Filter = new OneEuroFilter(minCutoff: DEFAULT_WHEEL_CUTOFF, beta: DEFAULT_WHEEL_BETA);
+        public OneEuroFilter axis1Filter = new(minCutoff: DEFAULT_WHEEL_CUTOFF, beta: DEFAULT_WHEEL_BETA);
+        public OneEuroFilter axis2Filter = new(minCutoff: DEFAULT_WHEEL_CUTOFF, beta: DEFAULT_WHEEL_BETA);
     }
 
     public class OneEuroFilter3D
@@ -417,9 +417,9 @@ namespace DS4Windows
         public const double DEFAULT_WHEEL_CUTOFF = 0.4;
         public const double DEFAULT_WHEEL_BETA = 0.2;
 
-        public OneEuroFilter axis1Filter = new OneEuroFilter(minCutoff: DEFAULT_WHEEL_CUTOFF, beta: DEFAULT_WHEEL_BETA);
-        public OneEuroFilter axis2Filter = new OneEuroFilter(minCutoff: DEFAULT_WHEEL_CUTOFF, beta: DEFAULT_WHEEL_BETA);
-        public OneEuroFilter axis3Filter = new OneEuroFilter(minCutoff: DEFAULT_WHEEL_CUTOFF, beta: DEFAULT_WHEEL_BETA);
+        public OneEuroFilter axis1Filter = new(minCutoff: DEFAULT_WHEEL_CUTOFF, beta: DEFAULT_WHEEL_BETA);
+        public OneEuroFilter axis2Filter = new(minCutoff: DEFAULT_WHEEL_CUTOFF, beta: DEFAULT_WHEEL_BETA);
+        public OneEuroFilter axis3Filter = new(minCutoff: DEFAULT_WHEEL_CUTOFF, beta: DEFAULT_WHEEL_BETA);
 
         public void SetFilterAttrs(double minCutoff, double beta)
         {
@@ -436,9 +436,9 @@ namespace DS4Windows
         public const int OLD_XINPUT_CONTROLLER_COUNT = 4;
         public const byte DS4_STICK_AXIS_MIDPOINT = 128;
 
-        public static CultureInfo configFileDecimalCulture = new CultureInfo("en-US"); // Loading and Saving decimal values in configuration files should always use en-US decimal format (ie. dot char as decimal separator char, not comma char)
+        public static CultureInfo configFileDecimalCulture = new("en-US"); // Loading and Saving decimal values in configuration files should always use en-US decimal format (ie. dot char as decimal separator char, not comma char)
 
-        protected static BackingStore m_Config = new BackingStore();
+        protected static BackingStore m_Config = new();
         protected static Int32 m_IdleTimeout = 600000;
 
         public static string exelocation = Process.GetCurrentProcess().MainModule.FileName;
@@ -509,9 +509,9 @@ namespace DS4Windows
         //public static string vigembusVersion = ViGEmBusVersion();
         public static string vigembusVersion = BLANK_VIGEMBUS_VERSION;
         public static Version vigemBusVersionInfo =
-            new Version(!string.IsNullOrEmpty(vigembusVersion) ? vigembusVersion :
+            new(!string.IsNullOrEmpty(vigembusVersion) ? vigembusVersion :
                 BLANK_VIGEMBUS_VERSION);
-        public static Version minSupportedViGEmBusVersionInfo = new Version(MIN_SUPPORTED_VIGEMBUS_VERSION);
+        public static Version minSupportedViGEmBusVersionInfo = new(MIN_SUPPORTED_VIGEMBUS_VERSION);
         public static bool hidHideInstalled = IsHidHideInstalled();
         public static bool fakerInputInstalled = IsFakerInputInstalled();
         public const string BLANK_FAKERINPUT_VERSION = "0.0.0.0";
@@ -596,7 +596,7 @@ namespace DS4Windows
             return temp;
         })();
 
-        public static Dictionary<X360Controls, string> xboxDefaultNames = new Dictionary<X360Controls, string>()
+        public static Dictionary<X360Controls, string> xboxDefaultNames = new()
         {
             [X360Controls.LXNeg] = "Left X-Axis-",
             [X360Controls.LXPos] = "Left X-Axis+",
@@ -639,7 +639,7 @@ namespace DS4Windows
             [X360Controls.None] = "Unassigned",
         };
 
-        public static Dictionary<X360Controls, string> ds4DefaultNames = new Dictionary<X360Controls, string>()
+        public static Dictionary<X360Controls, string> ds4DefaultNames = new()
         {
             [X360Controls.LXNeg] = "Left X-Axis-",
             [X360Controls.LXPos] = "Left X-Axis+",
@@ -696,7 +696,7 @@ namespace DS4Windows
             return result;
         }
 
-        public static Dictionary<DS4Controls, string> ds4inputNames = new Dictionary<DS4Controls, string>()
+        public static Dictionary<DS4Controls, string> ds4inputNames = new()
         {
             [DS4Controls.LXNeg] = "Left X-Axis-",
             [DS4Controls.LXPos] = "Left X-Axis+",
@@ -750,7 +750,7 @@ namespace DS4Windows
             [DS4Controls.GyroSwipeDown] = "Gyro Swipe Down",
         };
 
-        public static Dictionary<DS4Controls, int> macroDS4Values = new Dictionary<DS4Controls, int>()
+        public static Dictionary<DS4Controls, int> macroDS4Values = new()
         {
             [DS4Controls.Cross] = 261,
             [DS4Controls.Circle] = 262,
@@ -783,7 +783,7 @@ namespace DS4Windows
             [DS4Controls.TouchMulti] = 286,
         };
 
-        public static Dictionary<TrayIconChoice, string> iconChoiceResources = new Dictionary<TrayIconChoice, string>
+        public static Dictionary<TrayIconChoice, string> iconChoiceResources = new()
         {
             [TrayIconChoice.Default] = "/DS4Windows;component/Resources/DS4W.ico",
             [TrayIconChoice.Colored] = "/DS4Windows;component/Resources/DS4W.ico",
@@ -803,7 +803,7 @@ namespace DS4Windows
         public static bool SaveDefault(string path)
         {
             Boolean Saved = true;
-            XmlDocument m_Xdoc = new XmlDocument();
+            XmlDocument m_Xdoc = new();
             try
             {
                 XmlNode Node;
@@ -859,8 +859,7 @@ namespace DS4Windows
         {
             bool result = false;
             Guid deviceGuid = Guid.Parse(guid);
-            NativeMethods.SP_DEVINFO_DATA deviceInfoData =
-                new NativeMethods.SP_DEVINFO_DATA();
+            NativeMethods.SP_DEVINFO_DATA deviceInfoData = new();
             deviceInfoData.cbSize =
                 System.Runtime.InteropServices.Marshal.SizeOf(deviceInfoData);
 
@@ -891,8 +890,7 @@ namespace DS4Windows
         {
             bool result = false;
             Guid deviceGuid = Guid.Parse(VIGEMBUS_GUID);
-            NativeMethods.SP_DEVINFO_DATA deviceInfoData =
-                new NativeMethods.SP_DEVINFO_DATA();
+            NativeMethods.SP_DEVINFO_DATA deviceInfoData = new();
             deviceInfoData.cbSize =
                 System.Runtime.InteropServices.Marshal.SizeOf(deviceInfoData);
 
@@ -908,13 +906,13 @@ namespace DS4Windows
                 NativeMethods.DEVPKEY_Device_DeviceDesc,
             };
 
-            List<ViGEmBusInfo> tempViGEmBusInfoList = new List<ViGEmBusInfo>();
+            List<ViGEmBusInfo> tempViGEmBusInfoList = new();
 
             IntPtr deviceInfoSet = NativeMethods.SetupDiGetClassDevs(ref deviceGuid, null, 0,
                 NativeMethods.DIGCF_DEVICEINTERFACE);
             for (int i = 0; !result && NativeMethods.SetupDiEnumDeviceInfo(deviceInfoSet, i, ref deviceInfoData); i++)
             {
-                ViGEmBusInfo tempBusInfo = new ViGEmBusInfo();
+                ViGEmBusInfo tempBusInfo = new();
 
                 foreach (NativeMethods.DEVPROPKEY currentDevKey in lookupProperties)
                 {
@@ -972,7 +970,7 @@ namespace DS4Windows
 
             // Iterate over list and find most recent version number
             //IEnumerable<ViGEmBusInfo> tempResults = tempViGEmBusInfoList.Where(item => minSupportedViGEmBusVersionInfo.CompareTo(item.deviceVersion) <= 0);
-            Version latestKnown = new Version(BLANK_VIGEMBUS_VERSION);
+            Version latestKnown = new(BLANK_VIGEMBUS_VERSION);
             string deviceInstanceId = string.Empty;
             foreach (ViGEmBusInfo item in tempViGEmBusInfoList)
             {
@@ -993,8 +991,7 @@ namespace DS4Windows
         {
             bool result = false;
             Guid sysGuid = Guid.Parse("{4d36e97d-e325-11ce-bfc1-08002be10318}");
-            NativeMethods.SP_DEVINFO_DATA deviceInfoData =
-                new NativeMethods.SP_DEVINFO_DATA();
+            NativeMethods.SP_DEVINFO_DATA deviceInfoData = new();
             deviceInfoData.cbSize =
                 System.Runtime.InteropServices.Marshal.SizeOf(deviceInfoData);
             var dataBuffer = new byte[4096];
@@ -1029,13 +1026,13 @@ namespace DS4Windows
             NativeMethods.DEVPROPKEY prop)
         {
             string result = string.Empty;
-            NativeMethods.SP_DEVINFO_DATA deviceInfoData = new NativeMethods.SP_DEVINFO_DATA();
+            NativeMethods.SP_DEVINFO_DATA deviceInfoData = new();
             deviceInfoData.cbSize = System.Runtime.InteropServices.Marshal.SizeOf(deviceInfoData);
             var dataBuffer = new byte[4096];
             ulong propertyType = 0;
             var requiredSize = 0;
 
-            Guid hidGuid = new Guid();
+            Guid hidGuid = new();
             NativeMethods.HidD_GetHidGuid(ref hidGuid);
             IntPtr deviceInfoSet = NativeMethods.SetupDiGetClassDevs(ref hidGuid, deviceInstanceId, 0, NativeMethods.DIGCF_PRESENT | NativeMethods.DIGCF_DEVICEINTERFACE);
             NativeMethods.SetupDiEnumDeviceInfo(deviceInfoSet, 0, ref deviceInfoData);
@@ -1116,7 +1113,7 @@ namespace DS4Windows
             // Start with BLANK_FAKERINPUT_VERSION for result
             string result = BLANK_FAKERINPUT_VERSION;
             IntPtr deviceInfoSet = NativeMethods.SetupDiGetClassDevs(ref Util.fakerInputGuid, null, 0, NativeMethods.DIGCF_DEVICEINTERFACE);
-            NativeMethods.SP_DEVINFO_DATA deviceInfoData = new NativeMethods.SP_DEVINFO_DATA();
+            NativeMethods.SP_DEVINFO_DATA deviceInfoData = new();
             deviceInfoData.cbSize = System.Runtime.InteropServices.Marshal.SizeOf(deviceInfoData);
             bool foundDev = false;
             //bool success = NativeMethods.SetupDiEnumDeviceInfo(deviceInfoSet, 0, ref deviceInfoData);
@@ -1194,7 +1191,7 @@ namespace DS4Windows
 
         public static void CreateStdActions()
         {
-            XmlDocument xDoc = new XmlDocument();
+            XmlDocument xDoc = new();
             try
             {
                 string[] profiles = Directory.GetFiles(appdatapath + @"\Profiles\");
@@ -1241,7 +1238,7 @@ namespace DS4Windows
             try
             {
                 XmlNode Node;
-                XmlDocument doc = new XmlDocument();
+                XmlDocument doc = new();
 
                 Node = doc.CreateXmlDeclaration("1.0", "utf-8", String.Empty);
                 doc.AppendChild(Node);
@@ -1264,10 +1261,7 @@ namespace DS4Windows
         public static event EventHandler<EventArgs> ControllerStatusChange; // called when a controller is added/removed/battery or touchpad mode changes/etc.
         public static void ControllerStatusChanged(object sender)
         {
-            if (ControllerStatusChange != null)
-            {
-                ControllerStatusChange(sender, EventArgs.Empty);
-            }
+            ControllerStatusChange?.Invoke(sender, EventArgs.Empty);
         }
 
         public static event EventHandler<BatteryReportArgs> BatteryStatusChange;
@@ -1275,7 +1269,7 @@ namespace DS4Windows
         {
             if (BatteryStatusChange != null)
             {
-                BatteryReportArgs args = new BatteryReportArgs(index, level, charging);
+                BatteryReportArgs args = new(index, level, charging);
                 BatteryStatusChange(sender, args);
             }
         }
@@ -1285,7 +1279,7 @@ namespace DS4Windows
         {
             if (ControllerRemoved != null)
             {
-                ControllerRemovedArgs args = new ControllerRemovedArgs(index);
+                ControllerRemovedArgs args = new(index);
                 ControllerRemoved(sender, args);
             }
         }
@@ -1295,7 +1289,7 @@ namespace DS4Windows
         {
             if (DeviceStatusChange != null)
             {
-                DeviceStatusChangeEventArgs args = new DeviceStatusChangeEventArgs(index);
+                DeviceStatusChangeEventArgs args = new(index);
                 DeviceStatusChange(sender, args);
             }
         }
@@ -1305,7 +1299,7 @@ namespace DS4Windows
         {
             if (DeviceSerialChange != null)
             {
-                SerialChangeArgs args = new SerialChangeArgs(index, serial);
+                SerialChangeArgs args = new(index, serial);
                 DeviceSerialChange(sender, args);
             }
         }
@@ -1315,7 +1309,7 @@ namespace DS4Windows
             ulong result = 0;
             try
             {
-                Version tmpVersion = new Version(versionStr);
+                Version tmpVersion = new(versionStr);
                 result = CompileVersionNumber(tmpVersion.Major, tmpVersion.Minor,
                     tmpVersion.Build, tmpVersion.Revision);
             }
@@ -2603,7 +2597,7 @@ namespace DS4Windows
         public static DS4Color GetTransitionedColor(ref DS4Color c1, ref DS4Color c2, double ratio)
         {
             //Color cs = Color.FromArgb(c1.red, c1.green, c1.blue);
-            DS4Color cs = new DS4Color
+            DS4Color cs = new()
             {
                 red = ApplyRatio(c1.red, c2.red, ratio),
                 green = ApplyRatio(c1.green, c2.green, ratio),
@@ -2750,7 +2744,7 @@ namespace DS4Windows
         public string m_linkedProfiles = Global.appdatapath + "\\LinkedProfiles.xml";
         public string m_controllerConfigs = Global.appdatapath + "\\ControllerConfigs.xml";
 
-        protected XmlDocument m_Xdoc = new XmlDocument();
+        protected XmlDocument m_Xdoc = new();
         // ninth (fifth in old builds) value used for options, not last controller
         public ButtonMouseInfo[] buttonMouseInfos = new ButtonMouseInfo[Global.TEST_PROFILE_ITEM_COUNT]
         {
@@ -2767,7 +2761,7 @@ namespace DS4Windows
         public bool[] touchClickPassthru = new bool[Global.TEST_PROFILE_ITEM_COUNT] { false, false, false, false, false, false, false, false, false };
         public string[] profilePath = new string[Global.TEST_PROFILE_ITEM_COUNT] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
         public string[] olderProfilePath = new string[Global.TEST_PROFILE_ITEM_COUNT] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
-        public Dictionary<string, string> linkedProfiles = new Dictionary<string, string>();
+        public Dictionary<string, string> linkedProfiles = new();
         // Cache properties instead of performing a string comparison every frame
         public bool[] distanceProfiles = new bool[Global.TEST_PROFILE_ITEM_COUNT] { false, false, false, false, false, false, false, false, false };
         public Byte[] rumble = new Byte[Global.TEST_PROFILE_ITEM_COUNT] { 100, 100, 100, 100, 100, 100, 100, 100, 100 };
@@ -3058,7 +3052,7 @@ namespace DS4Windows
         public bool ds4Mapping = false;
         public bool quickCharge = false;
         public bool closeMini = false;
-        public List<SpecialAction> actions = new List<SpecialAction>();
+        public List<SpecialAction> actions = new();
         public List<DS4ControlSettings>[] ds4settings = new List<DS4ControlSettings>[Global.TEST_PROFILE_ITEM_COUNT]
             { new List<DS4ControlSettings>(), new List<DS4ControlSettings>(), new List<DS4ControlSettings>(),
               new List<DS4ControlSettings>(), new List<DS4ControlSettings>(), new List<DS4ControlSettings>(), new List<DS4ControlSettings>(), new List<DS4ControlSettings>(), new List<DS4ControlSettings>() };
@@ -3090,8 +3084,7 @@ namespace DS4Windows
         public AppThemeChoice useCurrentTheme;
         public string fakeExeFileName = string.Empty;
 
-        public ControlServiceDeviceOptions deviceOptions =
-            new ControlServiceDeviceOptions();
+        public ControlServiceDeviceOptions deviceOptions = new();
 
         // Cache whether profile has custom action
         public bool[] containsCustomAction = new bool[Global.TEST_PROFILE_ITEM_COUNT] { false, false, false, false, false, false, false, false, false };
@@ -3135,8 +3128,6 @@ namespace DS4Windows
         // TRUE=AutoProfile reverts to default profile if current foreground process is unknown, FALSE=Leave existing profile active when a foreground proces is unknown (ie. no matching auto-profile rule)
         public bool autoProfileRevertDefaultProfile = true;
 
-        bool tempBool = false;
-
         public BackingStore()
         {
             ds4controlSettings = new ControlSettingsGroup[Global.TEST_PROFILE_ITEM_COUNT];
@@ -3162,8 +3153,10 @@ namespace DS4Windows
 
         public void EstablishDefaultSpecialActions(int idx)
         {
-            profileActions[idx] = new List<string>();
-            profileActions[idx].Add("Disconnect Controller");
+            profileActions[idx] = new List<string>
+            {
+                "Disconnect Controller"
+            };
             profileActionCount[idx] = profileActions[idx].Count;
         }
 
@@ -4279,16 +4272,16 @@ namespace DS4Windows
             string propath = "", bool xinputChange = true, bool postLoad = true)
         {
             bool Loaded = true;
-            Dictionary<DS4Controls, DS4KeyType> customMapKeyTypes = new Dictionary<DS4Controls, DS4KeyType>();
-            Dictionary<DS4Controls, UInt16> customMapKeys = new Dictionary<DS4Controls, UInt16>();
-            Dictionary<DS4Controls, X360Controls> customMapButtons = new Dictionary<DS4Controls, X360Controls>();
-            Dictionary<DS4Controls, String> customMapMacros = new Dictionary<DS4Controls, String>();
-            Dictionary<DS4Controls, String> customMapExtras = new Dictionary<DS4Controls, String>();
-            Dictionary<DS4Controls, DS4KeyType> shiftCustomMapKeyTypes = new Dictionary<DS4Controls, DS4KeyType>();
-            Dictionary<DS4Controls, UInt16> shiftCustomMapKeys = new Dictionary<DS4Controls, UInt16>();
-            Dictionary<DS4Controls, X360Controls> shiftCustomMapButtons = new Dictionary<DS4Controls, X360Controls>();
-            Dictionary<DS4Controls, String> shiftCustomMapMacros = new Dictionary<DS4Controls, String>();
-            Dictionary<DS4Controls, String> shiftCustomMapExtras = new Dictionary<DS4Controls, String>();
+            Dictionary<DS4Controls, DS4KeyType> customMapKeyTypes = new();
+            Dictionary<DS4Controls, UInt16> customMapKeys = new();
+            Dictionary<DS4Controls, X360Controls> customMapButtons = new();
+            Dictionary<DS4Controls, String> customMapMacros = new();
+            Dictionary<DS4Controls, String> customMapExtras = new();
+            Dictionary<DS4Controls, DS4KeyType> shiftCustomMapKeyTypes = new();
+            Dictionary<DS4Controls, UInt16> shiftCustomMapKeys = new();
+            Dictionary<DS4Controls, X360Controls> shiftCustomMapButtons = new();
+            Dictionary<DS4Controls, String> shiftCustomMapMacros = new();
+            Dictionary<DS4Controls, String> shiftCustomMapExtras = new();
             string rootname = "DS4Windows";
             bool missingSetting = false;
             bool migratePerformed = false;
@@ -4309,7 +4302,7 @@ namespace DS4Windows
             {
                 XmlNode Item;
 
-                ProfileMigration tmpMigration = new ProfileMigration(profilepath);
+                ProfileMigration tmpMigration = new(profilepath);
                 if (tmpMigration.RequiresMigration())
                 {
                     tmpMigration.Migrate();
@@ -5053,10 +5046,10 @@ namespace DS4Windows
 
                     if (!procFound)
                     {
-                        Task processTask = new Task(() =>
+                        Task processTask = new(() =>
                         {
                             Thread.Sleep(5000);
-                            System.Diagnostics.Process tempProcess = new System.Diagnostics.Process();
+                            System.Diagnostics.Process tempProcess = new();
                             tempProcess.StartInfo.FileName = programPath;
                             tempProcess.StartInfo.WorkingDirectory = new FileInfo(programPath).Directory.ToString();
                             //tempProcess.StartInfo.UseShellExecute = false;
@@ -5470,7 +5463,7 @@ namespace DS4Windows
                     Item = m_Xdoc.SelectSingleNode("/" + rootname + "/TouchDisInvTriggers");
                     string[] triggers = Item.InnerText.Split(',');
                     int temp = -1;
-                    List<int> tempIntList = new List<int>();
+                    List<int> tempIntList = new();
                     for (int i = 0, arlen = triggers.Length; i < arlen; i++)
                     {
                         if (int.TryParse(triggers[i], out temp))
@@ -6686,7 +6679,7 @@ namespace DS4Windows
 
         private void CreateAction()
         {
-            XmlDocument m_Xdoc = new XmlDocument();
+            XmlDocument m_Xdoc = new();
             PrepareActionsXml(m_Xdoc);
             m_Xdoc.Save(m_Actions);
         }
@@ -6831,7 +6824,7 @@ namespace DS4Windows
             try
             {
                 actions.Clear();
-                XmlDocument doc = new XmlDocument();
+                XmlDocument doc = new();
                 doc.Load(Global.appdatapath + "\\Actions.xml");
                 XmlNodeList actionslist = doc.SelectNodes("Actions/Action");
                 string name, controls, type, details, extras, extras2;
@@ -6955,7 +6948,7 @@ namespace DS4Windows
         public bool CreateLinkedProfiles()
         {
             bool saved = true;
-            XmlDocument m_Xdoc = new XmlDocument();
+            XmlDocument m_Xdoc = new();
             XmlNode Node;
 
             Node = m_Xdoc.CreateXmlDeclaration("1.0", "utf-8", string.Empty);
@@ -6981,7 +6974,7 @@ namespace DS4Windows
             bool loaded = true;
             if (File.Exists(m_linkedProfiles))
             {
-                XmlDocument linkedXdoc = new XmlDocument();
+                XmlDocument linkedXdoc = new();
                 XmlNode Node;
                 linkedXdoc.Load(m_linkedProfiles);
                 linkedProfiles.Clear();
@@ -7014,7 +7007,7 @@ namespace DS4Windows
             bool saved = true;
             if (File.Exists(m_linkedProfiles))
             {
-                XmlDocument linkedXdoc = new XmlDocument();
+                XmlDocument linkedXdoc = new();
                 XmlNode Node;
 
                 Node = linkedXdoc.CreateXmlDeclaration("1.0", "utf-8", string.Empty);
@@ -7056,7 +7049,7 @@ namespace DS4Windows
         public bool CreateControllerConfigs()
         {
             bool saved = true;
-            XmlDocument configXdoc = new XmlDocument();
+            XmlDocument configXdoc = new();
             XmlNode Node;
 
             Node = configXdoc.CreateXmlDeclaration("1.0", "utf-8", string.Empty);
@@ -7093,7 +7086,7 @@ namespace DS4Windows
 
             try
             {
-                XmlDocument xmlDoc = new XmlDocument();
+                XmlDocument xmlDoc = new();
                 xmlDoc.Load(m_controllerConfigs);
 
                 XmlNode node = xmlDoc.SelectSingleNode("/Controllers/Controller[@Mac=\"" + device.GetMacAddress() + "\"]");
@@ -7161,7 +7154,7 @@ namespace DS4Windows
             try
             {
                 //XmlNode node = null;
-                XmlDocument xmlDoc = new XmlDocument();
+                XmlDocument xmlDoc = new();
                 xmlDoc.Load(m_controllerConfigs);
 
                 XmlNode node = xmlDoc.SelectSingleNode("/Controllers/Controller[@Mac=\"" + device.GetMacAddress() + "\"]");
@@ -8240,9 +8233,9 @@ namespace DS4Windows
             {
                 bool oldUseDInputOnly = Global.useDInputOnly[device];
                 DS4Device tempDevice = control.DS4Controllers[device];
-                bool exists = tempBool = (tempDevice != null);
-                bool synced = tempBool = exists ? tempDevice.IsSynced() : false;
-                bool isAlive = tempBool = exists ? tempDevice.IsAlive() : false;
+                bool exists = (tempDevice != null);
+                bool synced = exists && tempDevice.IsSynced();
+                bool isAlive = exists && tempDevice.IsAlive();
                 if (dinputOnly[device] != oldUseDInputOnly)
                 {
                     if (dinputOnly[device] == true)
@@ -8313,13 +8306,13 @@ namespace DS4Windows
         public enum ActionTypeId { None, Key, Program, Profile, Macro, DisconnectBT, BatteryCheck, MultiAction, XboxGameDVR, SASteeringWheelEmulationCalibrate }
 
         public string name;
-        public List<DS4Controls> trigger = new List<DS4Controls>();
+        public List<DS4Controls> trigger = new();
         public string type;
         public ActionTypeId typeID;
         public string controls;
-        public List<int> macro = new List<int>();
+        public List<int> macro = new();
         public string details;
-        public List<DS4Controls> uTrigger = new List<DS4Controls>();
+        public List<DS4Controls> uTrigger = new();
         public string ucontrols;
         public double delayTime = 0;
         public string extra;
@@ -8443,7 +8436,7 @@ namespace DS4Windows
             {
                 this.typeID = ActionTypeId.XboxGameDVR;
                 string[] dets = details.Split(',');
-                List<string> macros = new List<string>();
+                List<string> macros = new();
                 //string dets = "";
                 int typeT = 0;
                 for (int i = 0; i < 3; i++)

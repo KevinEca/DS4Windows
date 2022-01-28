@@ -10,8 +10,7 @@ namespace DS4Windows
 
         public IDualShock4Controller cont;
         //public DualShock4FeedbackReceivedEventHandler forceFeedbackCall;
-        public Dictionary<int, DualShock4FeedbackReceivedEventHandler> forceFeedbacksDict =
-            new Dictionary<int, DualShock4FeedbackReceivedEventHandler>();
+        public Dictionary<int, DualShock4FeedbackReceivedEventHandler> forceFeedbacksDict = new();
 
         public DS4OutDevice(ViGEmClient client)
         {

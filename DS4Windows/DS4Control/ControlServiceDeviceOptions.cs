@@ -6,17 +6,10 @@ namespace DS4Windows
 {
     public class ControlServiceDeviceOptions
     {
-        private readonly DS4DeviceOptions dS4DeviceOpts = new DS4DeviceOptions();
-        public DS4DeviceOptions DS4DeviceOpts { get => dS4DeviceOpts; }
-
-        private readonly DualSenseDeviceOptions dualSenseOpts = new DualSenseDeviceOptions();
-        public DualSenseDeviceOptions DualSenseOpts { get => dualSenseOpts; }
-
-        private readonly SwitchProDeviceOptions switchProDeviceOpts = new SwitchProDeviceOptions();
-        public SwitchProDeviceOptions SwitchProDeviceOpts { get => switchProDeviceOpts; }
-
-        private readonly JoyConDeviceOptions joyConDeviceOpts = new JoyConDeviceOptions();
-        public JoyConDeviceOptions JoyConDeviceOpts { get => joyConDeviceOpts; }
+        public DS4DeviceOptions DS4DeviceOpts { get; } = new DS4DeviceOptions();
+        public DualSenseDeviceOptions DualSenseOpts { get; } = new DualSenseDeviceOptions();
+        public SwitchProDeviceOptions SwitchProDeviceOpts { get; } = new SwitchProDeviceOptions();
+        public JoyConDeviceOptions JoyConDeviceOpts { get; } = new JoyConDeviceOptions();
 
         private bool verboseLogMessages;
         public bool VerboseLogMessages { get => verboseLogMessages; set => verboseLogMessages = value; }

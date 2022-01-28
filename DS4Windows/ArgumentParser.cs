@@ -16,8 +16,7 @@ namespace DS4WinWPF
         private string commandArgs;
         private string virtualkbmHandler = VirtualKBMFactory.DEFAULT_IDENTIFIER;
 
-        private readonly Dictionary<string, string> errors =
-            new Dictionary<string, string>();
+        private readonly Dictionary<string, string> errors = new();
 
         public bool Mini { get => mini; }
         public bool Stop { get => stop; }

@@ -9,7 +9,7 @@ namespace DS4WinWPF
 {
     public class AutoProfileHolder
     {
-        private readonly object _colLockobj = new object();
+        private readonly object _colLockobj = new();
         private readonly ObservableCollection<AutoProfileEntity> autoProfileColl;
         public ObservableCollection<AutoProfileEntity> AutoProfileColl { get => autoProfileColl; }
         //public Dictionary<string, AutoProfileEntity> AutoProfileDict { get => autoProfileDict; }
@@ -29,7 +29,7 @@ namespace DS4WinWPF
         {
             try
             {
-                XmlDocument doc = new XmlDocument();
+                XmlDocument doc = new();
 
                 if (!File.Exists(DS4Windows.Global.appdatapath + "\\Auto Profiles.xml"))
                 {
@@ -42,7 +42,7 @@ namespace DS4WinWPF
                 {
                     string path = x.Attributes["path"]?.Value ?? string.Empty;
                     string title = x.Attributes["title"]?.Value ?? string.Empty;
-                    AutoProfileEntity autoprof = new AutoProfileEntity(path, title);
+                    AutoProfileEntity autoprof = new(path, title);
 
                     XmlNode item;
                     for (int i = 0; i < ControlService.CURRENT_DS4_CONTROLLER_LIMIT; i++)
@@ -69,7 +69,7 @@ namespace DS4WinWPF
 
         public bool Save(string m_Profile)
         {
-            XmlDocument doc = new XmlDocument();
+            XmlDocument doc = new();
             XmlNode Node;
             bool saved = true;
             try
@@ -156,7 +156,7 @@ namespace DS4WinWPF
             {
                 bPathMatched = (path_lowercase == searchPath
                     || (path[0] == '^' && searchPath.StartsWith(path_lowercase))
-                    || (path[path.Length - 1] == '$' && searchPath.EndsWith(path_lowercase))
+                    || (path[^1] == '$' && searchPath.EndsWith(path_lowercase))
                     || (path[0] == '*' && searchPath.Contains(path_lowercase))
                    );
             }
@@ -165,7 +165,7 @@ namespace DS4WinWPF
             {
                 bTitleMwatched = (title_lowercase == searchTitle
                     || (title[0] == '^' && searchTitle.StartsWith(title_lowercase))
-                    || (title[title.Length - 1] == '$' && searchTitle.EndsWith(title_lowercase))
+                    || (title[^1] == '$' && searchTitle.EndsWith(title_lowercase))
                     || (title[0] == '*' && searchTitle.Contains(title_lowercase))
                    );
             }
@@ -185,15 +185,15 @@ namespace DS4WinWPF
                 {
                     if (path[0] == '^')
                     {
-                        path_lowercase = path_lowercase.Substring(1);
+                        path_lowercase = path_lowercase[1..];
                     }
-                    else if (path[path.Length - 1] == '$')
+                    else if (path[^1] == '$')
                     {
-                        path_lowercase = path_lowercase.Substring(0, path_lowercase.Length - 1);
+                        path_lowercase = path_lowercase[0..^1];
                     }
                     else if (path[0] == '*')
                     {
-                        path_lowercase = path_lowercase.Substring(1);
+                        path_lowercase = path_lowercase[1..];
                     }
                 }
             }
@@ -214,15 +214,15 @@ namespace DS4WinWPF
                 {
                     if (title[0] == '^')
                     {
-                        title_lowercase = title_lowercase.Substring(1);
+                        title_lowercase = title_lowercase[1..];
                     }
-                    else if (title[title.Length - 1] == '$')
+                    else if (title[^1] == '$')
                     {
-                        title_lowercase = title_lowercase.Substring(0, title_lowercase.Length - 1);
+                        title_lowercase = title_lowercase[0..^1];
                     }
                     else if (title[0] == '*')
                     {
-                        title_lowercase = title_lowercase.Substring(1);
+                        title_lowercase = title_lowercase[1..];
                     }
                 }
             }

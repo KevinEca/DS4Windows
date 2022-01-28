@@ -34,13 +34,13 @@ namespace DS4WinWPF.DS4Forms
         private const int DEFAULT_PROFILE_EDITOR_HEIGHT = 650;
 
         private readonly MainWindowsViewModel mainWinVM;
-        private readonly StatusLogMsg lastLogMsg = new StatusLogMsg();
-        private readonly ProfileList profileListHolder = new ProfileList();
+        private readonly StatusLogMsg lastLogMsg = new();
+        private readonly ProfileList profileListHolder = new();
         private readonly LogViewModel logvm;
         private readonly ControllerListViewModel conLvViewModel;
         private readonly TrayIconViewModel trayIconVM;
         private readonly SettingsViewModel settingsWrapVM;
-        private IntPtr regHandle = new IntPtr();
+        private IntPtr regHandle = new();
         private bool showAppInTaskbar = false;
         private ManagementEventWatcher managementEvWatcher;
         private bool wasrunning = false;
@@ -118,18 +118,24 @@ namespace DS4WinWPF.DS4Forms
 
             SetupEvents();
 
-            Thread timerThread = new Thread(() =>
+            Thread timerThread = new(() =>
             {
-                hotkeysTimer = new NonFormTimer();
-                hotkeysTimer.Interval = 20;
-                hotkeysTimer.AutoReset = false;
+                hotkeysTimer = new NonFormTimer
+                {
+                    Interval = 20,
+                    AutoReset = false
+                };
 
-                autoProfilesTimer = new NonFormTimer();
-                autoProfilesTimer.Interval = 1000;
-                autoProfilesTimer.AutoReset = false;
-            });
-            timerThread.IsBackground = true;
-            timerThread.Priority = ThreadPriority.Lowest;
+                autoProfilesTimer = new NonFormTimer
+                {
+                    Interval = 1000,
+                    AutoReset = false
+                };
+            })
+            {
+                IsBackground = true,
+                Priority = ThreadPriority.Lowest
+            };
             timerThread.Start();
             timerThread.Join();
         }
@@ -171,7 +177,7 @@ namespace DS4WinWPF.DS4Forms
         private void DownloadUpstreamVersionInfo()
         {
             // Sorry other devs, gonna have to find your own server
-            Uri url = new Uri("https://raw.githubusercontent.com/Ryochan7/DS4Windows/jay/DS4Windows/newest.txt");
+            Uri url = new("https://raw.githubusercontent.com/Ryochan7/DS4Windows/jay/DS4Windows/newest.txt");
             string filename = Global.appdatapath + "\\version.txt";
             bool success = false;
             using (var downloadStream = new FileStream(filename, FileMode.Create))
@@ -198,7 +204,7 @@ namespace DS4WinWPF.DS4Forms
         {
             string result = string.Empty;
             // Sorry other devs, gonna have to find your own server
-            Uri url = new Uri("https://raw.githubusercontent.com/Ryochan7/DS4Updater/master/Updater2/newest.txt");
+            Uri url = new("https://raw.githubusercontent.com/Ryochan7/DS4Updater/master/Updater2/newest.txt");
             string filename = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "DS4Updater_version.txt");
             bool readFile = false;
             using (var downloadStream = new FileStream(filename, FileMode.Create))
@@ -245,7 +251,7 @@ namespace DS4WinWPF.DS4Forms
                 MessageBoxResult result = MessageBoxResult.No;
                 Dispatcher.Invoke(() =>
                 {
-                    UpdaterWindow updaterWin = new UpdaterWindow(newversion);
+                    UpdaterWindow updaterWin = new(newversion);
                     updaterWin.ShowDialog();
                     result = updaterWin.Result;
                 });
@@ -257,12 +263,14 @@ namespace DS4WinWPF.DS4Forms
 
                     if (launch)
                     {
-                        using (Process p = new Process())
+                        using (Process p = new())
                         {
                             p.StartInfo.FileName = System.IO.Path.Combine(Global.exedirpath, "DS4Updater.exe");
                             bool isAdmin = Global.IsAdministrator();
-                            List<string> argList = new List<string>();
-                            argList.Add("-autolaunch");
+                            List<string> argList = new()
+                            {
+                                "-autolaunch"
+                            };
                             if (!isAdmin)
                             {
                                 argList.Add("-user");
@@ -332,7 +340,7 @@ namespace DS4WinWPF.DS4Forms
                 (!string.IsNullOrEmpty(version) && FileVersionInfo.GetVersionInfo(destPath).FileVersion.CompareTo(version) != 0))
             {
                 launch = false;
-                Uri url2 = new Uri($"https://github.com/Ryochan7/DS4Updater/releases/download/v{version}/{mainWinVM.updaterExe}");
+                Uri url2 = new($"https://github.com/Ryochan7/DS4Updater/releases/download/v{version}/{mainWinVM.updaterExe}");
                 string filename = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "DS4Updater.exe");
                 using (var downloadStream = new FileStream(filename, FileMode.Create))
                 {
@@ -428,8 +436,8 @@ namespace DS4WinWPF.DS4Forms
             mainWinVM.FullTabsEnabledChanged += MainWinVM_FullTabsEnabledChanged;
 
             bool wmiConnected = false;
-            WqlEventQuery q = new WqlEventQuery();
-            ManagementScope scope = new ManagementScope("root\\CIMV2");
+            WqlEventQuery q = new();
+            ManagementScope scope = new("root\\CIMV2");
             q.EventClassName = "Win32_PowerManagementEvent";
 
             try
@@ -781,8 +789,10 @@ Suspend support not enabled.", true);
 
         private void Item_RequestColorPicker(CompositeDeviceModel sender)
         {
-            ColorPickerWindow dialog = new ColorPickerWindow();
-            dialog.Owner = this;
+            ColorPickerWindow dialog = new()
+            {
+                Owner = this
+            };
             dialog.colorPicker.SelectedColor = sender.CustomLightColor;
             dialog.ColorChanged += (sender2, color) =>
             {
@@ -821,8 +831,10 @@ Suspend support not enabled.", true);
 
         private void AboutBtn_Click(object sender, RoutedEventArgs e)
         {
-            About aboutWin = new About();
-            aboutWin.Owner = this;
+            About aboutWin = new()
+            {
+                Owner = this
+            };
             aboutWin.ShowDialog();
         }
 
@@ -860,8 +872,10 @@ Suspend support not enabled.", true);
             if (idx > -1)
             {
                 LogItem temp = logvm.LogItems[idx];
-                LogMessageDisplay msgBox = new LogMessageDisplay(temp.Message);
-                msgBox.Owner = this;
+                LogMessageDisplay msgBox = new(temp.Message)
+                {
+                    Owner = this
+                };
                 msgBox.ShowDialog();
                 //MessageBox.Show(temp.Message, "Log");
             }
@@ -916,16 +930,18 @@ Suspend support not enabled.", true);
 
         private void ExportLogBtn_Click(object sender, RoutedEventArgs e)
         {
-            SaveFileDialog dialog = new SaveFileDialog();
-            dialog.AddExtension = true;
-            dialog.DefaultExt = ".txt";
-            dialog.Filter = "Text Documents (*.txt)|*.txt";
-            dialog.Title = "Select Export File";
-            // TODO: Expose config dir
-            dialog.InitialDirectory = Global.appdatapath;
+            SaveFileDialog dialog = new()
+            {
+                AddExtension = true,
+                DefaultExt = ".txt",
+                Filter = "Text Documents (*.txt)|*.txt",
+                Title = "Select Export File",
+                // TODO: Expose config dir
+                InitialDirectory = Global.appdatapath
+            };
             if (dialog.ShowDialog() == true)
             {
-                LogWriter logWriter = new LogWriter(dialog.FileName, logvm.LogItems.ToList());
+                LogWriter logWriter = new(dialog.FileName, logvm.LogItems.ToList());
                 logWriter.Process();
             }
         }
@@ -1035,7 +1051,7 @@ Suspend support not enabled.", true);
 
         private bool inHotPlug = false;
         private int hotplugCounter = 0;
-        private readonly object hotplugCounterLock = new object();
+        private readonly object hotplugCounterLock = new();
         private const int DBT_DEVNODES_CHANGED = 0x0007;
         private const int DBT_DEVICEARRIVAL = 0x8000;
         private const int DBT_DEVICEREMOVECOMPLETE = 0x8004;
@@ -1373,7 +1389,7 @@ Suspend support not enabled.", true);
 
         private void HookWindowMessages(HwndSource source)
         {
-            Guid hidGuid = new Guid();
+            Guid hidGuid = new();
             NativeMethods.HidD_GetHidGuid(ref hidGuid);
             bool result = Util.RegisterNotify(source.Handle, hidGuid, ref regHandle);
             if (!result)
@@ -1449,8 +1465,10 @@ Suspend support not enabled.", true);
 
         private void ProfFolderBtn_Click(object sender, RoutedEventArgs e)
         {
-            ProcessStartInfo startInfo = new ProcessStartInfo(Global.appdatapath + "\\Profiles");
-            startInfo.UseShellExecute = true;
+            ProcessStartInfo startInfo = new(Global.appdatapath + "\\Profiles")
+            {
+                UseShellExecute = true
+            };
             try
             {
                 using (Process temp = Process.Start(startInfo))
@@ -1477,11 +1495,13 @@ Suspend support not enabled.", true);
             });
 
             StartStopBtn.IsEnabled = true;
-            ProcessStartInfo startInfo = new ProcessStartInfo();
-            startInfo.FileName = Global.exelocation;
-            startInfo.Arguments = "-driverinstall";
-            startInfo.Verb = "runas";
-            startInfo.UseShellExecute = true;
+            ProcessStartInfo startInfo = new()
+            {
+                FileName = Global.exelocation,
+                Arguments = "-driverinstall",
+                Verb = "runas",
+                UseShellExecute = true
+            };
             try
             {
                 using (Process temp = Process.Start(startInfo))
@@ -1511,11 +1531,13 @@ Suspend support not enabled.", true);
             bool deriverinstalled = Global.IsViGEmBusInstalled();
             if (!deriverinstalled || !Global.IsRunningSupportedViGEmBus())
             {
-                ProcessStartInfo startInfo = new ProcessStartInfo();
-                startInfo.FileName = $"{Global.exelocation}";
-                startInfo.Arguments = "-driverinstall";
-                startInfo.Verb = "runas";
-                startInfo.UseShellExecute = true;
+                ProcessStartInfo startInfo = new()
+                {
+                    FileName = $"{Global.exelocation}",
+                    Arguments = "-driverinstall",
+                    Verb = "runas",
+                    UseShellExecute = true
+                };
                 try
                 {
                     using (Process temp = Process.Start(startInfo))
@@ -1528,19 +1550,14 @@ Suspend support not enabled.", true);
 
         private void ImportProfBtn_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog dialog = new OpenFileDialog();
-            dialog.AddExtension = true;
-            dialog.DefaultExt = ".xml";
-            dialog.Filter = "DS4Windows Profile (*.xml)|*.xml";
-            dialog.Title = "Select Profile to Import File";
-            if (Global.appdatapath != Global.exedirpath)
+            OpenFileDialog dialog = new()
             {
-                dialog.InitialDirectory = Path.Combine(Global.appDataPpath, "Profiles");
-            }
-            else
-            {
-                dialog.InitialDirectory = Global.exedirpath + @"\Profiles\";
-            }
+                AddExtension = true,
+                DefaultExt = ".xml",
+                Filter = "DS4Windows Profile (*.xml)|*.xml",
+                Title = "Select Profile to Import File",
+                InitialDirectory = (Global.appdatapath != Global.exedirpath) ? Path.Combine(Global.appDataPpath, "Profiles") : Global.exedirpath + @"\Profiles\"
+            };
 
             if (dialog.ShowDialog() == true)
             {
@@ -1559,11 +1576,13 @@ Suspend support not enabled.", true);
         {
             if (profilesListBox.SelectedIndex >= 0)
             {
-                SaveFileDialog dialog = new SaveFileDialog();
-                dialog.AddExtension = true;
-                dialog.DefaultExt = ".xml";
-                dialog.Filter = "DS4Windows Profile (*.xml)|*.xml";
-                dialog.Title = "Select Profile to Export File";
+                SaveFileDialog dialog = new()
+                {
+                    AddExtension = true,
+                    DefaultExt = ".xml",
+                    Filter = "DS4Windows Profile (*.xml)|*.xml",
+                    Title = "Select Profile to Export File"
+                };
                 Stream stream;
                 int idx = profilesListBox.SelectedIndex;
                 Stream profile = new StreamReader(Global.appdatapath + "\\Profiles\\" + profileListHolder.ProfileListCol[idx].Name + ".xml").BaseStream;
@@ -1789,8 +1808,10 @@ Suspend support not enabled.", true);
             {
                 try
                 {
-                    ProcessStartInfo startInfo = new ProcessStartInfo(path);
-                    startInfo.UseShellExecute = true;
+                    ProcessStartInfo startInfo = new(path)
+                    {
+                        UseShellExecute = true
+                    };
                     using (Process proc = Process.Start(startInfo)) { }
                 }
                 catch { }
@@ -1821,16 +1842,17 @@ Suspend support not enabled.", true);
 
         private void ChecklogViewBtn_Click(object sender, RoutedEventArgs e)
         {
-            ChangelogWindow changelogWin = new ChangelogWindow();
+            ChangelogWindow changelogWin = new();
             changelogWin.ShowDialog();
         }
 
         private void DeviceOptionSettingsBtn_Click(object sender, RoutedEventArgs e)
         {
             ControllerRegisterOptionsWindow optsWindow =
-                new ControllerRegisterOptionsWindow(Program.rootHub.DeviceOptions, Program.rootHub);
-
-            optsWindow.Owner = this;
+                new(Program.rootHub.DeviceOptions, Program.rootHub)
+                {
+                    Owner = this
+                };
             optsWindow.Show();
         }
 
@@ -1847,7 +1869,7 @@ Suspend support not enabled.", true);
                 if (entity.Name != "Default" &&
                     File.Exists(filename))
                 {
-                    RenameProfileWindow renameWin = new RenameProfileWindow();
+                    RenameProfileWindow renameWin = new();
                     renameWin.ChangeProfileName(entity.Name);
                     bool? result = renameWin.ShowDialog();
                     if (result.HasValue && result.Value)
@@ -1882,8 +1904,7 @@ Suspend support not enabled.", true);
 
         public ImageLocationPaths()
         {
-            App current = App.Current as App;
-            if (current != null)
+            if (App.Current is App current)
             {
                 current.ThemeChanged += Current_ThemeChanged;
             }

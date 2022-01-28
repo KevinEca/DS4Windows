@@ -329,10 +329,12 @@ namespace DS4Windows.InputDevices
                     //ds4Output.IsBackground = true;
                     //ds4Output.Start();
 
-                    timeoutCheckThread = new Thread(TimeoutTestThread);
-                    timeoutCheckThread.Priority = ThreadPriority.BelowNormal;
-                    timeoutCheckThread.Name = "DualSense Timeout thread: " + Mac;
-                    timeoutCheckThread.IsBackground = true;
+                    timeoutCheckThread = new Thread(TimeoutTestThread)
+                    {
+                        Priority = ThreadPriority.BelowNormal,
+                        Name = "DualSense Timeout thread: " + Mac,
+                        IsBackground = true
+                    };
                     timeoutCheckThread.Start();
                 }
                 //else
@@ -344,10 +346,12 @@ namespace DS4Windows.InputDevices
                 //    ds4Output.Start();
                 //}
 
-                ds4Input = new Thread(ReadInput);
-                ds4Input.Priority = ThreadPriority.AboveNormal;
-                ds4Input.Name = "DualSense Input thread: " + Mac;
-                ds4Input.IsBackground = true;
+                ds4Input = new Thread(ReadInput)
+                {
+                    Priority = ThreadPriority.AboveNormal,
+                    Name = "DualSense Input thread: " + Mac,
+                    IsBackground = true
+                };
                 ds4Input.Start();
             }
             else

@@ -58,8 +58,8 @@ namespace DS4Windows
         public DeadZoneType deadzoneType = DEFAULT_DEADZONE_TYPE;
         public double outerBindDeadZone = DEFAULT_OUTER_BIND_DEAD;
         public bool outerBindInvert = DEFAULT_OUTER_BIND_INVERT;
-        public AxisDeadZoneInfo xAxisDeadInfo = new AxisDeadZoneInfo();
-        public AxisDeadZoneInfo yAxisDeadInfo = new AxisDeadZoneInfo();
+        public AxisDeadZoneInfo xAxisDeadInfo = new();
+        public AxisDeadZoneInfo yAxisDeadInfo = new();
 
         public void Reset()
         {
@@ -598,7 +598,7 @@ namespace DS4Windows
     {
         public bool useCustomLed;
         public bool ledAsBattery;
-        public DS4Color m_CustomLed = new DS4Color(0, 0, 255);
+        public DS4Color m_CustomLed = new(0, 0, 255);
         public DS4Color m_Led;
         public DS4Color m_LowLed;
         public DS4Color m_ChargingLed;
@@ -613,7 +613,7 @@ namespace DS4Windows
     public class LightbarSettingInfo
     {
         public LightbarMode mode = LightbarMode.DS4Win;
-        public LightbarDS4WinInfo ds4winSettings = new LightbarDS4WinInfo();
+        public LightbarDS4WinInfo ds4winSettings = new();
         public LightbarMode Mode
         {
             get => mode;
@@ -867,14 +867,14 @@ namespace DS4Windows
 
     public class StickModeSettings
     {
-        public FlickStickSettings flickSettings = new FlickStickSettings();
-        public StickControlSettings controlSettings = new StickControlSettings();
+        public FlickStickSettings flickSettings = new();
+        public StickControlSettings controlSettings = new();
     }
 
     public class StickOutputSetting
     {
         public StickMode mode = StickMode.Controls;
-        public StickModeSettings outputSettings = new StickModeSettings();
+        public StickModeSettings outputSettings = new();
 
         public void ResetSettings()
         {
@@ -926,8 +926,7 @@ namespace DS4Windows
         }
         public event EventHandler TriggerEffectChanged;
 
-        public InputDevices.TriggerEffectSettings effectSettings =
-            new InputDevices.TriggerEffectSettings();
+        public InputDevices.TriggerEffectSettings effectSettings = new();
         public ref InputDevices.TriggerEffectSettings TrigEffectSettings
         {
             get => ref effectSettings;

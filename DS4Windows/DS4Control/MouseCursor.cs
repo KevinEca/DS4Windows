@@ -47,7 +47,7 @@ namespace DS4Windows
         private readonly double[] xSmoothBuffer = new double[SMOOTH_BUFFER_LEN];
         private readonly double[] ySmoothBuffer = new double[SMOOTH_BUFFER_LEN];
         private int smoothBufferTail = 0;
-        private OneEuroFilterPair filterPair = new OneEuroFilterPair();
+        private OneEuroFilterPair filterPair = new();
 
         private int gyroCursorDeadZone = GYRO_MOUSE_DEADZONE;
         public int GyroCursorDeadZone { get => gyroCursorDeadZone; set => gyroCursorDeadZone = value; }

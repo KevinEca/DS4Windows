@@ -447,7 +447,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
                 int result = step.Value;
                 result -= 1000000;
                 string temp = result.ToString();
-                result = int.Parse(temp.Substring(0, 3));
+                result = int.Parse(temp[..3]);
                 return result;
             }
             set
