@@ -14,7 +14,7 @@ namespace DS4WinWPF.DS4Forms
         {
             InitializeComponent();
 
-            RecordBox box = new RecordBox(deviceNum, settings, false, repeatable: repeatable);
+            RecordBox box = new(deviceNum, settings, false, repeatable: repeatable);
             mainPanel.Children.Add(box);
 
             box.Save += RecordBox_Save;

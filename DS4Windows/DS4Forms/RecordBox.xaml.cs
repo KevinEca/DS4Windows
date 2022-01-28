@@ -241,7 +241,7 @@ namespace DS4WinWPF.DS4Forms
             else
             {
                 changeLightBtn.Content = "Change Lightbar Color";
-                DS4Windows.MacroStep step = new DS4Windows.MacroStep(1000000000, $"Reset Lightbar",
+                DS4Windows.MacroStep step = new(1000000000, $"Reset Lightbar",
                             DS4Windows.MacroStep.StepType.ActUp, DS4Windows.MacroStep.StepOutput.Lightbar);
                 recordBoxVM.AddMacroStep(step);
             }

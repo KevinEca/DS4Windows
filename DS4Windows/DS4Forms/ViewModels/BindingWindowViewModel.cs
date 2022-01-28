@@ -136,7 +136,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
         {
             if (deviceNum < ControlService.CURRENT_DS4_CONTROLLER_LIMIT)
             {
-                DS4Color dcolor = new DS4Color() { red = color.R, green = color.G, blue = color.B };
+                DS4Color dcolor = new() { red = color.R, green = color.G, blue = color.B };
                 DS4LightBar.forcedColor[deviceNum] = dcolor;
                 DS4LightBar.forcedFlash[deviceNum] = 0;
                 DS4LightBar.forcelight[deviceNum] = true;
@@ -157,7 +157,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
         {
             if (deviceNum < ControlService.CURRENT_DS4_CONTROLLER_LIMIT)
             {
-                DS4Color dcolor = new DS4Color() { red = color.R, green = color.G, blue = color.B };
+                DS4Color dcolor = new() { red = color.R, green = color.G, blue = color.B };
                 DS4LightBar.forcedColor[deviceNum] = dcolor;
                 DS4LightBar.forcedFlash[deviceNum] = 0;
                 DS4LightBar.forcelight[deviceNum] = true;
