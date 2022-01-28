@@ -1,19 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DS4Windows;
+using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using NonFormTimer = System.Timers.Timer;
-using DS4Windows;
 
 namespace DS4WinWPF.DS4Forms
 {
@@ -32,7 +22,7 @@ namespace DS4WinWPF.DS4Forms
         private int deviceNum;
         private int profileDeviceNum;
         private event EventHandler DeviceNumChanged;
-        private NonFormTimer readingTimer;
+        private readonly NonFormTimer readingTimer;
         private bool useTimer;
         private double lsDeadX;
         private double lsDeadY;
@@ -134,9 +124,9 @@ namespace DS4WinWPF.DS4Forms
 
         private LatencyWarnMode warnMode;
         private LatencyWarnMode prevWarnMode;
-        private DS4State baseState = new DS4State();
-        private DS4State interState = new DS4State();
-        private DS4StateExposed exposeState;
+        private readonly DS4State baseState = new DS4State();
+        private readonly DS4State interState = new DS4State();
+        private readonly DS4StateExposed exposeState;
         private const int CANVAS_WIDTH = 130;
         private const int CANVAS_MIDPOINT = CANVAS_WIDTH / 2;
         private const double TRIG_LB_TRANSFORM_OFFSETY = 66.0;
@@ -144,7 +134,7 @@ namespace DS4WinWPF.DS4Forms
         public ControllerReadingsControl()
         {
             InitializeComponent();
-            inputContNum.Content = $"#{deviceNum+1}";
+            inputContNum.Content = $"#{deviceNum + 1}";
             exposeState = new DS4StateExposed(baseState);
 
             readingTimer = new NonFormTimer();
@@ -163,7 +153,7 @@ namespace DS4WinWPF.DS4Forms
 
         private void ControllerReadingsControl_DeviceNumChanged(object sender, EventArgs e)
         {
-            inputContNum.Content = $"#{deviceNum+1}";
+            inputContNum.Content = $"#{deviceNum + 1}";
         }
 
         private void ChangeSixAxisDeadControls(object sender, EventArgs e)
@@ -224,8 +214,8 @@ namespace DS4WinWPF.DS4Forms
             {
                 // Don't bother waiting for UI thread to grab references
                 //DS4StateExposed tmpexposeState = Program.rootHub.ExposedState[deviceNum];
-                DS4State tmpbaseState = Program.rootHub.getDS4State(deviceNum);
-                DS4State tmpinterState = Program.rootHub.getDS4StateTemp(deviceNum);
+                DS4State tmpbaseState = Program.rootHub.GetDS4State(deviceNum);
+                DS4State tmpinterState = Program.rootHub.GetDS4StateTemp(deviceNum);
                 long cntCalibrating = ds.SixAxis.CntCalibrating;
 
                 // Wait for controller to be in a wait period
@@ -237,7 +227,9 @@ namespace DS4WinWPF.DS4Forms
                 tmpinterState.CopyTo(interState);
 
                 if (deviceNum != profileDeviceNum)
+                {
                     Mapping.SetCurveAndDeadzone(profileDeviceNum, baseState, interState);
+                }
 
                 // Done with copying. Allow input thread to resume
                 ds.ReadWaitEv.Set();
@@ -252,8 +244,8 @@ namespace DS4WinWPF.DS4Forms
                     //bool mappedLS = interState.LX != x || interState.LY != y;
                     //if (mappedLS)
                     //{
-                        Canvas.SetLeft(lsMapValRec, interState.LX / 255.0 * CANVAS_WIDTH - 3);
-                        Canvas.SetTop(lsMapValRec, interState.LY / 255.0 * CANVAS_WIDTH - 3);
+                    Canvas.SetLeft(lsMapValRec, interState.LX / 255.0 * CANVAS_WIDTH - 3);
+                    Canvas.SetTop(lsMapValRec, interState.LY / 255.0 * CANVAS_WIDTH - 3);
                     //}
 
                     x = baseState.RX;
@@ -263,8 +255,8 @@ namespace DS4WinWPF.DS4Forms
                     Canvas.SetLeft(rsMapValRec, interState.RX / 255.0 * CANVAS_WIDTH - 3);
                     Canvas.SetTop(rsMapValRec, interState.RY / 255.0 * CANVAS_WIDTH - 3);
 
-                    x = exposeState.getAccelX() + 127;
-                    y = exposeState.getAccelZ() + 127;
+                    x = exposeState.GetAccelX() + 127;
+                    y = exposeState.GetAccelZ() + 127;
                     Canvas.SetLeft(sixAxisValRec, x / 255.0 * CANVAS_WIDTH - 3);
                     Canvas.SetTop(sixAxisValRec, y / 255.0 * CANVAS_WIDTH - 3);
                     Canvas.SetLeft(sixAxisMapValRec, Math.Min(Math.Max(interState.Motion.outputAccelX + 127.0, 0), 255.0) / 255.0 * CANVAS_WIDTH - 3);
@@ -304,15 +296,15 @@ namespace DS4WinWPF.DS4Forms
                     gyroPitchSlider.Value = baseState.Motion.gyroPitchFull;
                     gyroRollSlider.Value = baseState.Motion.gyroRollFull;
 
-                    accelXSlider.Value = exposeState.getAccelX();
-                    accelYSlider.Value = exposeState.getAccelY();
-                    accelZSlider.Value = exposeState.getAccelZ();
+                    accelXSlider.Value = exposeState.GetAccelX();
+                    accelYSlider.Value = exposeState.GetAccelY();
+                    accelZSlider.Value = exposeState.GetAccelZ();
 
                     touchXValLb.Content = baseState.TrackPadTouch0.X;
                     touchYValLb.Content = baseState.TrackPadTouch0.Y;
 
                     double latency = ds.Latency;
-                    int warnInterval = ds.getWarnInterval();
+                    int warnInterval = ds.GetWarnInterval();
                     inputDelayLb.Content = string.Format(Properties.Resources.InputDelay,
                         latency.ToString());
 

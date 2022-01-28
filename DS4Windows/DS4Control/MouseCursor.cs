@@ -5,7 +5,7 @@ namespace DS4Windows
     public class MouseCursor
     {
         private readonly int deviceNumber;
-        private DS4Device.GyroMouseSens gyroMouseSensSettings;
+        private readonly DS4Device.GyroMouseSens gyroMouseSensSettings;
         public MouseCursor(int deviceNum, DS4Device.GyroMouseSens gyroMouseSens)
         {
             deviceNumber = deviceNum;
@@ -44,8 +44,8 @@ namespace DS4Windows
         private const double TOUCHPAD_MOUSE_OFFSET = 0.015;
 
         private const int SMOOTH_BUFFER_LEN = 3;
-        private double[] xSmoothBuffer = new double[SMOOTH_BUFFER_LEN];
-        private double[] ySmoothBuffer = new double[SMOOTH_BUFFER_LEN];
+        private readonly double[] xSmoothBuffer = new double[SMOOTH_BUFFER_LEN];
+        private readonly double[] ySmoothBuffer = new double[SMOOTH_BUFFER_LEN];
         private int smoothBufferTail = 0;
         private OneEuroFilterPair filterPair = new OneEuroFilterPair();
 
@@ -61,10 +61,10 @@ namespace DS4Windows
         double tempDouble = 0.0;
         //bool tempBool = false;
 
-        public virtual void sixaxisMoved(SixAxisEventArgs arg)
+        public virtual void SixaxisMoved(SixAxisEventArgs arg)
         {
             int deltaX = 0, deltaY = 0;
-            deltaX = Global.getGyroMouseHorizontalAxis(deviceNumber) == 0 ? arg.sixAxis.gyroYawFull :
+            deltaX = Global.GetGyroMouseHorizontalAxis(deviceNumber) == 0 ? arg.sixAxis.gyroYawFull :
                 arg.sixAxis.gyroRollFull;
             deltaY = -arg.sixAxis.gyroPitchFull;
             //tempDouble = arg.sixAxis.elapsed * 0.001 * 200.0; // Base default speed on 5 ms
@@ -74,7 +74,7 @@ namespace DS4Windows
             gyroSmooth = tempInfo.enableSmoothing;
             double gyroSmoothWeight = 0.0;
 
-            coefficient = (Global.getGyroSensitivity(deviceNumber) * 0.01) * gyroMouseSensSettings.mouseCoefficient;
+            coefficient = (Global.GetGyroSensitivity(deviceNumber) * 0.01) * gyroMouseSensSettings.mouseCoefficient;
             double offset = gyroMouseSensSettings.mouseOffset;
             if (gyroSmooth)
             {
@@ -121,7 +121,7 @@ namespace DS4Windows
             double xMotion = deltaX != 0 ? coefficient * (deltaX * tempDouble)
                 + (normX * (offset * signX)) : 0;
 
-            verticalScale = Global.getGyroSensVerticalScale(deviceNumber) * 0.01;
+            verticalScale = Global.GetGyroSensVerticalScale(deviceNumber) * 0.01;
             double yMotion = deltaY != 0 ? (coefficient * verticalScale) * (deltaY * tempDouble)
                 + (normY * (offset * signY)) : 0;
 
@@ -208,21 +208,27 @@ namespace DS4Windows
                 }
             }
 
-            int gyroInvert = Global.getGyroInvert(deviceNumber);
+            int gyroInvert = Global.GetGyroInvert(deviceNumber);
             if ((gyroInvert & 0x02) == 2)
+            {
                 xAction *= -1;
+            }
 
             if ((gyroInvert & 0x01) == 1)
+            {
                 yAction *= -1;
+            }
 
             if (yAction != 0 || xAction != 0)
+            {
                 Global.outputKBMHandler.MoveRelativeMouse(xAction, yAction);
+            }
 
             hDirection = xMotion > 0.0 ? Direction.Positive : xMotion < 0.0 ? Direction.Negative : Direction.Neutral;
             vDirection = yMotion > 0.0 ? Direction.Positive : yMotion < 0.0 ? Direction.Negative : Direction.Neutral;
         }
 
-        public void mouseRemainderReset(SixAxisEventArgs arg)
+        public void MouseRemainderReset(SixAxisEventArgs arg)
         {
             hRemainder = vRemainder = 0.0;
             int iIndex = smoothBufferTail % SMOOTH_BUFFER_LEN;
@@ -239,7 +245,7 @@ namespace DS4Windows
             }
         }
 
-        public void touchesBegan(TouchpadEventArgs arg)
+        public void TouchesBegan(TouchpadEventArgs arg)
         {
             if (arg.touches.Length == 1)
             {
@@ -250,11 +256,13 @@ namespace DS4Windows
         }
 
         private byte lastTouchID;
-        public void touchesMoved(TouchpadEventArgs arg, bool dragging, bool disableInvert = false)
+        public void TouchesMoved(TouchpadEventArgs arg, bool dragging, bool disableInvert = false)
         {
             int touchesLen = arg.touches.Length;
             if ((!dragging && touchesLen != 1) || (dragging && touchesLen < 1))
+            {
                 return;
+            }
 
             int deltaX = 0, deltaY = 0;
             if (arg.touches[0].touchID != lastTouchID)
@@ -285,7 +293,9 @@ namespace DS4Windows
         {
             int touchesLen = arg.touches.Length;
             if (touchesLen != 1)
+            {
                 return;
+            }
 
             int currentX = 0, currentY = 0;
             if (touchesLen > 1)
@@ -314,8 +324,8 @@ namespace DS4Windows
             currentX = currentX > maxX ? maxX : (currentX < minX ? minX : currentX);
             currentY = currentY > maxY ? maxY : (currentX < minY ? minY : currentY);
 
-            double absX = (currentX * mX - bX) / (double)DS4Touchpad.RESOLUTION_X_MAX;
-            double absY = (currentY * mY - bY) / (double)DS4Touchpad.RESOLUTION_Y_MAX;
+            double absX = (currentX * mX - bX) / DS4Touchpad.RESOLUTION_X_MAX;
+            double absY = (currentY * mY - bY) / DS4Touchpad.RESOLUTION_Y_MAX;
             //InputMethods.MoveAbsoluteMouse(absX, absY);
             Global.outputKBMHandler.MoveAbsoluteMouse(absX, absY);
         }
@@ -344,8 +354,8 @@ namespace DS4Windows
             double normY = Math.Abs(Math.Sin(tempAngle));
             int signX = Math.Sign(dx);
             int signY = Math.Sign(dy);
-            double coefficient = Global.getTouchSensitivity(deviceNumber) * 0.01;
-            bool jitterCompenstation = Global.getTouchpadJitterCompensation(deviceNumber);
+            double coefficient = Global.GetTouchSensitivity(deviceNumber) * 0.01;
+            bool jitterCompenstation = Global.GetTouchpadJitterCompensation(deviceNumber);
 
             double xMotion = dx != 0 ?
                 coefficient * dx + (normX * (TOUCHPAD_MOUSE_OFFSET * signX)) : 0.0;
@@ -417,16 +427,22 @@ namespace DS4Windows
 
             if (disableInvert == false)
             {
-                int touchpadInvert = tempInt = Global.getTouchpadInvert(deviceNumber);
+                int touchpadInvert = tempInt = Global.GetTouchpadInvert(deviceNumber);
                 if ((touchpadInvert & 0x02) == 2)
+                {
                     xAction *= -1;
+                }
 
                 if ((touchpadInvert & 0x01) == 1)
+                {
                     yAction *= -1;
+                }
             }
 
             if (yAction != 0 || xAction != 0)
+            {
                 Global.outputKBMHandler.MoveRelativeMouse(xAction, yAction);
+            }
 
             horizontalDirection = xMotion > 0.0 ? Direction.Positive : xMotion < 0.0 ? Direction.Negative : Direction.Neutral;
             verticalDirection = yMotion > 0.0 ? Direction.Positive : yMotion < 0.0 ? Direction.Negative : Direction.Neutral;

@@ -1,16 +1,13 @@
-﻿using System;
+﻿using DS4Windows;
+using DS4WinWPF.DS4Forms.ViewModels.Util;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using DS4Windows;
-using DS4WinWPF.DS4Forms.ViewModels.Util;
 
 namespace DS4WinWPF.DS4Forms.ViewModels.SpecialActions
 {
@@ -25,7 +22,11 @@ namespace DS4WinWPF.DS4Forms.ViewModels.SpecialActions
             get => filepath;
             set
             {
-                if (filepath == value) return;
+                if (filepath == value)
+                {
+                    return;
+                }
+
                 filepath = value;
                 FilepathChanged?.Invoke(this, EventArgs.Empty);
             }

@@ -1,6 +1,6 @@
 ﻿
-using System.Collections.Generic;
 using DS4Windows.DS4Control;
+using System.Collections.Generic;
 
 namespace DS4WinWPF
 {
@@ -16,7 +16,7 @@ namespace DS4WinWPF
         private string commandArgs;
         private string virtualkbmHandler = VirtualKBMFactory.DEFAULT_IDENTIFIER;
 
-        private Dictionary<string, string> errors =
+        private readonly Dictionary<string, string> errors =
             new Dictionary<string, string>();
 
         public bool Mini { get => mini; }
@@ -39,7 +39,7 @@ namespace DS4WinWPF
             for (int i = 0; i < args.Length; i++)
             {
                 string arg = args[i];
-                switch(arg)
+                switch (arg)
                 {
                     case "driverinstall":
                     case "-driverinstall":

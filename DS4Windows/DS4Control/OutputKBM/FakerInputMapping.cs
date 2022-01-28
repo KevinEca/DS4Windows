@@ -1,14 +1,13 @@
-﻿using System;
+﻿using FakerInputWrapper;
 using System.Collections.Generic;
 using System.Windows.Input;
-using FakerInputWrapper;
 using MouseButton = FakerInputWrapper.MouseButton;
 
 namespace DS4Windows.DS4Control
 {
     public class FakerInputMapping : VirtualKBMMapping
     {
-        private Dictionary<ushort, uint> mappingPairs = new Dictionary<ushort, uint>();
+        private readonly Dictionary<ushort, uint> mappingPairs = new Dictionary<ushort, uint>();
 
         /// <summary>
         /// Use to define keys not available in the VMultiDllWrapper. Might not use

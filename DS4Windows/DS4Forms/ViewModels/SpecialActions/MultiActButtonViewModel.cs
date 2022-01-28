@@ -1,19 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DS4Windows;
+﻿using DS4Windows;
 using DS4WinWPF.DS4Forms.ViewModels.Util;
+using System;
+using System.Collections.Generic;
 
 namespace DS4WinWPF.DS4Forms.ViewModels.SpecialActions
 {
     public class MultiActButtonViewModel : NotifyDataErrorBase
     {
-        private List<int> tapMacro = new List<int>();
-        private List<int> holdMacro = new List<int>();
-        private List<int> doubleTapMacro = new List<int>();
-        private List<int>[] loadAccessArray;
+        private readonly List<int> tapMacro = new List<int>();
+        private readonly List<int> holdMacro = new List<int>();
+        private readonly List<int> doubleTapMacro = new List<int>();
+        private readonly List<int>[] loadAccessArray;
 
         public List<int> TapMacro { get => tapMacro; }
         public List<int> HoldMacro { get => holdMacro; }
@@ -78,7 +75,9 @@ namespace DS4WinWPF.DS4Forms.ViewModels.SpecialActions
                 foreach (string s in macs)
                 {
                     if (int.TryParse(s, out int v))
+                    {
                         loadAccessArray[i].Add(v);
+                    }
                 }
             }
         }

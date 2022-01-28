@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 using Microsoft.Win32.TaskScheduler;
+using System;
+using System.IO;
+using System.Runtime.InteropServices;
 using Task = Microsoft.Win32.TaskScheduler.Task;
 
 namespace DS4WinWPF
@@ -14,7 +11,7 @@ namespace DS4WinWPF
     public static class StartupMethods
     {
         public static string lnkpath = Environment.GetFolderPath(Environment.SpecialFolder.Startup) + "\\DS4Windows.lnk";
-        private static string taskBatPath = Path.Combine(DS4Windows.Global.exedirpath, "task.bat");
+        private static readonly string taskBatPath = Path.Combine(DS4Windows.Global.exedirpath, "task.bat");
         private const string net5SubKey = @"SOFTWARE\dotnet\Setup\InstalledVersions";
 
         public static bool HasStartProgEntry()
@@ -74,7 +71,7 @@ namespace DS4WinWPF
             Task tasker = ts.FindTask("RunDS4Windows");
             if (tasker != null)
             {
-                foreach(Microsoft.Win32.TaskScheduler.Action act in tasker.Definition.Actions)
+                foreach (Microsoft.Win32.TaskScheduler.Action act in tasker.Definition.Actions)
                 {
                     if (act.ActionType == TaskActionType.Execute)
                     {

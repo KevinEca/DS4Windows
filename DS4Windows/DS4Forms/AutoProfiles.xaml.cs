@@ -1,22 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using DS4WinWPF.DS4Forms.ViewModels;
+using Microsoft.Win32;
+using Ookii.Dialogs.Wpf;
+using System;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.ComponentModel;
-using Ookii.Dialogs.Wpf;
-using DS4WinWPF.DS4Forms.ViewModels;
-using Microsoft.Win32;
 
 namespace DS4WinWPF.DS4Forms
 {
@@ -28,14 +19,17 @@ namespace DS4WinWPF.DS4Forms
         protected String m_Profile = DS4Windows.Global.appdatapath + "\\Auto Profiles.xml";
         public const string steamCommx86Loc = @"C:\Program Files (x86)\Steam\steamapps\common";
         public const string steamCommLoc = @"C:\Program Files\Steam\steamapps\common";
-        private string steamgamesdir;
+        private readonly string steamgamesdir;
         private AutoProfilesViewModel autoProfVM;
         private AutoProfileHolder autoProfileHolder;
         private ProfileList profileList;
         private bool autoDebug;
 
-        public AutoProfileHolder AutoProfileHolder { get => autoProfileHolder;
-            set => autoProfileHolder = value; }
+        public AutoProfileHolder AutoProfileHolder
+        {
+            get => autoProfileHolder;
+            set => autoProfileHolder = value;
+        }
         public AutoProfilesViewModel AutoProfVM { get => autoProfVM; }
         public bool AutoDebug { get => autoDebug; }
         public event EventHandler AutoDebugChanged;
@@ -45,26 +39,36 @@ namespace DS4WinWPF.DS4Forms
             InitializeComponent();
 
             if (!File.Exists(DS4Windows.Global.appdatapath + @"\Auto Profiles.xml"))
+            {
                 DS4Windows.Global.CreateAutoProfiles(m_Profile);
+            }
 
             //LoadP();
 
             if (DS4Windows.Global.UseCustomSteamFolder &&
                 Directory.Exists(DS4Windows.Global.CustomSteamFolder))
+            {
                 steamgamesdir = DS4Windows.Global.CustomSteamFolder;
+            }
             else if (Directory.Exists(steamCommx86Loc))
+            {
                 steamgamesdir = steamCommx86Loc;
+            }
             else if (Directory.Exists(steamCommLoc))
+            {
                 steamgamesdir = steamCommLoc;
+            }
             else
+            {
                 addProgramsBtn.ContextMenu.Items.Remove(steamMenuItem);
+            }
 
             autoProfileHolder = new AutoProfileHolder();
 
             int currentRowCount = autoProfilesGrid.RowDefinitions.Count;
             if (currentRowCount > DS4Windows.ControlService.CURRENT_DS4_CONTROLLER_LIMIT)
             {
-                for (int i = currentRowCount-1; i >= DS4Windows.ControlService.CURRENT_DS4_CONTROLLER_LIMIT; i--)
+                for (int i = currentRowCount - 1; i >= DS4Windows.ControlService.CURRENT_DS4_CONTROLLER_LIMIT; i--)
                 {
                     autoProfilesGrid.RowDefinitions.RemoveAt(i);
                 }
@@ -76,7 +80,7 @@ namespace DS4WinWPF.DS4Forms
             autoProfVM = new AutoProfilesViewModel(autoProfileHolder, profileList);
             programListLV.DataContext = autoProfVM;
             programListLV.ItemsSource = autoProfVM.ProgramColl;
-            
+
             revertDefaultProfileOnUnknownCk.DataContext = autoProfVM;
 
             autoProfVM.SearchFinished += AutoProfVM_SearchFinished;
@@ -361,8 +365,10 @@ namespace DS4WinWPF.DS4Forms
         {
             if (autoProfVM.SelectedItem != null && sender != null)
             {
-                if(autoProfVM.MoveItemUpDown(autoProfVM.SelectedItem, ((sender as MenuItem).Name == "MoveUp") ? -1 : 1))
+                if (autoProfVM.MoveItemUpDown(autoProfVM.SelectedItem, ((sender as MenuItem).Name == "MoveUp") ? -1 : 1))
+                {
                     autoProfVM.AutoProfileHolder.Save(DS4Windows.Global.appdatapath + @"\Auto Profiles.xml");
+                }
             }
         }
     }

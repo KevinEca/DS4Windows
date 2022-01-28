@@ -1,9 +1,9 @@
-﻿using System;
+﻿using DS4Windows;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Runtime.InteropServices;
-using DS4Windows;
+using System.Text;
 
 namespace DS4WinWPF.DS4Control
 {

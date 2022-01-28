@@ -1,11 +1,10 @@
-﻿using System;
+﻿using DS4Windows.InputDevices;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
-using System.Threading;
-using DS4Windows.InputDevices;
 
 namespace DS4Windows
 {
@@ -56,7 +55,7 @@ namespace DS4Windows
         public const int STATUS_SUCCESS = 0;
         public const int STATUS_INIT_FAILURE = -1;
         private int statusCode = STATUS_INIT_FAILURE;
-        private string instanceId;
+        private readonly string instanceId;
         public int StatusCode
         {
             get => statusCode;
@@ -97,14 +96,14 @@ namespace DS4Windows
     public class DS4Devices
     {
         // (HID device path, DS4Device)
-        private static Dictionary<string, DS4Device> Devices = new Dictionary<string, DS4Device>();
+        private static readonly Dictionary<string, DS4Device> Devices = new Dictionary<string, DS4Device>();
         // (MacAddress, DS4Device)
-        private static Dictionary<string, DS4Device> serialDevices = new Dictionary<string, DS4Device>();
-        private static HashSet<string> deviceSerials = new HashSet<string>();
-        private static HashSet<string> DevicePaths = new HashSet<string>();
+        private static readonly Dictionary<string, DS4Device> serialDevices = new Dictionary<string, DS4Device>();
+        private static readonly HashSet<string> deviceSerials = new HashSet<string>();
+        private static readonly HashSet<string> DevicePaths = new HashSet<string>();
         // Keep instance of opened exclusive mode devices not in use (Charging while using BT connection)
-        private static List<HidDevice> DisabledDevices = new List<HidDevice>();
-        private static Stopwatch sw = new Stopwatch();
+        private static readonly List<HidDevice> DisabledDevices = new List<HidDevice>();
+        private static readonly Stopwatch sw = new Stopwatch();
         public static event RequestElevationDelegate RequestElevation;
         public static CheckVirtualDelegate checkVirtualFunc = null;
         public static PrepareInitDelegate PrepareDS4Init = null;
@@ -123,7 +122,7 @@ namespace DS4Windows
         // https://support.steampowered.com/kb_article.php?ref=5199-TOKV-4426&l=english web site has a list of other PS4 compatible device VID/PID values and brand names. 
         // However, not all those are guaranteed to work with DS4Windows app so support is added case by case when users of DS4Windows app tests non-official DS4 gamepads.
 
-        private static VidPidInfo[] knownDevices =
+        private static readonly VidPidInfo[] knownDevices =
         {
             new VidPidInfo(SONY_VID, 0xBA0, "Sony WA", InputDeviceType.DS4, VidPidFeatureSet.MonitorAudio),
             new VidPidInfo(SONY_VID, 0x5C4, "DS4 v.1"),
@@ -161,7 +160,7 @@ namespace DS4Windows
             new VidPidInfo(0x7331, 0x0001, "DualShock 3 (DS4 Emulation)", InputDeviceType.DS4, VidPidFeatureSet.NoGyroCalib | VidPidFeatureSet.VendorDefinedDevice), // Sony DualShock 3 using DsHidMini driver. DsHidMini uses vendor-defined HID device type when it's emulating DS3 using DS4 button layout
         };
 
-        public static string devicePathToInstanceId(string devicePath)
+        public static string DevicePathToInstanceId(string devicePath)
         {
             string deviceInstanceId = devicePath;
             if (!string.IsNullOrEmpty(deviceInstanceId))
@@ -190,7 +189,7 @@ namespace DS4Windows
         {
             // Assume true by default
             bool result = true;
-            string deviceInstanceId = devicePathToInstanceId(hDevice.DevicePath);
+            string deviceInstanceId = DevicePathToInstanceId(hDevice.DevicePath);
             if (!string.IsNullOrEmpty(deviceInstanceId))
             {
                 CheckVirtualInfo info = checkVirtualFunc(deviceInstanceId);
@@ -204,7 +203,7 @@ namespace DS4Windows
         }
 
         // Enumerates ds4 controllers in the system
-        public static void findControllers()
+        public static void FindControllers()
         {
             lock (Devices)
             {
@@ -235,7 +234,7 @@ namespace DS4Windows
                 });
 
                 List<HidDevice> tempList = hDevices.ToList();
-                purgeHiddenExclusiveDevices();
+                PurgeHiddenExclusiveDevices();
                 tempList.AddRange(DisabledDevices);
                 int devCount = tempList.Count();
                 string devicePlural = "device" + (devCount == 0 || devCount > 1 ? "s" : "");
@@ -249,9 +248,13 @@ namespace DS4Windows
                         x.pid == hDevice.Attributes.ProductId);
 
                     if (!metainfo.featureSet.HasFlag(VidPidFeatureSet.VendorDefinedDevice) && hDevice.Description == "HID-compliant vendor-defined device")
+                    {
                         continue; // ignore the Nacon Revolution Pro programming interface
+                    }
                     else if (DevicePaths.Contains(hDevice.DevicePath))
+                    {
                         continue; // BT/USB endpoint already open once
+                    }
 
                     if (!hDevice.IsOpen)
                     {
@@ -268,8 +271,8 @@ namespace DS4Windows
                                 if (!elevated)
                                 {
                                     // Tell the client to launch routine to re-enable a device
-                                    RequestElevationArgs eleArgs = 
-                                        new RequestElevationArgs(devicePathToInstanceId(hDevice.DevicePath));
+                                    RequestElevationArgs eleArgs =
+                                        new RequestElevationArgs(DevicePathToInstanceId(hDevice.DevicePath));
                                     RequestElevation?.Invoke(eleArgs);
                                     if (eleArgs.StatusCode == RequestElevationArgs.STATUS_SUCCESS)
                                     {
@@ -278,16 +281,18 @@ namespace DS4Windows
                                 }
                                 else
                                 {
-                                    reEnableDevice(devicePathToInstanceId(hDevice.DevicePath));
+                                    ReEnableDevice(DevicePathToInstanceId(hDevice.DevicePath));
                                     hDevice.OpenDevice(isExclusiveMode);
                                 }
                             }
                             catch (Exception) { }
                         }
-                        
+
                         // TODO in exclusive mode, try to hold both open when both are connected
                         if (isExclusiveMode && !hDevice.IsOpen)
+                        {
                             hDevice.OpenDevice(false);
+                        }
                     }
 
                     if (hDevice.IsOpen)
@@ -365,9 +370,9 @@ namespace DS4Windows
                 }
             }
         }
-        
+
         // Returns DS4 controllers that were found and are running
-        public static IEnumerable<DS4Device> getDS4Controllers()
+        public static IEnumerable<DS4Device> GetDS4Controllers()
         {
             lock (Devices)
             {
@@ -377,7 +382,7 @@ namespace DS4Windows
             }
         }
 
-        public static void stopControllers()
+        public static void StopControllers()
         {
             lock (Devices)
             {
@@ -437,27 +442,29 @@ namespace DS4Windows
                 if (device != null)
                 {
                     string devPath = device.HidDevice.DevicePath;
-                    string serial = device.getMacAddress();
+                    string serial = device.GetMacAddress();
                     if (Devices.ContainsKey(devPath))
                     {
                         deviceSerials.Remove(serial);
                         serialDevices.Remove(serial);
-                        device.updateSerial();
-                        serial = device.getMacAddress();
-                        if (DS4Device.isValidSerial(serial))
+                        device.UpdateSerial();
+                        serial = device.GetMacAddress();
+                        if (DS4Device.IsValidSerial(serial))
                         {
                             deviceSerials.Add(serial);
                             serialDevices.Add(serial, device);
                         }
 
                         if (device.ShouldRunCalib())
+                        {
                             device.RefreshCalibration();
+                        }
                     }
                 }
             }
         }
 
-        private static void purgeHiddenExclusiveDevices()
+        private static void PurgeHiddenExclusiveDevices()
         {
             int disabledDevCount = DisabledDevices.Count;
             if (disabledDevCount > 0)
@@ -498,7 +505,7 @@ namespace DS4Windows
             }
         }
 
-        public static void reEnableDevice(string deviceInstanceId)
+        public static void ReEnableDevice(string deviceInstanceId)
         {
             bool success;
             Guid hidGuid = new Guid();

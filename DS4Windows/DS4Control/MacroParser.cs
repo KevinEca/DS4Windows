@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace DS4Windows
@@ -10,27 +7,41 @@ namespace DS4Windows
     public class MacroParser
     {
         private bool loaded;
-        private List<MacroStep> macroSteps;
-        private int[] inputMacro;
-        private Dictionary<int, bool> keydown = new Dictionary<int, bool>();
+        private readonly List<MacroStep> macroSteps;
+        private readonly int[] inputMacro;
+        private readonly Dictionary<int, bool> keydown = new Dictionary<int, bool>();
         public static Dictionary<int, string> macroInputNames = new Dictionary<int, string>()
         {
-            [256] = "Left Mouse Button", [257] = "Right Mouse Button",
-            [258] = "Middle Mouse Button", [259] = "4th Mouse Button",
+            [256] = "Left Mouse Button",
+            [257] = "Right Mouse Button",
+            [258] = "Middle Mouse Button",
+            [259] = "4th Mouse Button",
             [260] = "5th Mouse Button",
             [261] = "A Button",
-            [262] = "B Button", [263] = "X Button",
-            [264] = "Y Button", [265] = "Start",
-            [266] = "Back", [267] = "Up Button",
-            [268] = "Down Button", [269] = "Left Button",
-            [270] = "Right Button", [271] = "Guide",
-            [272] = "Left Bumper", [273] = "Right Bumper",
-            [274] = "Left Trigger", [275] = "Right Trigger",
-            [276] = "Left Stick", [277] = "Right Stick",
-            [278] = "LS Right", [279] = "LS Left",
-            [280] = "LS Down", [281] = "LS Up",
-            [282] = "RS Right", [283] = "RS Left",
-            [284] = "RS Down", [285] = "RS Up",
+            [262] = "B Button",
+            [263] = "X Button",
+            [264] = "Y Button",
+            [265] = "Start",
+            [266] = "Back",
+            [267] = "Up Button",
+            [268] = "Down Button",
+            [269] = "Left Button",
+            [270] = "Right Button",
+            [271] = "Guide",
+            [272] = "Left Bumper",
+            [273] = "Right Bumper",
+            [274] = "Left Trigger",
+            [275] = "Right Trigger",
+            [276] = "Left Stick",
+            [277] = "Right Stick",
+            [278] = "LS Right",
+            [279] = "LS Left",
+            [280] = "LS Down",
+            [281] = "LS Up",
+            [282] = "RS Right",
+            [283] = "RS Left",
+            [284] = "RS Down",
+            [285] = "RS Up",
             [286] = "Touchpad Click",
         };
 
@@ -50,7 +61,7 @@ namespace DS4Windows
             }
 
             keydown.Clear();
-            for(int i = 0; i < inputMacro.Length; i++)
+            for (int i = 0; i < inputMacro.Length; i++)
             {
                 int value = inputMacro[i];
                 MacroStep step = ParseStep(value);
@@ -68,7 +79,7 @@ namespace DS4Windows
             }
 
             List<string> result = new List<string>();
-            foreach(MacroStep step in macroSteps)
+            foreach (MacroStep step in macroSteps)
             {
                 result.Add(step.Name);
             }
@@ -186,8 +197,8 @@ namespace DS4Windows
 
         private string name;
         private int value;
-        private StepType actType;
-        private StepOutput outputType;
+        private readonly StepType actType;
+        private readonly StepOutput outputType;
 
         public string Name
         {
@@ -226,7 +237,7 @@ namespace DS4Windows
         {
             if (actType == StepType.Wait)
             {
-                Name = $"Wait {value-300}ms";
+                Name = $"Wait {value - 300}ms";
             }
             else if (outputType == StepOutput.Rumble)
             {

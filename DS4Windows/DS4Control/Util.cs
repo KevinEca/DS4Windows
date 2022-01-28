@@ -1,11 +1,10 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Diagnostics;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Threading.Tasks;
-using System.Text;
-using System.IO;
-using Microsoft.Win32;
 
 namespace DS4Windows
 {
@@ -201,7 +200,7 @@ namespace DS4Windows
             });
         }
 
-        public static int ElevatedCopyUpdater(string tmpUpdaterPath, bool deleteUpdatesDir=false)
+        public static int ElevatedCopyUpdater(string tmpUpdaterPath, bool deleteUpdatesDir = false)
         {
             int result = -1;
             string tmpPath = Path.Combine(Path.GetTempPath(), "updatercopy.bat");

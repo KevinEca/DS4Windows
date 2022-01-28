@@ -3,7 +3,7 @@ namespace DS4Windows
 {
     public class DS4StateFieldMapping
     {
-        public enum ControlType: int { Unknown = 0, Button, AxisDir, Trigger, Touch, GyroDir, SwipeDir }
+        public enum ControlType : int { Unknown = 0, Button, AxisDir, Trigger, Touch, GyroDir, SwipeDir }
 
         public bool[] buttons = new bool[(int)DS4Controls.RSOuter + 1];
         public byte[] axisdirs = new byte[(int)DS4Controls.RSOuter + 1];
@@ -72,7 +72,7 @@ namespace DS4Windows
         {
         }
 
-        public DS4StateFieldMapping(DS4State cState, DS4StateExposed exposeState, Mouse tp, bool priorMouse=false)
+        public DS4StateFieldMapping(DS4State cState, DS4StateExposed exposeState, Mouse tp, bool priorMouse = false)
         {
             PopulateFieldMapping(cState, exposeState, tp, priorMouse);
         }
@@ -125,11 +125,11 @@ namespace DS4Windows
                 buttons[(int)DS4Controls.TouchUpper] = tp != null ? (!priorMouse ? tp.upperDown : tp.priorUpperDown) : false;
                 buttons[(int)DS4Controls.TouchMulti] = tp != null ? (!priorMouse ? tp.multiDown : tp.priorMultiDown) : false;
 
-                int sixAxisX = -exposeState.getOutputAccelX();
+                int sixAxisX = -exposeState.GetOutputAccelX();
                 gryodirs[(int)DS4Controls.GyroXPos] = sixAxisX > 0 ? sixAxisX : 0;
                 gryodirs[(int)DS4Controls.GyroXNeg] = sixAxisX < 0 ? sixAxisX : 0;
 
-                int sixAxisZ = exposeState.getOutputAccelZ();
+                int sixAxisZ = exposeState.GetOutputAccelZ();
                 gryodirs[(int)DS4Controls.GyroZPos] = sixAxisZ > 0 ? sixAxisZ : 0;
                 gryodirs[(int)DS4Controls.GyroZNeg] = sixAxisZ < 0 ? sixAxisZ : 0;
 

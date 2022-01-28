@@ -1,11 +1,11 @@
-﻿using System;
+﻿using DS4Windows;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using DS4Windows;
 
 namespace DS4WinWPF.DS4Forms.ViewModels
 {
@@ -15,30 +15,46 @@ namespace DS4WinWPF.DS4Forms.ViewModels
         private string iconSource;
         public const string ballonTitle = "DS4Windows";
         public static string trayTitle = $"DS4Windows v{Global.exeversion}";
-        private ContextMenu contextMenu;
-        private MenuItem changeServiceItem;
-        private MenuItem openItem;
-        private MenuItem minimizeItem;
-        private MenuItem openProgramItem;
-        private MenuItem closeItem;
+        private readonly ContextMenu contextMenu;
+        private readonly MenuItem changeServiceItem;
+        private readonly MenuItem openItem;
+        private readonly MenuItem minimizeItem;
+        private readonly MenuItem openProgramItem;
+        private readonly MenuItem closeItem;
 
 
-        public string TooltipText { get => tooltipText;
+        public string TooltipText
+        {
+            get => tooltipText;
             set
             {
                 string temp = value;
-                if (value.Length > 63) temp = value.Substring(0, 63);
-                if (tooltipText == temp) return;
+                if (value.Length > 63)
+                {
+                    temp = value.Substring(0, 63);
+                }
+
+                if (tooltipText == temp)
+                {
+                    return;
+                }
+
                 tooltipText = temp;
                 TooltipTextChanged?.Invoke(this, EventArgs.Empty);
             }
         }
         public event EventHandler TooltipTextChanged;
 
-        public string IconSource { get => iconSource;
+        public string IconSource
+        {
+            get => iconSource;
             set
             {
-                if (iconSource == value) return;
+                if (iconSource == value)
+                {
+                    return;
+                }
+
                 iconSource = value;
                 IconSourceChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -52,10 +68,10 @@ namespace DS4WinWPF.DS4Forms.ViewModels
         public event EventHandler RequestMinimize;
         public event EventHandler RequestServiceChange;
 
-        private ReaderWriterLockSlim _colLocker = new ReaderWriterLockSlim();
-        private List<ControllerHolder> controllerList = new List<ControllerHolder>();
-        private ProfileList profileListHolder;
-        private ControlService controlService;
+        private readonly ReaderWriterLockSlim _colLocker = new ReaderWriterLockSlim();
+        private readonly List<ControllerHolder> controllerList = new List<ControllerHolder>();
+        private readonly ProfileList profileListHolder;
+        private readonly ControlService controlService;
 
         public delegate void ProfileSelectedHandler(TrayIconViewModel sender,
             ControllerHolder item, string profile);
@@ -72,8 +88,11 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             changeServiceItem.Click += ChangeControlServiceItem_Click;
             changeServiceItem.IsEnabled = false;
 
-            openItem = new MenuItem() { Header = "Open",
-                FontWeight = FontWeights.Bold };
+            openItem = new MenuItem()
+            {
+                Header = "Open",
+                FontWeight = FontWeights.Bold
+            };
             openItem.Click += OpenMenuItem_Click;
             minimizeItem = new MenuItem() { Header = "Minimize" };
             minimizeItem.Click += MinimizeMenuItem_Click;
@@ -409,8 +428,8 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
     public class ControllerHolder
     {
-        private DS4Device device;
-        private int index;
+        private readonly DS4Device device;
+        private readonly int index;
         public DS4Device Device { get => device; }
         public int Index { get => index; }
 

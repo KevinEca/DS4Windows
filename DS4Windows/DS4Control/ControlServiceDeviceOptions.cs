@@ -1,25 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DS4Windows.InputDevices;
+using System;
 using System.Xml;
-using DS4Windows.InputDevices;
 
 namespace DS4Windows
 {
     public class ControlServiceDeviceOptions
     {
-        private DS4DeviceOptions dS4DeviceOpts = new DS4DeviceOptions();
+        private readonly DS4DeviceOptions dS4DeviceOpts = new DS4DeviceOptions();
         public DS4DeviceOptions DS4DeviceOpts { get => dS4DeviceOpts; }
 
-        private DualSenseDeviceOptions dualSenseOpts = new DualSenseDeviceOptions();
+        private readonly DualSenseDeviceOptions dualSenseOpts = new DualSenseDeviceOptions();
         public DualSenseDeviceOptions DualSenseOpts { get => dualSenseOpts; }
 
-        private SwitchProDeviceOptions switchProDeviceOpts = new SwitchProDeviceOptions();
+        private readonly SwitchProDeviceOptions switchProDeviceOpts = new SwitchProDeviceOptions();
         public SwitchProDeviceOptions SwitchProDeviceOpts { get => switchProDeviceOpts; }
 
-        private JoyConDeviceOptions joyConDeviceOpts = new JoyConDeviceOptions();
+        private readonly JoyConDeviceOptions joyConDeviceOpts = new JoyConDeviceOptions();
         public JoyConDeviceOptions JoyConDeviceOpts { get => joyConDeviceOpts; }
 
         private bool verboseLogMessages;
@@ -60,7 +56,11 @@ namespace DS4Windows
             get => enabled;
             set
             {
-                if (enabled == value) return;
+                if (enabled == value)
+                {
+                    return;
+                }
+
                 enabled = value;
                 EnabledChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -76,7 +76,11 @@ namespace DS4Windows
             get => copyCatController;
             set
             {
-                if (copyCatController == value) return;
+                if (copyCatController == value)
+                {
+                    return;
+                }
+
                 copyCatController = value;
                 IsCopyCatChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -128,7 +132,11 @@ namespace DS4Windows
             get => enabled;
             set
             {
-                if (enabled == value) return;
+                if (enabled == value)
+                {
+                    return;
+                }
+
                 enabled = value;
                 EnabledChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -159,7 +167,11 @@ namespace DS4Windows
             get => enableRumble;
             set
             {
-                if (enableRumble == value) return;
+                if (enableRumble == value)
+                {
+                    return;
+                }
+
                 enableRumble = value;
                 EnableRumbleChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -172,7 +184,11 @@ namespace DS4Windows
             get => hapticIntensity;
             set
             {
-                if (hapticIntensity == value) return;
+                if (hapticIntensity == value)
+                {
+                    return;
+                }
+
                 hapticIntensity = value;
                 HapticIntensityChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -185,7 +201,11 @@ namespace DS4Windows
             get => ledMode;
             set
             {
-                if (ledMode == value) return;
+                if (ledMode == value)
+                {
+                    return;
+                }
+
                 ledMode = value;
                 LedModeChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -198,7 +218,11 @@ namespace DS4Windows
             get => muteLedMode;
             set
             {
-                if (muteLedMode == value) return;
+                if (muteLedMode == value)
+                {
+                    return;
+                }
+
                 muteLedMode = value;
                 MuteLedModeChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -284,7 +308,11 @@ namespace DS4Windows
             get => enabled;
             set
             {
-                if (enabled == value) return;
+                if (enabled == value)
+                {
+                    return;
+                }
+
                 enabled = value;
                 EnabledChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -300,7 +328,11 @@ namespace DS4Windows
             get => enableHomeLED;
             set
             {
-                if (enableHomeLED == value) return;
+                if (enableHomeLED == value)
+                {
+                    return;
+                }
+
                 enableHomeLED = value;
                 EnableHomeLEDChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -352,7 +384,11 @@ namespace DS4Windows
             get => enabled;
             set
             {
-                if (enabled == value) return;
+                if (enabled == value)
+                {
+                    return;
+                }
+
                 enabled = value;
                 EnabledChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -371,7 +407,11 @@ namespace DS4Windows
             get => linkedMode;
             set
             {
-                if (linkedMode == value) return;
+                if (linkedMode == value)
+                {
+                    return;
+                }
+
                 linkedMode = value;
             }
         }
@@ -388,7 +428,11 @@ namespace DS4Windows
             get => joinGyroProv;
             set
             {
-                if (joinGyroProv == value) return;
+                if (joinGyroProv == value)
+                {
+                    return;
+                }
+
                 joinGyroProv = value;
             }
         }
@@ -402,7 +446,11 @@ namespace DS4Windows
             get => enableHomeLED;
             set
             {
-                if (enableHomeLED == value) return;
+                if (enableHomeLED == value)
+                {
+                    return;
+                }
+
                 enableHomeLED = value;
                 EnableHomeLEDChanged?.Invoke(this, EventArgs.Empty);
             }

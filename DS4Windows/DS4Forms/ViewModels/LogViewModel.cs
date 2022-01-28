@@ -1,17 +1,17 @@
-﻿using System;
+﻿using DS4Windows;
+using System;
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.Threading;
 using System.Windows.Data;
-using DS4Windows;
 
 namespace DS4WinWPF.DS4Forms.ViewModels
 {
     public class LogViewModel
     {
         //private object _colLockobj = new object();
-        private ReaderWriterLockSlim _logListLocker = new ReaderWriterLockSlim();
-        private ObservableCollection<LogItem> logItems = new ObservableCollection<LogItem>();
+        private readonly ReaderWriterLockSlim _logListLocker = new ReaderWriterLockSlim();
+        private readonly ObservableCollection<LogItem> logItems = new ObservableCollection<LogItem>();
 
         public ObservableCollection<LogItem> LogItems => logItems;
 

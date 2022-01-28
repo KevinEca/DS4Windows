@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Diagnostics;
 
 namespace Sensorit.Base
 {
@@ -83,7 +80,9 @@ namespace Sensorit.Base
                 hatX = x;
             }
             else
+            {
                 hatX = alpha * x + (1 - alpha) * hatXPrev;
+            }
 
             hatXPrev = hatX;
 

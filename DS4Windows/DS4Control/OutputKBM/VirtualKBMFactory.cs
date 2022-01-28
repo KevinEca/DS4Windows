@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace DS4Windows.DS4Control
+﻿namespace DS4Windows.DS4Control
 {
     public static class VirtualKBMFactory
     {

@@ -1,5 +1,5 @@
-﻿using System;
-using Sensorit.Base;
+﻿using Sensorit.Base;
+using System;
 
 namespace DS4Windows
 {
@@ -100,7 +100,11 @@ namespace DS4Windows
             get => deadZone;
             set
             {
-                if (deadZone == value) return;
+                if (deadZone == value)
+                {
+                    return;
+                }
+
                 deadZone = value;
                 DeadZoneChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -114,7 +118,11 @@ namespace DS4Windows
             get => maxZone;
             set
             {
-                if (maxZone == value) return;
+                if (maxZone == value)
+                {
+                    return;
+                }
+
                 maxZone = value;
                 MaxZoneChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -128,7 +136,11 @@ namespace DS4Windows
             get => maxOutput;
             set
             {
-                if (maxOutput == value) return;
+                if (maxOutput == value)
+                {
+                    return;
+                }
+
                 maxOutput = value;
                 MaxOutputChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -180,7 +192,11 @@ namespace DS4Windows
             get => minCutoff;
             set
             {
-                if (minCutoff == value) return;
+                if (minCutoff == value)
+                {
+                    return;
+                }
+
                 minCutoff = value;
                 MinCutoffChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -192,7 +208,11 @@ namespace DS4Windows
             get => beta;
             set
             {
-                if (beta == value) return;
+                if (beta == value)
+                {
+                    return;
+                }
+
                 beta = value;
                 BetaChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -329,7 +349,11 @@ namespace DS4Windows
             get => minCutoff;
             set
             {
-                if (minCutoff == value) return;
+                if (minCutoff == value)
+                {
+                    return;
+                }
+
                 minCutoff = value;
                 MinCutoffChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -341,7 +365,11 @@ namespace DS4Windows
             get => beta;
             set
             {
-                if (beta == value) return;
+                if (beta == value)
+                {
+                    return;
+                }
+
                 beta = value;
                 BetaChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -513,7 +541,11 @@ namespace DS4Windows
             get => buttonSensitivity;
             set
             {
-                if (buttonSensitivity == value) return;
+                if (buttonSensitivity == value)
+                {
+                    return;
+                }
+
                 buttonSensitivity = value;
                 ButtonMouseInfoChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -587,7 +619,11 @@ namespace DS4Windows
             get => mode;
             set
             {
-                if (mode == value) return;
+                if (mode == value)
+                {
+                    return;
+                }
+
                 mode = value;
                 ModeChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -620,7 +656,11 @@ namespace DS4Windows
             get => minCutoff;
             set
             {
-                if (minCutoff == value) return;
+                if (minCutoff == value)
+                {
+                    return;
+                }
+
                 minCutoff = value;
                 MinCutoffChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -632,7 +672,11 @@ namespace DS4Windows
             get => beta;
             set
             {
-                if (beta == value) return;
+                if (beta == value)
+                {
+                    return;
+                }
+
                 beta = value;
                 BetaChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -756,7 +800,11 @@ namespace DS4Windows
             get => minCutoff;
             set
             {
-                if (minCutoff == value) return;
+                if (minCutoff == value)
+                {
+                    return;
+                }
+
                 minCutoff = value;
                 MinCutoffChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -768,7 +816,11 @@ namespace DS4Windows
             get => beta;
             set
             {
-                if (beta == value) return;
+                if (beta == value)
+                {
+                    return;
+                }
+
                 beta = value;
                 BetaChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -845,7 +897,11 @@ namespace DS4Windows
             get => twoStageMode;
             set
             {
-                if (twoStageMode == value) return;
+                if (twoStageMode == value)
+                {
+                    return;
+                }
+
                 twoStageMode = value;
                 TwoStageModeChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -859,7 +915,11 @@ namespace DS4Windows
             get => triggerEffect;
             set
             {
-                if (triggerEffect == value) return;
+                if (triggerEffect == value)
+                {
+                    return;
+                }
+
                 triggerEffect = value;
                 TriggerEffectChanged?.Invoke(this, EventArgs.Empty);
             }

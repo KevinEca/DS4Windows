@@ -1,25 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using DS4Windows;
+using System;
+using System.Diagnostics; // StopWatch
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Text;
-using System.Diagnostics; // StopWatch
 using System.Threading; // Sleep
-using System.Threading.Tasks;
-using DS4Windows;
 
 namespace DS4WinWPF
 {
     [SuppressUnmanagedCodeSecurity]
     public class AutoProfileChecker
     {
-        private AutoProfileHolder profileHolder;
+        private readonly AutoProfileHolder profileHolder;
         private IntPtr prevForegroundWnd = IntPtr.Zero;
         private uint prevForegroundProcessID;
         private string prevForegroundProcessName = string.Empty;
         private string prevForegroundWndTitleName = string.Empty;
-        private StringBuilder autoProfileCheckTextBuilder = new StringBuilder(1000);
+        private readonly StringBuilder autoProfileCheckTextBuilder = new StringBuilder(1000);
         private int autoProfileDebugLogLevel = 0;
         private bool turnOffTemp;
         private AutoProfileEntity tempAutoProfile;
@@ -52,7 +49,9 @@ namespace DS4WinWPF
                     if (tempEntity.IsMatch(topProcessName, topWindowTitle))
                     {
                         if (autoProfileDebugLogLevel > 0)
+                        {
                             DS4Windows.AppLogger.LogToGui($"DEBUG: Auto-Profile. Rule#{i + 1}  Path={tempEntity.path}  Title={tempEntity.title}", false, true);
+                        }
 
                         // Matching autoprofile rule found
                         turnOffDS4WinApp = tempEntity.Turnoff;
@@ -85,15 +84,19 @@ namespace DS4WinWPF
                                 forceLoadProfile)
                             {
                                 if (autoProfileDebugLogLevel > 0)
+                                {
                                     DS4Windows.AppLogger.LogToGui($"DEBUG: Auto-Profile. LoadProfile Controller {j + 1}={tempname}", false, true);
+                                }
 
                                 Global.LoadTempProfile(j, tempname, true, Program.rootHub); // j is controller index, i is filename
-                                                                                              //if (LaunchProgram[j] != string.Empty) Process.Start(LaunchProgram[j]);
+                                                                                            //if (LaunchProgram[j] != string.Empty) Process.Start(LaunchProgram[j]);
                             }
                             else
                             {
                                 if (autoProfileDebugLogLevel > 0)
+                                {
                                     DS4Windows.AppLogger.LogToGui($"DEBUG: Auto-Profile. LoadProfile Controller {j + 1}={tempname} (already loaded)", false, true);
+                                }
                             }
                         }
                     }
@@ -104,7 +107,9 @@ namespace DS4WinWPF
                         if (App.rootHub.running)
                         {
                             if (autoProfileDebugLogLevel > 0)
+                            {
                                 DS4Windows.AppLogger.LogToGui($"DEBUG: Auto-Profile. Turning DS4Windows temporarily off", false, true);
+                            }
 
                             SetAndWaitServiceStatus(false);
                         }
@@ -120,7 +125,9 @@ namespace DS4WinWPF
                         if (!App.rootHub.running)
                         {
                             if (autoProfileDebugLogLevel > 0)
+                            {
                                 DS4Windows.AppLogger.LogToGui($"DEBUG: Auto-Profile. Turning DS4Windows on before reverting to default profile", false, true);
+                            }
 
                             SetAndWaitServiceStatus(true);
                         }
@@ -134,14 +141,18 @@ namespace DS4WinWPF
                             if (DS4Windows.Global.AutoProfileRevertDefaultProfile)
                             {
                                 if (autoProfileDebugLogLevel > 0)
+                                {
                                     DS4Windows.AppLogger.LogToGui($"DEBUG: Auto-Profile. Unknown process. Reverting to default profile. Controller {j + 1}={Global.ProfilePath[j]} (default)", false, true);
+                                }
 
                                 Global.LoadProfile(j, false, Program.rootHub);
                             }
                             else
                             {
                                 if (autoProfileDebugLogLevel > 0)
+                                {
                                     DS4Windows.AppLogger.LogToGui($"DEBUG: Auto-Profile. Unknown process. Existing profile left as active. Controller {j + 1}={Global.tempprofilename[j]}", false, true);
+                                }
                             }
                         }
                     }
@@ -193,8 +204,14 @@ namespace DS4WinWPF
                 prevForegroundProcessID = lpdwProcessId;
 
                 hProcess = OpenProcess(0x0410, false, lpdwProcessId);
-                if (hProcess != IntPtr.Zero) GetModuleFileNameEx(hProcess, IntPtr.Zero, autoProfileCheckTextBuilder, autoProfileCheckTextBuilder.Capacity);
-                else autoProfileCheckTextBuilder.Clear();
+                if (hProcess != IntPtr.Zero)
+                {
+                    GetModuleFileNameEx(hProcess, IntPtr.Zero, autoProfileCheckTextBuilder, autoProfileCheckTextBuilder.Capacity);
+                }
+                else
+                {
+                    autoProfileCheckTextBuilder.Clear();
+                }
 
                 prevForegroundProcessName = topProcessName = autoProfileCheckTextBuilder.Replace('/', '\\').ToString().ToLower();
             }
@@ -203,10 +220,15 @@ namespace DS4WinWPF
             prevForegroundWndTitleName = topWndTitleName = autoProfileCheckTextBuilder.ToString().ToLower();
 
 
-            if (hProcess != IntPtr.Zero) CloseHandle(hProcess);
+            if (hProcess != IntPtr.Zero)
+            {
+                CloseHandle(hProcess);
+            }
 
             if (autoProfileDebugLogLevel > 0)
+            {
                 DS4Windows.AppLogger.LogToGui($"DEBUG: Auto-Profile. PID={lpdwProcessId}  Path={topProcessName} | WND={hWnd}  Title={topWndTitleName}", false, true);
+            }
 
             return true;
         }

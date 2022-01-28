@@ -1,5 +1,5 @@
-﻿using System.Windows;
-using DS4WinWPF.DS4Forms.ViewModels;
+﻿using DS4WinWPF.DS4Forms.ViewModels;
+using System.Windows;
 
 namespace DS4WinWPF.DS4Forms
 {
@@ -8,7 +8,7 @@ namespace DS4WinWPF.DS4Forms
     /// </summary>
     public partial class RenameProfileWindow : Window
     {
-        private RenameProfileViewModel renameProfileVM;
+        private readonly RenameProfileViewModel renameProfileVM;
         public RenameProfileViewModel RenameProfileVM
         {
             get => renameProfileVM;

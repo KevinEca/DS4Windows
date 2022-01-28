@@ -1,19 +1,16 @@
-﻿using System;
+﻿using DS4Windows;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
-using DS4Windows;
 
 namespace DS4WinWPF.DS4Forms.ViewModels
 {
     public class SpecialActionsListViewModel
     {
-        private int deviceNum;
-        private ObservableCollection<SpecialActionItem> actionCol =
+        private readonly int deviceNum;
+        private readonly ObservableCollection<SpecialActionItem> actionCol =
             new ObservableCollection<SpecialActionItem>();
         private int specialActionIndex = -1;
 
@@ -24,7 +21,11 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             get => specialActionIndex;
             set
             {
-                if (specialActionIndex == value) return;
+                if (specialActionIndex == value)
+                {
+                    return;
+                }
+
                 specialActionIndex = value;
                 SpecialActionIndexChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -129,7 +130,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
         public void ExportEnabledActions()
         {
             List<string> pactions = new List<string>();
-            foreach(SpecialActionItem item in actionCol)
+            foreach (SpecialActionItem item in actionCol)
             {
                 if (item.Active)
                 {
@@ -152,9 +153,9 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
     public class SpecialActionItem
     {
-        private SpecialAction specialAction;
+        private readonly SpecialAction specialAction;
         private bool active;
-        private string typeName;
+        private readonly string typeName;
         private int index = 0;
 
         public SpecialActionItem(SpecialAction specialAction, string displayName,
@@ -195,7 +196,11 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             get => active;
             set
             {
-                if (active == value) return;
+                if (active == value)
+                {
+                    return;
+                }
+
                 active = value;
                 ActiveChanged?.Invoke(this, EventArgs.Empty);
             }

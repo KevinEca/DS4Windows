@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Text;
@@ -19,16 +18,16 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 {
     public class AutoProfilesViewModel
     {
-        private object _colLockobj = new object();
-        private ObservableCollection<ProgramItem> programColl;
-        private AutoProfileHolder autoProfileHolder;
-        private ProfileList profileList;
+        private readonly object _colLockobj = new();
+        private readonly ObservableCollection<ProgramItem> programColl;
+        private readonly AutoProfileHolder autoProfileHolder;
+        private readonly ProfileList profileList;
         private int selectedIndex = -1;
         private ProgramItem selectedItem;
-        private HashSet<string> existingapps;
+        private readonly HashSet<string> existingapps;
 
         public ObservableCollection<ProgramItem> ProgramColl { get => programColl; }
-        
+
         public AutoProfileHolder AutoProfileHolder { get => autoProfileHolder; }
 
         public int SelectedIndex { get => selectedIndex; set => selectedIndex = value; }
@@ -89,9 +88,9 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
         private void PopulateCurrentEntries()
         {
-            foreach(AutoProfileEntity entry in autoProfileHolder.AutoProfileColl)
+            foreach (AutoProfileEntity entry in autoProfileHolder.AutoProfileColl)
             {
-                ProgramItem item = new ProgramItem(entry.Path, entry);
+                ProgramItem item = new(entry.Path, entry);
 
                 programColl.Add(item);
                 existingapps.Add(entry.Path);
@@ -157,11 +156,11 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
         private void AddFromStartMenu(string path)
         {
-            List<string> lnkpaths = new List<string>();
+            List<string> lnkpaths = new();
             lnkpaths.AddRange(Directory.GetFiles(path, "*.lnk", SearchOption.AllDirectories));
             lnkpaths.AddRange(Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartMenu) + "\\Programs", "*.lnk", SearchOption.AllDirectories));
-            List<string> exepaths = new List<string>();
-            foreach(string link in lnkpaths)
+            List<string> exepaths = new();
+            foreach (string link in lnkpaths)
             {
                 string target = GetTargetPath(link);
                 exepaths.Add(target);
@@ -172,14 +171,14 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
         private void AddAppsFromLocation(string path)
         {
-            List<string> exepaths = new List<string>();
+            List<string> exepaths = new();
             exepaths.AddRange(Directory.GetFiles(path, "*.exe", SearchOption.AllDirectories));
             ScanApps(exepaths);
         }
 
         private void AddAppExeLocation(string path)
         {
-            List<string> exepaths = new List<string>();
+            List<string> exepaths = new();
             exepaths.Add(path);
             ScanApps(exepaths, checkexisting: false, skipsetupapps: false);
         }
@@ -195,7 +194,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
                 skip = skip || (checkexisting && existingapps.Contains(target));
                 if (!skip)
                 {
-                    ProgramItem item = new ProgramItem(target);
+                    ProgramItem item = new(target);
                     /*if (autoProfileHolder.AutoProfileDict.TryGetValue(target, out AutoProfileEntity autoEntity))
                     {
                         item.MatchedAutoProfile = autoEntity;
@@ -212,8 +211,10 @@ namespace DS4WinWPF.DS4Forms.ViewModels
         {
             if (item.MatchedAutoProfile == null)
             {
-                AutoProfileEntity tempEntry = new AutoProfileEntity(item.Path, item.Title);
-                tempEntry.Turnoff = item.Turnoff;
+                AutoProfileEntity tempEntry = new(item.Path, item.Title)
+                {
+                    Turnoff = item.Turnoff
+                };
                 int tempindex = item.SelectedIndexCon1;
                 tempEntry.ProfileNames[0] = tempindex > 0 ? profileList.ProfileListCol[tempindex - 1].Name :
                     AutoProfileEntity.NONE_STRING;
@@ -340,9 +341,9 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
         public string ResolveMsiShortcut(string file)
         {
-            StringBuilder product = new StringBuilder(NativeMethods2.MaxGuidLength + 1);
-            StringBuilder feature = new StringBuilder(NativeMethods2.MaxFeatureLength + 1);
-            StringBuilder component = new StringBuilder(NativeMethods2.MaxGuidLength + 1);
+            StringBuilder product = new(NativeMethods2.MaxGuidLength + 1);
+            StringBuilder feature = new(NativeMethods2.MaxFeatureLength + 1);
+            StringBuilder component = new(NativeMethods2.MaxGuidLength + 1);
 
             NativeMethods2.MsiGetShortcutTarget(file, product, feature, component);
 
@@ -397,12 +398,14 @@ namespace DS4WinWPF.DS4Forms.ViewModels
                 autoProfileHolder.AutoProfileColl.Move(oldIdx, oldIdx - 1);
             }
             else if (moveDirection == 1 && oldIdx >= 0 && oldIdx < programColl.Count - 1 && oldIdx < autoProfileHolder.AutoProfileColl.Count - 1)
-            {    
+            {
                 programColl.Move(oldIdx, oldIdx + 1);
                 autoProfileHolder.AutoProfileColl.Move(oldIdx, oldIdx + 1);
             }
             else
+            {
                 itemMoved = false;
+            }
 
             return itemMoved;
         }
@@ -411,18 +414,24 @@ namespace DS4WinWPF.DS4Forms.ViewModels
     public class ProgramItem
     {
         private string path;
-        private string path_lowercase;
-        private string filename;
+        private readonly string path_lowercase;
+        private readonly string filename;
         private string title;
         private string title_lowercase;
         private AutoProfileEntity matchedAutoProfile;
-        private ImageSource exeicon;
+        private readonly ImageSource exeicon;
         private bool turnoff;
 
-        public string Path { get => path;
+        public string Path
+        {
+            get => path;
             set
             {
-                if (path == value) return;
+                if (path == value)
+                {
+                    return;
+                }
+
                 path = value;
                 if (matchedAutoProfile != null)
                 {
@@ -431,10 +440,16 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             }
         }
 
-        public string Title { get => title;
+        public string Title
+        {
+            get => title;
             set
             {
-                if (title == value) return;
+                if (title == value)
+                {
+                    return;
+                }
+
                 title = value;
                 if (matchedAutoProfile != null)
                 {
@@ -464,7 +479,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
         public event EventHandler MatchedAutoProfileChanged;
         public delegate void AutoProfileHandler(ProgramItem sender, bool added);
         public event AutoProfileHandler AutoProfileAction;
-        public string Filename { get => filename;  }
+        public string Filename { get => filename; }
         public ImageSource Exeicon { get => exeicon; }
 
         public bool Turnoff
@@ -512,7 +527,11 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             get => selectedIndexCon1;
             set
             {
-                if (selectedIndexCon1 == value) return;
+                if (selectedIndexCon1 == value)
+                {
+                    return;
+                }
+
                 selectedIndexCon1 = value;
             }
         }
@@ -522,7 +541,11 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             get => selectedIndexCon2;
             set
             {
-                if (selectedIndexCon2 == value) return;
+                if (selectedIndexCon2 == value)
+                {
+                    return;
+                }
+
                 selectedIndexCon2 = value;
             }
         }
@@ -531,7 +554,11 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             get => selectedIndexCon3;
             set
             {
-                if (selectedIndexCon3 == value) return;
+                if (selectedIndexCon3 == value)
+                {
+                    return;
+                }
+
                 selectedIndexCon3 = value;
             }
         }
@@ -540,7 +567,11 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             get => selectedIndexCon4;
             set
             {
-                if (selectedIndexCon4 == value) return;
+                if (selectedIndexCon4 == value)
+                {
+                    return;
+                }
+
                 selectedIndexCon4 = value;
             }
         }
@@ -550,7 +581,11 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             get => selectedIndexCon5;
             set
             {
-                if (selectedIndexCon5 == value) return;
+                if (selectedIndexCon5 == value)
+                {
+                    return;
+                }
+
                 selectedIndexCon5 = value;
             }
         }
@@ -560,7 +595,11 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             get => selectedIndexCon6;
             set
             {
-                if (selectedIndexCon6 == value) return;
+                if (selectedIndexCon6 == value)
+                {
+                    return;
+                }
+
                 selectedIndexCon6 = value;
             }
         }
@@ -570,7 +609,11 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             get => selectedIndexCon7;
             set
             {
-                if (selectedIndexCon7 == value) return;
+                if (selectedIndexCon7 == value)
+                {
+                    return;
+                }
+
                 selectedIndexCon7 = value;
             }
         }
@@ -580,7 +623,11 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             get => selectedIndexCon8;
             set
             {
-                if (selectedIndexCon8 == value) return;
+                if (selectedIndexCon8 == value)
+                {
+                    return;
+                }
+
                 selectedIndexCon8 = value;
             }
         }

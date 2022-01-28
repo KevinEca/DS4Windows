@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace DS4Windows.InputDevices
 {
@@ -51,7 +49,7 @@ namespace DS4Windows.InputDevices
         //private const int AMP_LIMIT_R_MAX = 206;
         private const int AMP_LIMIT_R_MAX = 404;
 
-        private static RumbleTableData[] fixedRumbleTable = new RumbleTableData[]
+        private static readonly RumbleTableData[] fixedRumbleTable = new RumbleTableData[]
         {
             new RumbleTableData(high: 0x00, low: 0x0040, amp: 0),
             new RumbleTableData(high: 0x02, low: 0x8040, amp: 10), new RumbleTableData(high: 0x04, low: 0x0041, amp: 12), new RumbleTableData(high: 0x06, low: 0x8041, amp: 14),
@@ -90,7 +88,7 @@ namespace DS4Windows.InputDevices
             new RumbleTableData(high: 0xC8, low: 0x0072, amp: 1003),
         };
 
-        private static RumbleTableData[] compiledRumbleTable = new Func<RumbleTableData[]>(() =>
+        private static readonly RumbleTableData[] compiledRumbleTable = new Func<RumbleTableData[]>(() =>
         {
             RumbleTableData[] tmpBuffer = new RumbleTableData[fixedRumbleTable.Last().amp + 1];
             int currentOffset = 0;
@@ -130,7 +128,7 @@ namespace DS4Windows.InputDevices
             public ushort min;
         };
 
-        private static byte[] commandBuffHeader =
+        private static readonly byte[] commandBuffHeader =
             { 0x0, 0x1, 0x40, 0x40, 0x0, 0x1, 0x40, 0x40 };
 
         public const int JOYCON_L_PRODUCT_ID = 0x2006;
@@ -199,13 +197,13 @@ namespace DS4Windows.InputDevices
         public int OutputReportLen { get => OUTPUT_REPORT_LEN; }
         public int RumbleReportLen { get => RUMBLE_REPORT_LEN; }
 
-        private ushort[] leftStickCalib = new ushort[6];
-        private ushort leftStickOffsetX = 0;
-        private ushort leftStickOffsetY = 0;
+        private readonly ushort[] leftStickCalib = new ushort[6];
+        private readonly ushort leftStickOffsetX = 0;
+        private readonly ushort leftStickOffsetY = 0;
 
-        private ushort[] rightStickCalib = new ushort[6];
-        private ushort rightStickOffsetX = 0;
-        private ushort rightStickOffsetY = 0;
+        private readonly ushort[] rightStickCalib = new ushort[6];
+        private readonly ushort rightStickOffsetX = 0;
+        private readonly ushort rightStickOffsetY = 0;
 
         private double combLatency;
         public double CombLatency { get => combLatency; set => combLatency = value; }
@@ -215,7 +213,7 @@ namespace DS4Windows.InputDevices
 
         private JoyConControllerOptions nativeOptionsStore;
 
-        private ReaderWriterLockSlim lockSlim = new ReaderWriterLockSlim();
+        private readonly ReaderWriterLockSlim lockSlim = new ReaderWriterLockSlim();
         private JoyConDevice jointDevice;
         public JoyConDevice JointDevice
         {
@@ -262,7 +260,8 @@ namespace DS4Windows.InputDevices
         {
             runCalib = false;
             synced = true;
-            DeviceSlotNumberChanged += (sender, e) => {
+            DeviceSlotNumberChanged += (sender, e) =>
+            {
                 CalculateDeviceSlotMask();
             };
 
@@ -384,7 +383,7 @@ namespace DS4Windows.InputDevices
             unchecked
             {
                 firstActive = DateTime.UtcNow;
-                NativeMethods.HidD_SetNumInputBuffers(hDevice.safeReadHandle.DangerousGetHandle(), 3);
+                NativeMethods.HidD_SetNumInputBuffers(hDevice.SafeReadHandle.DangerousGetHandle(), 3);
                 Queue<long> latencyQueue = new Queue<long>(21); // Set capacity at max + 1 to avoid any resizing
                 int tempLatencyCount = 0;
                 long oldtime = 0;
@@ -594,15 +593,15 @@ namespace DS4Windows.InputDevices
 
                         tempShort = gyro_raw[IMU_YAW_IDX + gyro_offset] = (short)((ushort)(inputReportBuffer[24 + data_offset] << 8) | inputReportBuffer[23 + data_offset]);
                         //gyro_out[IMU_YAW_IDX + gyro_offset] = (short)(tempShort - device.gyroBias[IMU_YAW_IDX]);
-                        gyro_out[IMU_YAW_IDX + gyro_offset] = (short)(tempShort);
+                        gyro_out[IMU_YAW_IDX + gyro_offset] = tempShort;
 
                         tempShort = gyro_raw[IMU_PITCH_IDX + gyro_offset] = (short)((ushort)(inputReportBuffer[22 + data_offset] << 8) | inputReportBuffer[21 + data_offset]);
                         //gyro_out[IMU_PITCH_IDX + gyro_offset] = (short)(tempShort - device.gyroBias[IMU_PITCH_IDX]);
-                        gyro_out[IMU_PITCH_IDX + gyro_offset] = (short)(tempShort);
+                        gyro_out[IMU_PITCH_IDX + gyro_offset] = tempShort;
 
                         tempShort = gyro_raw[IMU_ROLL_IDX + gyro_offset] = (short)((ushort)(inputReportBuffer[20 + data_offset] << 8) | inputReportBuffer[19 + data_offset]);
                         //gyro_out[IMU_ROLL_IDX + gyro_offset] = (short)(tempShort - device.gyroBias[IMU_ROLL_IDX]);
-                        gyro_out[IMU_ROLL_IDX + gyro_offset] = (short)(tempShort);
+                        gyro_out[IMU_ROLL_IDX + gyro_offset] = tempShort;
 
                         //Console.WriteLine($"IDX: ({i}) Accel: X({accel_raw[IMU_XAXIS_IDX]}) Y({accel_raw[IMU_YAXIS_IDX]}) Z({accel_raw[IMU_ZAXIS_IDX]})");
                         //Console.WriteLine($"IDX: ({i}) Gyro: Yaw({gyro_raw[IMU_YAW_IDX + gyro_offset]}) Pitch({gyro_raw[IMU_PITCH_IDX + gyro_offset]}) Roll({gyro_raw[IMU_ROLL_IDX + gyro_offset]})");
@@ -672,7 +671,7 @@ namespace DS4Windows.InputDevices
                         }
                         else
                         {
-                            idleInput = isDS4Idle();
+                            idleInput = IsDS4Idle();
                             if (!idleInput)
                             {
                                 lastActive = utcNow;
@@ -684,12 +683,14 @@ namespace DS4Windows.InputDevices
                         bool shouldDisconnect = false;
                         if (!isRemoved && idleTimeout > 0)
                         {
-                            idleInput = isDS4Idle();
+                            idleInput = IsDS4Idle();
                             if (idleInput)
                             {
                                 DateTime timeout = lastActive + TimeSpan.FromSeconds(idleTimeout);
                                 if (!charging)
+                                {
                                     shouldDisconnect = utcNow >= timeout;
+                                }
                             }
                             else
                             {
@@ -722,11 +723,15 @@ namespace DS4Windows.InputDevices
                     //forceWrite = false;
 
                     if (!string.IsNullOrEmpty(currerror))
+                    {
                         error = currerror;
+                    }
                     else if (!string.IsNullOrEmpty(error))
+                    {
                         error = string.Empty;
+                    }
 
-                    pState.Motion.copy(cState.Motion);
+                    pState.Motion.Copy(cState.Motion);
                     cState.CopyTo(pState);
 
                     if (hasInputEvts)
@@ -841,7 +846,7 @@ namespace DS4Windows.InputDevices
             frameCount = (byte)(++frameCount & 0x0F);
 
             result = hDevice.WriteOutputReportViaInterrupt(tmpRumble, 0);
-            hDevice.fileStream.Flush();
+            hDevice.FileStream.Flush();
             //res = hidDevice.ReadWithFileStream(tmpReport, 500);
             //res = hidDevice.ReadFile(tmpReport);
         }
@@ -860,7 +865,7 @@ namespace DS4Windows.InputDevices
             commandBuffer[10] = subcommand;
 
             result = hDevice.WriteOutputReportViaInterrupt(commandBuffer, 0);
-            hDevice.fileStream.Flush();
+            hDevice.FileStream.Flush();
 
             byte[] tmpReport = null;
             if (result && checkResponse)
@@ -951,7 +956,7 @@ namespace DS4Windows.InputDevices
                 buffer[8] = (byte)(freq_data_low + (amp_low >> 8) & 0xFF); // 6
                 buffer[9] = (byte)(amp_low & 0xFF); // 7
             }
-            
+
             //byte amp_high = 0x9a; // 609
             //ushort amp_low = 0x8066; // 609
             //buffer[2] = 0x28; // 0
@@ -963,7 +968,7 @@ namespace DS4Windows.InputDevices
             //buffer[7] = 0xc8; // 5
             //buffer[8] = 0x81; // 6
             //buffer[9] = 0x71; // 7
-            
+
             //Console.WriteLine("RUMBLE BUFF: {0}", string.Join(", ", buffer));
             //Console.WriteLine("RUMBLE BUFF: {0}",
             //    string.Concat(buffer.Select(i => string.Format("{0:x2} ", i))));
@@ -1194,8 +1199,15 @@ namespace DS4Windows.InputDevices
         {
             int scaled = sense * ((raw - offset) * 256) / range + 128;
             //if (scaled > 119 && scaled < 138) scaled = 128; // dead zone
-            if (scaled > 255) scaled = 255;
-            else if (scaled < 0) scaled = 0;
+            if (scaled > 255)
+            {
+                scaled = 255;
+            }
+            else if (scaled < 0)
+            {
+                scaled = 0;
+            }
+
             return (byte)(scaled);
         }
 
@@ -1239,7 +1251,9 @@ namespace DS4Windows.InputDevices
                 if (!success)
                 {
                     if (!NativeMethods.BluetoothFindNextRadio(searchHandle, ref btHandle))
+                    {
                         btHandle = IntPtr.Zero;
+                    }
                 }
             }
 
@@ -1261,7 +1275,7 @@ namespace DS4Windows.InputDevices
             if (primaryDevice &&
                 tempJointDevice != null)
             {
-                tempJointDevice.queueEvent(() =>
+                tempJointDevice.QueueEvent(() =>
                 {
                     tempJointDevice.DisconnectBT(callRemoval);
                 });
@@ -1380,7 +1394,7 @@ namespace DS4Windows.InputDevices
             }
         }
 
-        public override DS4State getCurrentStateRef()
+        public override DS4State GetCurrentStateRef()
         {
             DS4State tempState = null;
             if (!performStateMerge)
@@ -1395,7 +1409,7 @@ namespace DS4Windows.InputDevices
             return tempState;
         }
 
-        public override DS4State getPreviousStateRef()
+        public override DS4State GetPreviousStateRef()
         {
             DS4State tempState = null;
             if (!performStateMerge)
@@ -1442,7 +1456,10 @@ namespace DS4Windows.InputDevices
                         dState.SideR = cState.SideR;
                     }
 
-                    if (outputMapGyro) dState.Motion = cState.Motion;
+                    if (outputMapGyro)
+                    {
+                        dState.Motion = cState.Motion;
+                    }
                     //dState.Motion = cState.Motion;
                 }
                 else if (DeviceType == InputDeviceType.JoyConR)
@@ -1468,7 +1485,10 @@ namespace DS4Windows.InputDevices
                         dState.SideR = cState.SideR;
                     }
 
-                    if (outputMapGyro) dState.Motion = cState.Motion;
+                    if (outputMapGyro)
+                    {
+                        dState.Motion = cState.Motion;
+                    }
                     //dState.Motion = cState.Motion;
                 }
             }

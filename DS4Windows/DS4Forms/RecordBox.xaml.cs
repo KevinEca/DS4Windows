@@ -1,21 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DS4WinWPF.DS4Forms.ViewModels;
+using Microsoft.Win32;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using NonFormTimer = System.Timers.Timer;
-using Microsoft.Win32;
 using Xceed.Wpf.Toolkit;
-using DS4WinWPF.DS4Forms.ViewModels;
+using NonFormTimer = System.Timers.Timer;
 
 namespace DS4WinWPF.DS4Forms
 {
@@ -24,7 +16,7 @@ namespace DS4WinWPF.DS4Forms
     /// </summary>
     public partial class RecordBox : UserControl
     {
-        private RecordBoxViewModel recordBoxVM;
+        private readonly RecordBoxViewModel recordBoxVM;
         public RecordBoxViewModel RecordBoxVM { get => recordBoxVM; }
 
         private bool saved;
@@ -34,7 +26,7 @@ namespace DS4WinWPF.DS4Forms
         public event EventHandler Cancel;
 
         private ColorPickerWindow colorDialog;
-        private NonFormTimer ds4 = new NonFormTimer();
+        private readonly NonFormTimer ds4 = new NonFormTimer();
 
         public RecordBox(int deviceNum, DS4Windows.DS4ControlSettings controlSettings, bool shift, bool showscan = true, bool repeatable = true)
         {

@@ -1,21 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DS4Windows;
+using System;
 using System.Windows;
 using System.Windows.Media;
-using DS4Windows;
 
 namespace DS4WinWPF.DS4Forms.ViewModels
 {
     public class BindingWindowViewModel
     {
-        private int deviceNum;
-        private bool use360Mode;
-        private DS4ControlSettings settings;
-        private OutBinding currentOutBind;
-        private OutBinding shiftOutBind;
+        private readonly int deviceNum;
+        private readonly bool use360Mode;
+        private readonly DS4ControlSettings settings;
+        private readonly OutBinding currentOutBind;
+        private readonly OutBinding shiftOutBind;
         private OutBinding actionBinding;
         private bool showShift;
         private bool rumbleActive;
@@ -60,11 +56,11 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             shiftOutBind.input = setting.control;
             if (setting.actionType != DS4ControlSettings.ActionType.Default)
             {
-                switch(setting.actionType)
+                switch (setting.actionType)
                 {
                     case DS4ControlSettings.ActionType.Button:
                         currentOutBind.outputType = OutBinding.OutType.Button;
-                        currentOutBind.control = (X360Controls)setting.action.actionBtn;
+                        currentOutBind.control = setting.action.actionBtn;
                         break;
                     case DS4ControlSettings.ActionType.Default:
                         currentOutBind.outputType = OutBinding.OutType.Default;
@@ -77,7 +73,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
                         break;
                     case DS4ControlSettings.ActionType.Macro:
                         currentOutBind.outputType = OutBinding.OutType.Macro;
-                        currentOutBind.macro = (int[])setting.action.actionMacro;
+                        currentOutBind.macro = setting.action.actionMacro;
                         currentOutBind.macroType = settings.keyType;
                         currentOutBind.hasScanCode = sc;
                         break;
@@ -102,7 +98,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
                 {
                     case DS4ControlSettings.ActionType.Button:
                         shiftOutBind.outputType = OutBinding.OutType.Button;
-                        shiftOutBind.control = (X360Controls)setting.shiftAction.actionBtn;
+                        shiftOutBind.control = setting.shiftAction.actionBtn;
                         break;
                     case DS4ControlSettings.ActionType.Default:
                         shiftOutBind.outputType = OutBinding.OutType.Default;
@@ -115,7 +111,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
                         break;
                     case DS4ControlSettings.ActionType.Macro:
                         shiftOutBind.outputType = OutBinding.OutType.Macro;
-                        shiftOutBind.macro = (int[])setting.shiftAction.actionMacro;
+                        shiftOutBind.macro = setting.shiftAction.actionMacro;
                         shiftOutBind.macroType = setting.shiftKeyType;
                         shiftOutBind.hasScanCode = sc;
                         break;
@@ -216,7 +212,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
         private int lightRumble = 0;
         private int flashRate;
         private int mouseSens = 25;
-        private DS4Color extrasColor = new DS4Color(255,255,255);
+        private DS4Color extrasColor = new DS4Color(255, 255, 255);
 
         public bool HasScanCode { get => hasScanCode; set => hasScanCode = value; }
         public bool Toggle { get => toggle; set => toggle = value; }
@@ -261,7 +257,8 @@ namespace DS4WinWPF.DS4Forms.ViewModels
         public event EventHandler UseMouseSensChanged;
 
         private bool useExtrasColor;
-        public bool UseExtrasColor {
+        public bool UseExtrasColor
+        {
             get
             {
                 return useExtrasColor;
@@ -366,7 +363,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
                 string color = string.Empty;
                 if (outputType == OutType.Default)
                 {
-                    color =  Colors.LimeGreen.ToString();
+                    color = Colors.LimeGreen.ToString();
                 }
                 else
                 {

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
-using System.ComponentModel;
 using System.Threading;
 
 namespace DS4Windows
@@ -70,16 +70,16 @@ namespace DS4Windows
         private Socket udpSock;
         private uint serverId;
         private bool running;
-        private byte[] recvBuffer = new byte[1024];
-        private SocketAsyncEventArgs[] argsList;
+        private readonly byte[] recvBuffer = new byte[1024];
+        private readonly SocketAsyncEventArgs[] argsList;
         private int listInd = 0;
-        private ReaderWriterLockSlim poolLock = new ReaderWriterLockSlim();
-        private SemaphoreSlim _pool;
+        private readonly ReaderWriterLockSlim poolLock = new ReaderWriterLockSlim();
+        private readonly SemaphoreSlim _pool;
         private const int ARG_BUFFER_LEN = 80;
 
         public delegate void GetPadDetail(int padIdx, ref DualShockPadMeta meta);
 
-        private GetPadDetail portInfoGet;
+        private readonly GetPadDetail portInfoGet;
 
         public UdpServer(GetPadDetail getPadDetailDel)
         {
@@ -120,8 +120,8 @@ namespace DS4Windows
         class ClientRequestTimes
         {
             DateTime allPads;
-            DateTime[] padIds;
-            Dictionary<PhysicalAddress, DateTime> padMacs;
+            readonly DateTime[] padIds;
+            readonly Dictionary<PhysicalAddress, DateTime> padMacs;
 
             public DateTime AllPadsTime { get { return allPads; } }
             public DateTime[] PadIdsTime { get { return padIds; } }
@@ -133,7 +133,9 @@ namespace DS4Windows
                 padIds = new DateTime[4];
 
                 for (int i = 0; i < padIds.Length; i++)
+                {
                     padIds[i] = DateTime.MinValue;
+                }
 
                 padMacs = new Dictionary<PhysicalAddress, DateTime>();
             }
@@ -141,13 +143,17 @@ namespace DS4Windows
             public void RequestPadInfo(byte regFlags, byte idToReg, PhysicalAddress macToReg)
             {
                 if (regFlags == 0)
+                {
                     allPads = DateTime.UtcNow;
+                }
                 else
                 {
                     if ((regFlags & 0x01) != 0) //id valid
                     {
                         if (idToReg < padIds.Length)
+                        {
                             padIds[idToReg] = DateTime.UtcNow;
+                        }
                     }
                     if ((regFlags & 0x02) != 0) //mac valid
                     {
@@ -157,7 +163,7 @@ namespace DS4Windows
             }
         }
 
-        private Dictionary<IPEndPoint, ClientRequestTimes> clients = new Dictionary<IPEndPoint, ClientRequestTimes>();
+        private readonly Dictionary<IPEndPoint, ClientRequestTimes> clients = new Dictionary<IPEndPoint, ClientRequestTimes>();
 
         private int BeginPacket(byte[] packetBuf, ushort reqProtocolVersion = MaxProtocolVersion)
         {
@@ -167,7 +173,7 @@ namespace DS4Windows
             packetBuf[currIdx++] = (byte)'U';
             packetBuf[currIdx++] = (byte)'S';
 
-            Array.Copy(BitConverter.GetBytes((ushort)reqProtocolVersion), 0, packetBuf, currIdx, 2);
+            Array.Copy(BitConverter.GetBytes(reqProtocolVersion), 0, packetBuf, currIdx, 2);
             currIdx += 2;
 
             Array.Copy(BitConverter.GetBytes((ushort)packetBuf.Length - 16), 0, packetBuf, currIdx, 2);
@@ -176,7 +182,7 @@ namespace DS4Windows
             Array.Clear(packetBuf, currIdx, 4); //place for crc
             currIdx += 4;
 
-            Array.Copy(BitConverter.GetBytes((uint)serverId), 0, packetBuf, currIdx, 4);
+            Array.Copy(BitConverter.GetBytes(serverId), 0, packetBuf, currIdx, 4);
             currIdx += 4;
 
             return currIdx;
@@ -189,7 +195,7 @@ namespace DS4Windows
             //uint crcCalc = Crc32Algorithm.Compute(packetBuf);
             uint seed = Crc32Algorithm.DefaultSeed;
             uint crcCalc = ~Crc32Algorithm.CalculateBasicHash(ref seed, ref packetBuf, 0, packetBuf.Length);
-            Array.Copy(BitConverter.GetBytes((uint)crcCalc), 0, packetBuf, 8, 4);
+            Array.Copy(BitConverter.GetBytes(crcCalc), 0, packetBuf, 8, 4);
         }
 
         private void SendPacket(IPEndPoint clientEP, byte[] usefulData, ushort reqProtocolVersion = MaxProtocolVersion)
@@ -212,14 +218,21 @@ namespace DS4Windows
             Array.Copy(packetData, args.Buffer, packetData.Length);
             //args.SetBuffer(packetData, 0, packetData.Length);
             bool sentAsync = false;
-            try {
+            try
+            {
                 sentAsync = udpSock.SendToAsync(args);
-                if (!sentAsync) CompletedSynchronousSocketEvent();
+                if (!sentAsync)
+                {
+                    CompletedSynchronousSocketEvent();
+                }
             }
             catch (Exception /*e*/) { }
             finally
             {
-                if (!sentAsync) CompletedSynchronousSocketEvent();
+                if (!sentAsync)
+                {
+                    CompletedSynchronousSocketEvent();
+                }
             }
         }
 
@@ -229,25 +242,35 @@ namespace DS4Windows
             {
                 int currIdx = 0;
                 if (localMsg[0] != 'D' || localMsg[1] != 'S' || localMsg[2] != 'U' || localMsg[3] != 'C')
+                {
                     return;
+                }
                 else
+                {
                     currIdx += 4;
+                }
 
                 uint protocolVer = BitConverter.ToUInt16(localMsg, currIdx);
                 currIdx += 2;
 
                 if (protocolVer > MaxProtocolVersion)
+                {
                     return;
+                }
 
                 uint packetSize = BitConverter.ToUInt16(localMsg, currIdx);
                 currIdx += 2;
 
                 if (packetSize < 0)
+                {
                     return;
+                }
 
                 packetSize += 16; //size of header
                 if (packetSize > localMsg.Length)
+                {
                     return;
+                }
                 else if (packetSize < localMsg.Length)
                 {
                     byte[] newMsg = new byte[packetSize];
@@ -264,7 +287,9 @@ namespace DS4Windows
 
                 uint crcCalc = Crc32Algorithm.Compute(localMsg);
                 if (crcValue != crcCalc)
+                {
                     return;
+                }
 
                 uint clientId = BitConverter.ToUInt32(localMsg, currIdx);
                 currIdx += 4;
@@ -278,7 +303,7 @@ namespace DS4Windows
                     int outIdx = 0;
                     Array.Copy(BitConverter.GetBytes((uint)MessageType.DSUS_VersionRsp), 0, outputData, outIdx, 4);
                     outIdx += 4;
-                    Array.Copy(BitConverter.GetBytes((ushort)MaxProtocolVersion), 0, outputData, outIdx, 2);
+                    Array.Copy(BitConverter.GetBytes(MaxProtocolVersion), 0, outputData, outIdx, 2);
                     outIdx += 2;
                     outputData[outIdx++] = 0;
                     outputData[outIdx++] = 0;
@@ -290,14 +315,18 @@ namespace DS4Windows
                     int numPadRequests = BitConverter.ToInt32(localMsg, currIdx);
                     currIdx += 4;
                     if (numPadRequests < 0 || numPadRequests > NUMBER_SLOTS)
+                    {
                         return;
+                    }
 
                     int requestsIdx = currIdx;
                     for (int i = 0; i < numPadRequests; i++)
                     {
                         byte currRequest = localMsg[requestsIdx + i];
                         if (currRequest >= NUMBER_SLOTS)
+                        {
                             return;
+                        }
                     }
 
                     byte[] outputData = new byte[16];
@@ -311,14 +340,16 @@ namespace DS4Windows
                         Array.Copy(BitConverter.GetBytes((uint)MessageType.DSUS_PortInfo), 0, outputData, outIdx, 4);
                         outIdx += 4;
 
-                        outputData[outIdx++] = (byte)padData.PadId;
+                        outputData[outIdx++] = padData.PadId;
                         outputData[outIdx++] = (byte)padData.PadState;
                         outputData[outIdx++] = (byte)padData.Model;
                         outputData[outIdx++] = (byte)padData.ConnectionType;
 
                         byte[] addressBytes = null;
                         if (padData.PadMacAddress != null)
+                        {
                             addressBytes = padData.PadMacAddress.GetAddressBytes();
+                        }
 
                         if (addressBytes != null && addressBytes.Length == 6)
                         {
@@ -360,7 +391,9 @@ namespace DS4Windows
                     lock (clients)
                     {
                         if (clients.ContainsKey(clientEP))
+                        {
                             clients[clientEP].RequestPadInfo(regFlags, idToReg, macToReg);
+                        }
                         else
                         {
                             var clientTimes = new ClientRequestTimes();
@@ -394,7 +427,9 @@ namespace DS4Windows
 
             //Process the data if its valid
             if (localMsg != null)
+            {
                 ProcessIncoming(localMsg, (IPEndPoint)clientEP);
+            }
         }
         private void StartReceive()
         {
@@ -443,20 +478,23 @@ namespace DS4Windows
                 {
                     // Listen on all IPV4 interfaces. 
                     // Remote client connections allowed. If the local network is not "safe" then may not be a good idea, because at the moment incoming connections are not authenticated in any way
-                    udpListenIPAddress = IPAddress.Any;                    
+                    udpListenIPAddress = IPAddress.Any;
                 }
                 else
                 {
                     // Listen on a specific hostname or IPV4 interface address. If the hostname has multiple interfaces then use the first IPV4 address because it is usually the primary IP addr.
                     // Remote client connections allowed.
                     IPAddress[] ipAddresses = Dns.GetHostAddresses(listenAddress);
-                    udpListenIPAddress = null; 
+                    udpListenIPAddress = null;
                     foreach (IPAddress ip4 in ipAddresses.Where(ip => ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork))
                     {
                         udpListenIPAddress = ip4;
                         break;
                     }
-                    if (udpListenIPAddress == null) throw new SocketException(10049 /*WSAEADDRNOTAVAIL*/);
+                    if (udpListenIPAddress == null)
+                    {
+                        throw new SocketException(10049 /*WSAEADDRNOTAVAIL*/);
+                    }
                 }
                 udpSock.Bind(new IPEndPoint(udpListenIPAddress, port));
             }
@@ -492,27 +530,87 @@ namespace DS4Windows
             {
                 outputData[outIdx] = 0;
 
-                if (hidReport.DpadLeft) outputData[outIdx] |= 0x80;
-                if (hidReport.DpadDown) outputData[outIdx] |= 0x40;
-                if (hidReport.DpadRight) outputData[outIdx] |= 0x20;
-                if (hidReport.DpadUp) outputData[outIdx] |= 0x10;
+                if (hidReport.DpadLeft)
+                {
+                    outputData[outIdx] |= 0x80;
+                }
 
-                if (hidReport.Options) outputData[outIdx] |= 0x08;
-                if (hidReport.R3) outputData[outIdx] |= 0x04;
-                if (hidReport.L3) outputData[outIdx] |= 0x02;
-                if (hidReport.Share) outputData[outIdx] |= 0x01;
+                if (hidReport.DpadDown)
+                {
+                    outputData[outIdx] |= 0x40;
+                }
+
+                if (hidReport.DpadRight)
+                {
+                    outputData[outIdx] |= 0x20;
+                }
+
+                if (hidReport.DpadUp)
+                {
+                    outputData[outIdx] |= 0x10;
+                }
+
+                if (hidReport.Options)
+                {
+                    outputData[outIdx] |= 0x08;
+                }
+
+                if (hidReport.R3)
+                {
+                    outputData[outIdx] |= 0x04;
+                }
+
+                if (hidReport.L3)
+                {
+                    outputData[outIdx] |= 0x02;
+                }
+
+                if (hidReport.Share)
+                {
+                    outputData[outIdx] |= 0x01;
+                }
 
                 outputData[++outIdx] = 0;
 
-                if (hidReport.Square) outputData[outIdx] |= 0x80;
-                if (hidReport.Cross) outputData[outIdx] |= 0x40;
-                if (hidReport.Circle) outputData[outIdx] |= 0x20;
-                if (hidReport.Triangle) outputData[outIdx] |= 0x10;
+                if (hidReport.Square)
+                {
+                    outputData[outIdx] |= 0x80;
+                }
 
-                if (hidReport.R1) outputData[outIdx] |= 0x08;
-                if (hidReport.L1) outputData[outIdx] |= 0x04;
-                if (hidReport.R2Btn) outputData[outIdx] |= 0x02;
-                if (hidReport.L2Btn) outputData[outIdx] |= 0x01;
+                if (hidReport.Cross)
+                {
+                    outputData[outIdx] |= 0x40;
+                }
+
+                if (hidReport.Circle)
+                {
+                    outputData[outIdx] |= 0x20;
+                }
+
+                if (hidReport.Triangle)
+                {
+                    outputData[outIdx] |= 0x10;
+                }
+
+                if (hidReport.R1)
+                {
+                    outputData[outIdx] |= 0x08;
+                }
+
+                if (hidReport.L1)
+                {
+                    outputData[outIdx] |= 0x04;
+                }
+
+                if (hidReport.R2Btn)
+                {
+                    outputData[outIdx] |= 0x02;
+                }
+
+                if (hidReport.L2Btn)
+                {
+                    outputData[outIdx] |= 0x01;
+                }
 
                 outputData[++outIdx] = (hidReport.PS) ? (byte)1 : (byte)0;
                 outputData[++outIdx] = (hidReport.TouchButton) ? (byte)1 : (byte)0;
@@ -552,7 +650,7 @@ namespace DS4Windows
                     var tpad = (i == 0) ? hidReport.TrackPadTouch0 : hidReport.TrackPadTouch1;
 
                     outputData[outIdx++] = tpad.IsActive ? (byte)1 : (byte)0;
-                    outputData[outIdx++] = (byte)tpad.Id;
+                    outputData[outIdx++] = tpad.Id;
                     Array.Copy(BitConverter.GetBytes((ushort)tpad.X), 0, outputData, outIdx, 2);
                     outIdx += 2;
                     Array.Copy(BitConverter.GetBytes((ushort)tpad.Y), 0, outputData, outIdx, 2);
@@ -561,9 +659,13 @@ namespace DS4Windows
 
                 //motion timestamp
                 if (hidReport.Motion != null)
-                    Array.Copy(BitConverter.GetBytes((ulong)hidReport.totalMicroSec), 0, outputData, outIdx, 8);
+                {
+                    Array.Copy(BitConverter.GetBytes(hidReport.totalMicroSec), 0, outputData, outIdx, 8);
+                }
                 else
+                {
                     Array.Clear(outputData, outIdx, 8);
+                }
 
                 outIdx += 8;
 
@@ -606,7 +708,9 @@ namespace DS4Windows
         public void NewReportIncoming(ref DualShockPadMeta padMeta, DS4State hidReport, byte[] outputData)
         {
             if (!running)
+            {
                 return;
+            }
 
             var clientsList = new List<IPEndPoint>();
             var now = DateTime.UtcNow;
@@ -619,13 +723,19 @@ namespace DS4Windows
                     const double TimeoutLimit = 5;
 
                     if ((now - cl.Value.AllPadsTime).TotalSeconds < TimeoutLimit)
+                    {
                         clientsList.Add(cl.Key);
+                    }
                     else if ((padMeta.PadId < cl.Value.PadIdsTime.Length) &&
-                             (now - cl.Value.PadIdsTime[(byte)padMeta.PadId]).TotalSeconds < TimeoutLimit)
+                             (now - cl.Value.PadIdsTime[padMeta.PadId]).TotalSeconds < TimeoutLimit)
+                    {
                         clientsList.Add(cl.Key);
+                    }
                     else if (cl.Value.PadMacsTime.ContainsKey(padMeta.PadMacAddress) &&
                              (now - cl.Value.PadMacsTime[padMeta.PadMacAddress]).TotalSeconds < TimeoutLimit)
+                    {
                         clientsList.Add(cl.Key);
+                    }
                     else //check if this client is totally dead, and remove it if so
                     {
                         bool clientOk = false;
@@ -651,7 +761,9 @@ namespace DS4Windows
                             }
 
                             if (!clientOk)
+                            {
                                 clientsToDelete.Add(cl.Key);
+                            }
                         }
                     }
                 }
@@ -665,7 +777,9 @@ namespace DS4Windows
             }
 
             if (clientsList.Count <= 0)
+            {
                 return;
+            }
 
             unchecked
             {
@@ -674,7 +788,7 @@ namespace DS4Windows
                 Array.Copy(BitConverter.GetBytes((uint)MessageType.DSUS_PadDataRsp), 0, outputData, outIdx, 4);
                 outIdx += 4;
 
-                outputData[outIdx++] = (byte)padMeta.PadId;
+                outputData[outIdx++] = padMeta.PadId;
                 outputData[outIdx++] = (byte)padMeta.PadState;
                 outputData[outIdx++] = (byte)padMeta.Model;
                 outputData[outIdx++] = (byte)padMeta.ConnectionType;
@@ -690,13 +804,17 @@ namespace DS4Windows
                 outputData[outIdx++] = (byte)padMeta.BatteryStatus;
                 outputData[outIdx++] = padMeta.IsActive ? (byte)1 : (byte)0;
 
-                Array.Copy(BitConverter.GetBytes((uint)hidReport.PacketCounter), 0, outputData, outIdx, 4);
+                Array.Copy(BitConverter.GetBytes(hidReport.PacketCounter), 0, outputData, outIdx, 4);
                 outIdx += 4;
 
                 if (!ReportToBuffer(hidReport, outputData, ref outIdx))
+                {
                     return;
+                }
                 else
+                {
                     FinishPacket(outputData);
+                }
 
                 foreach (var cl in clientsList)
                 {
@@ -712,13 +830,17 @@ namespace DS4Windows
                     args.RemoteEndPoint = cl;
                     Array.Copy(outputData, args.Buffer, outputData.Length);
                     bool sentAsync = false;
-                    try {
+                    try
+                    {
                         sentAsync = udpSock.SendToAsync(args);
                     }
                     catch (SocketException /*ex*/) { }
                     finally
                     {
-                        if (!sentAsync) CompletedSynchronousSocketEvent();
+                        if (!sentAsync)
+                        {
+                            CompletedSynchronousSocketEvent();
+                        }
                     }
                 }
             }

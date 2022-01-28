@@ -11,7 +11,11 @@ namespace DS4WinWPF
             get => message;
             set
             {
-                if (message == value) return;
+                if (message == value)
+                {
+                    return;
+                }
+
                 message = value;
                 MessageChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -19,10 +23,16 @@ namespace DS4WinWPF
 
         public event EventHandler MessageChanged;
 
-        public bool Warning { get => warning;
+        public bool Warning
+        {
+            get => warning;
             set
             {
-                if (warning == value) return;
+                if (warning == value)
+                {
+                    return;
+                }
+
                 warning = value;
                 WarningChanged?.Invoke(this, EventArgs.Empty);
                 ColorChanged?.Invoke(this, EventArgs.Empty);

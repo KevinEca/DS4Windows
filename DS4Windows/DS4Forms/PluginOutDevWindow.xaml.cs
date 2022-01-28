@@ -1,18 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using DS4Windows;
+﻿using DS4Windows;
 using DS4WinWPF.DS4Control;
+using System.Windows;
 
 namespace DS4WinWPF.DS4Forms
 {
@@ -49,7 +37,7 @@ namespace DS4WinWPF.DS4Forms
                     break;
             }
 
-            switch(reserveTypeCombo.SelectedIndex)
+            switch (reserveTypeCombo.SelectedIndex)
             {
                 case 0:
                     reserveType = OutSlotDevice.ReserveStatus.Dynamic;

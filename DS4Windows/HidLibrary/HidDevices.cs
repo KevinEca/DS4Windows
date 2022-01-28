@@ -33,7 +33,7 @@ namespace DS4Windows
 
         public static IEnumerable<HidDevice> Enumerate(int vendorId, params int[] productIds)
         {
-            return EnumerateDevices().Select(x => new HidDevice(x.Path, x.Description)).Where(x => x.Attributes.VendorId == vendorId && 
+            return EnumerateDevices().Select(x => new HidDevice(x.Path, x.Description)).Where(x => x.Attributes.VendorId == vendorId &&
                                                                                   productIds.Contains(x.Attributes.ProductId));
         }
 
@@ -62,7 +62,7 @@ namespace DS4Windows
                     VidPidInfo tempInfo = devInfo[j];
                     if ((tempDev.Capabilities.Usage == HID_USAGE_GAMEPAD ||
                         tempDev.Capabilities.Usage == HID_USAGE_JOYSTICK ||
-                        tempInfo.featureSet.HasFlag(VidPidFeatureSet.VendorDefinedDevice))  &&
+                        tempInfo.featureSet.HasFlag(VidPidFeatureSet.VendorDefinedDevice)) &&
                         tempDev.Attributes.VendorId == tempInfo.vid &&
                         tempDev.Attributes.ProductId == tempInfo.pid)
                     {
@@ -128,7 +128,7 @@ namespace DS4Windows
                     {
                         deviceInterfaceIndex++;
                         var devicePath = GetDevicePath(deviceInfoSet, deviceInterfaceData);
-                        var description = GetBusReportedDeviceDescription(deviceInfoSet, ref deviceInfoData) ?? 
+                        var description = GetBusReportedDeviceDescription(deviceInfoSet, ref deviceInfoData) ??
                                           GetDeviceDescription(deviceInfoSet, ref deviceInfoData);
                         var parent = GetDeviceParent(deviceInfoSet, ref deviceInfoData);
                         devices.Add(new DeviceInfo { Path = devicePath, Description = description, Parent = parent });
@@ -158,7 +158,7 @@ namespace DS4Windows
 
             NativeMethods.SetupDiGetDeviceInterfaceDetailBuffer(deviceInfoSet, ref deviceInterfaceData, IntPtr.Zero, 0, ref bufferSize, IntPtr.Zero);
 
-            return NativeMethods.SetupDiGetDeviceInterfaceDetail(deviceInfoSet, ref deviceInterfaceData, ref interfaceDetail, bufferSize, ref bufferSize, IntPtr.Zero) ? 
+            return NativeMethods.SetupDiGetDeviceInterfaceDetail(deviceInfoSet, ref deviceInterfaceData, ref interfaceDetail, bufferSize, ref bufferSize, IntPtr.Zero) ?
                 interfaceDetail.DevicePath : null;
         }
 
@@ -166,7 +166,11 @@ namespace DS4Windows
         {
             get
             {
-                if (_hidClassGuid.Equals(Guid.Empty)) NativeMethods.HidD_GetHidGuid(ref _hidClassGuid);
+                if (_hidClassGuid.Equals(Guid.Empty))
+                {
+                    NativeMethods.HidD_GetHidGuid(ref _hidClassGuid);
+                }
+
                 return _hidClassGuid;
             }
         }
@@ -207,7 +211,10 @@ namespace DS4Windows
                                                                         ref requiredSize,
                                                                         0);
 
-                if (_continue) return descriptionBuffer.ToUTF16String();
+                if (_continue)
+                {
+                    return descriptionBuffer.ToUTF16String();
+                }
             }
             return null;
         }
@@ -242,5 +249,5 @@ namespace DS4Windows
 
             return result;
         }
-   }
+    }
 }

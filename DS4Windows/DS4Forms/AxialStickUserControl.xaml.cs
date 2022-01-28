@@ -1,7 +1,6 @@
-﻿using System;
-using System.Windows.Controls;
-using DS4Windows;
+﻿using DS4Windows;
 using DS4WinWPF.DS4Forms.ViewModels;
+using System.Windows.Controls;
 
 namespace DS4WinWPF.DS4Forms
 {

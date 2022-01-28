@@ -1,7 +1,6 @@
-﻿using System;
+﻿using FakerInputWrapper;
 using System.Collections.Generic;
 using System.Threading;
-using FakerInputWrapper;
 
 namespace DS4Windows.DS4Control
 {
@@ -17,14 +16,14 @@ namespace DS4Windows.DS4Control
 
         private const double ABSOLUTE_MOUSE_COOR_MAX = 32767.0;
 
-        private FakerInput fakerInput = null;
-        private RelativeMouseReport mouseReport = new RelativeMouseReport();
-        private AbsoluteMouseReport absoluteMouseReport = new AbsoluteMouseReport();
-        private KeyboardReport keyReport = new KeyboardReport();
-        private KeyboardEnhancedReport mediaKeyReport = new KeyboardEnhancedReport();
+        private readonly FakerInput fakerInput = null;
+        private readonly RelativeMouseReport mouseReport = new RelativeMouseReport();
+        private readonly AbsoluteMouseReport absoluteMouseReport = new AbsoluteMouseReport();
+        private readonly KeyboardReport keyReport = new KeyboardReport();
+        private readonly KeyboardEnhancedReport mediaKeyReport = new KeyboardEnhancedReport();
 
-        private HashSet<KeyboardModifier> modifiers = new HashSet<KeyboardModifier>();
-        private HashSet<KeyboardKey> pressedKeys = new HashSet<KeyboardKey>();
+        private readonly HashSet<KeyboardModifier> modifiers = new HashSet<KeyboardModifier>();
+        private readonly HashSet<KeyboardKey> pressedKeys = new HashSet<KeyboardKey>();
 
         // Flags that will dictate which output report methods to call in Sync method
         private bool syncKeyboard;
@@ -33,7 +32,7 @@ namespace DS4Windows.DS4Control
         private bool syncAbsoluteMouse;
 
         // Used to guard reports and attempt to keep methods thread safe
-        private ReaderWriterLockSlim eventLock = new ReaderWriterLockSlim();
+        private readonly ReaderWriterLockSlim eventLock = new ReaderWriterLockSlim();
 
         public FakerInputHandler()
         {
@@ -64,13 +63,13 @@ namespace DS4Windows.DS4Control
             absoluteMouseReport.Reset();
             syncAbsoluteMouse = true;
 
-            foreach(KeyboardModifier mod in modifiers)
+            foreach (KeyboardModifier mod in modifiers)
             {
                 keyReport.KeyUp(mod);
             }
             modifiers.Clear();
 
-            foreach(KeyboardKey key in pressedKeys)
+            foreach (KeyboardKey key in pressedKeys)
             {
                 keyReport.KeyUp(key);
             }

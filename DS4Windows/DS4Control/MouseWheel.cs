@@ -13,16 +13,20 @@ namespace DS4Windows
         // Keep track of remainders when performing scrolls or we lose fractional parts.
         private double horizontalRemainder = 0.0, verticalRemainder = 0.0;
 
-        public void touchesBegan(TouchpadEventArgs arg)
+        public void TouchesBegan(TouchpadEventArgs arg)
         {
             if (arg.touches.Length == 2)
+            {
                 horizontalRemainder = verticalRemainder = 0.0;
+            }
         }
 
-        public void touchesMoved(TouchpadEventArgs arg, bool dragging)
+        public void TouchesMoved(TouchpadEventArgs arg, bool dragging)
         {
             if (arg.touches.Length != 2 || dragging)
+            {
                 return;
+            }
 
             Touch lastT0 = arg.touches[0].previousTouch;
             Touch lastT1 = arg.touches[1].previousTouch;

@@ -1,12 +1,10 @@
-﻿using System;
+﻿using HttpProgress;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Documents;
-using HttpProgress;
-using System.Text.Json;
 using MarkdownEngine = MdXaml.Markdown;
 
 namespace DS4WinWPF.DS4Forms.ViewModels
@@ -19,7 +17,11 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             get => changelogDocument;
             private set
             {
-                if (changelogDocument == value) return;
+                if (changelogDocument == value)
+                {
+                    return;
+                }
+
                 changelogDocument = value;
                 ChangelogDocumentChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -50,7 +52,10 @@ namespace DS4WinWPF.DS4Forms.ViewModels
                 try
                 {
                     await temp.ConfigureAwait(true);
-                    if (temp.Result.IsSuccessStatusCode) readFile = true;
+                    if (temp.Result.IsSuccessStatusCode)
+                    {
+                        readFile = true;
+                    }
                 }
                 catch (System.Net.Http.HttpRequestException) { }
             }
@@ -69,7 +74,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
                     ChangelogInfo tempInfo = JsonSerializer.Deserialize<ChangelogInfo>(temp, options);
                     BuildChangelogDocument(tempInfo);
                 }
-                catch (JsonException) {}
+                catch (JsonException) { }
             }
             else if (!readFile)
             {

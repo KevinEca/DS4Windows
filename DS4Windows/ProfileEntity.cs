@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DS4WinWPF
 {
@@ -15,7 +11,11 @@ namespace DS4WinWPF
             get => name;
             set
             {
-                if (name == value) return;
+                if (name == value)
+                {
+                    return;
+                }
+
                 name = value;
                 NameChanged?.Invoke(this, EventArgs.Empty);
             }

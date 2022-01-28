@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DS4Windows;
+﻿using DS4Windows;
 using DS4WinWPF.DS4Forms.ViewModels.Util;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DS4WinWPF.DS4Forms.ViewModels.SpecialActions
 {
     public class LoadProfileViewModel : NotifyDataErrorBase
     {
         private bool autoUntrigger;
-        private ProfileList profileList;
+        private readonly ProfileList profileList;
         private int profileIndex;
         private bool normalTrigger = true;
 
@@ -22,7 +19,11 @@ namespace DS4WinWPF.DS4Forms.ViewModels.SpecialActions
             get => profileIndex;
             set
             {
-                if (profileIndex == value) return;
+                if (profileIndex == value)
+                {
+                    return;
+                }
+
                 profileIndex = value;
                 ProfileIndexChanged?.Invoke(this, EventArgs.Empty);
             }

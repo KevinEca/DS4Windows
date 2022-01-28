@@ -1,23 +1,16 @@
-﻿using System;
+﻿using DS4Windows;
+using DS4WinWPF.DS4Forms.ViewModels;
+using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Microsoft.Win32;
 using NonFormTimer = System.Timers.Timer;
-using DS4WinWPF.DS4Forms.ViewModels;
-using DS4Windows;
-using System.ComponentModel;
 
 namespace DS4WinWPF.DS4Forms
 {
@@ -33,27 +26,27 @@ namespace DS4WinWPF.DS4Forms
         }
 
         private int deviceNum;
-        private ProfileSettingsViewModel profileSettingsVM;
-        private MappingListViewModel mappingListVM;
+        private readonly ProfileSettingsViewModel profileSettingsVM;
+        private readonly MappingListViewModel mappingListVM;
         private ProfileEntity currentProfile;
-        private SpecialActionsListViewModel specialActionsVM;
+        private readonly SpecialActionsListViewModel specialActionsVM;
 
         public event EventHandler Closed;
         public delegate void CreatedProfileHandler(ProfileEditor sender, string profile);
         public event CreatedProfileHandler CreatedProfile;
 
-        private Dictionary<Button, ImageBrush> hoverImages =
+        private readonly Dictionary<Button, ImageBrush> hoverImages =
             new Dictionary<Button, ImageBrush>();
-        private Dictionary<Button, HoverImageInfo> hoverLocations = new Dictionary<Button, HoverImageInfo>();
-        private Dictionary<Button, int> hoverIndexes = new Dictionary<Button, int>();
-        private Dictionary<int, Button> reverseHoverIndexes = new Dictionary<int, Button>();
+        private readonly Dictionary<Button, HoverImageInfo> hoverLocations = new Dictionary<Button, HoverImageInfo>();
+        private readonly Dictionary<Button, int> hoverIndexes = new Dictionary<Button, int>();
+        private readonly Dictionary<int, Button> reverseHoverIndexes = new Dictionary<int, Button>();
 
         private bool keepsize;
         private bool controllerReadingsTabActive = false;
         public bool Keepsize { get => keepsize; }
         public int DeviceNum { get => deviceNum; }
 
-        private NonFormTimer inputTimer;
+        private readonly NonFormTimer inputTimer;
 
         public ProfileEditor(int device)
         {
@@ -202,7 +195,7 @@ namespace DS4WinWPF.DS4Forms
 
         private void PopulateReverseHoverIndexes()
         {
-            foreach(KeyValuePair<Button, int> pair in hoverIndexes)
+            foreach (KeyValuePair<Button, int> pair in hoverIndexes)
             {
                 reverseHoverIndexes.Add(pair.Value, pair.Key);
             }
@@ -257,28 +250,61 @@ namespace DS4WinWPF.DS4Forms
 
         private void PopulateHoverLocations()
         {
-            hoverLocations[crossConBtn] = new HoverImageInfo() { point = new Point(Canvas.GetLeft(crossConBtn), Canvas.GetTop(crossConBtn)),
-                size = new Size(crossConBtn.Width, crossConBtn.Height) };
-            hoverLocations[circleConBtn] = new HoverImageInfo() { point = new Point(Canvas.GetLeft(circleConBtn), Canvas.GetTop(circleConBtn)),
-                size = new Size(circleConBtn.Width, circleConBtn.Height) };
-            hoverLocations[squareConBtn] = new HoverImageInfo() { point = new Point(Canvas.GetLeft(squareConBtn), Canvas.GetTop(squareConBtn)),
-                size = new Size(squareConBtn.Width, squareConBtn.Height) };
-            hoverLocations[triangleConBtn] = new HoverImageInfo() { point = new Point(Canvas.GetLeft(triangleConBtn), Canvas.GetTop(triangleConBtn)),
-                size = new Size(triangleConBtn.Width, triangleConBtn.Height) };
-            hoverLocations[l1ConBtn] = new HoverImageInfo() { point = new Point(Canvas.GetLeft(l1ConBtn), Canvas.GetTop(l1ConBtn)),
-                size = new Size(l1ConBtn.Width, l1ConBtn.Height) };
-            hoverLocations[r1ConBtn] = new HoverImageInfo() { point = new Point(Canvas.GetLeft(r1ConBtn), Canvas.GetTop(r1ConBtn)),
-                size = new Size(r1ConBtn.Width, r1ConBtn.Height) };
-            hoverLocations[l2ConBtn] = new HoverImageInfo() { point = new Point(Canvas.GetLeft(l2ConBtn), Canvas.GetTop(l2ConBtn)),
-                size = new Size(l2ConBtn.Width, l2ConBtn.Height) };
-            hoverLocations[r2ConBtn] = new HoverImageInfo() { point = new Point(Canvas.GetLeft(r2ConBtn), Canvas.GetTop(r2ConBtn)),
-                size = new Size(r2ConBtn.Width, r2ConBtn.Height) };
-            hoverLocations[shareConBtn] = new HoverImageInfo() { point = new Point(Canvas.GetLeft(shareConBtn), Canvas.GetTop(shareConBtn)),
-                size = new Size(shareConBtn.Width, shareConBtn.Height) };
-            hoverLocations[optionsConBtn] = new HoverImageInfo() { point = new Point(Canvas.GetLeft(optionsConBtn), Canvas.GetTop(optionsConBtn)),
-                size = new Size(optionsConBtn.Width, optionsConBtn.Height) };
-            hoverLocations[guideConBtn] = new HoverImageInfo() { point = new Point(Canvas.GetLeft(guideConBtn), Canvas.GetTop(guideConBtn)),
-                size = new Size(guideConBtn.Width, guideConBtn.Height) };
+            hoverLocations[crossConBtn] = new HoverImageInfo()
+            {
+                point = new Point(Canvas.GetLeft(crossConBtn), Canvas.GetTop(crossConBtn)),
+                size = new Size(crossConBtn.Width, crossConBtn.Height)
+            };
+            hoverLocations[circleConBtn] = new HoverImageInfo()
+            {
+                point = new Point(Canvas.GetLeft(circleConBtn), Canvas.GetTop(circleConBtn)),
+                size = new Size(circleConBtn.Width, circleConBtn.Height)
+            };
+            hoverLocations[squareConBtn] = new HoverImageInfo()
+            {
+                point = new Point(Canvas.GetLeft(squareConBtn), Canvas.GetTop(squareConBtn)),
+                size = new Size(squareConBtn.Width, squareConBtn.Height)
+            };
+            hoverLocations[triangleConBtn] = new HoverImageInfo()
+            {
+                point = new Point(Canvas.GetLeft(triangleConBtn), Canvas.GetTop(triangleConBtn)),
+                size = new Size(triangleConBtn.Width, triangleConBtn.Height)
+            };
+            hoverLocations[l1ConBtn] = new HoverImageInfo()
+            {
+                point = new Point(Canvas.GetLeft(l1ConBtn), Canvas.GetTop(l1ConBtn)),
+                size = new Size(l1ConBtn.Width, l1ConBtn.Height)
+            };
+            hoverLocations[r1ConBtn] = new HoverImageInfo()
+            {
+                point = new Point(Canvas.GetLeft(r1ConBtn), Canvas.GetTop(r1ConBtn)),
+                size = new Size(r1ConBtn.Width, r1ConBtn.Height)
+            };
+            hoverLocations[l2ConBtn] = new HoverImageInfo()
+            {
+                point = new Point(Canvas.GetLeft(l2ConBtn), Canvas.GetTop(l2ConBtn)),
+                size = new Size(l2ConBtn.Width, l2ConBtn.Height)
+            };
+            hoverLocations[r2ConBtn] = new HoverImageInfo()
+            {
+                point = new Point(Canvas.GetLeft(r2ConBtn), Canvas.GetTop(r2ConBtn)),
+                size = new Size(r2ConBtn.Width, r2ConBtn.Height)
+            };
+            hoverLocations[shareConBtn] = new HoverImageInfo()
+            {
+                point = new Point(Canvas.GetLeft(shareConBtn), Canvas.GetTop(shareConBtn)),
+                size = new Size(shareConBtn.Width, shareConBtn.Height)
+            };
+            hoverLocations[optionsConBtn] = new HoverImageInfo()
+            {
+                point = new Point(Canvas.GetLeft(optionsConBtn), Canvas.GetTop(optionsConBtn)),
+                size = new Size(optionsConBtn.Width, optionsConBtn.Height)
+            };
+            hoverLocations[guideConBtn] = new HoverImageInfo()
+            {
+                point = new Point(Canvas.GetLeft(guideConBtn), Canvas.GetTop(guideConBtn)),
+                size = new Size(guideConBtn.Width, guideConBtn.Height)
+            };
             hoverLocations[muteConBtn] = new HoverImageInfo()
             {
                 point = new Point(Canvas.GetLeft(muteConBtn), Canvas.GetTop(muteConBtn)),
@@ -290,36 +316,78 @@ namespace DS4WinWPF.DS4Forms
             hoverLocations[rightTouchConBtn] = new HoverImageInfo() { point = new Point(156, 47), size = new Size(146, 94) };
             hoverLocations[topTouchConBtn] = new HoverImageInfo() { point = new Point(155, 6), size = new Size(153, 114) };
 
-            hoverLocations[l3ConBtn] = new HoverImageInfo() { point = new Point(Canvas.GetLeft(l3ConBtn), Canvas.GetTop(l3ConBtn)),
-                size = new Size(l3ConBtn.Width, l3ConBtn.Height) };
-            hoverLocations[lsuConBtn] = new HoverImageInfo() { point = new Point(Canvas.GetLeft(l3ConBtn), Canvas.GetTop(l3ConBtn)),
-                size = new Size(l3ConBtn.Width, l3ConBtn.Height) };
-            hoverLocations[lsrConBtn] = new HoverImageInfo() { point = new Point(Canvas.GetLeft(l3ConBtn), Canvas.GetTop(l3ConBtn)),
-                size = new Size(l3ConBtn.Width, l3ConBtn.Height) };
-            hoverLocations[lsdConBtn] = new HoverImageInfo() { point = new Point(Canvas.GetLeft(l3ConBtn), Canvas.GetTop(l3ConBtn)),
-                size = new Size(l3ConBtn.Width, l3ConBtn.Height) };
-            hoverLocations[lslConBtn] = new HoverImageInfo() { point = new Point(Canvas.GetLeft(l3ConBtn), Canvas.GetTop(l3ConBtn)),
-                size = new Size(l3ConBtn.Width, l3ConBtn.Height) };
+            hoverLocations[l3ConBtn] = new HoverImageInfo()
+            {
+                point = new Point(Canvas.GetLeft(l3ConBtn), Canvas.GetTop(l3ConBtn)),
+                size = new Size(l3ConBtn.Width, l3ConBtn.Height)
+            };
+            hoverLocations[lsuConBtn] = new HoverImageInfo()
+            {
+                point = new Point(Canvas.GetLeft(l3ConBtn), Canvas.GetTop(l3ConBtn)),
+                size = new Size(l3ConBtn.Width, l3ConBtn.Height)
+            };
+            hoverLocations[lsrConBtn] = new HoverImageInfo()
+            {
+                point = new Point(Canvas.GetLeft(l3ConBtn), Canvas.GetTop(l3ConBtn)),
+                size = new Size(l3ConBtn.Width, l3ConBtn.Height)
+            };
+            hoverLocations[lsdConBtn] = new HoverImageInfo()
+            {
+                point = new Point(Canvas.GetLeft(l3ConBtn), Canvas.GetTop(l3ConBtn)),
+                size = new Size(l3ConBtn.Width, l3ConBtn.Height)
+            };
+            hoverLocations[lslConBtn] = new HoverImageInfo()
+            {
+                point = new Point(Canvas.GetLeft(l3ConBtn), Canvas.GetTop(l3ConBtn)),
+                size = new Size(l3ConBtn.Width, l3ConBtn.Height)
+            };
 
-            hoverLocations[r3ConBtn] = new HoverImageInfo() { point = new Point(Canvas.GetLeft(r3ConBtn), Canvas.GetTop(r3ConBtn)),
-                size = new Size(r3ConBtn.Width, r3ConBtn.Height) };
-            hoverLocations[rsuConBtn] = new HoverImageInfo() { point = new Point(Canvas.GetLeft(r3ConBtn), Canvas.GetTop(r3ConBtn)),
-                size = new Size(r3ConBtn.Width, r3ConBtn.Height) };
-            hoverLocations[rsrConBtn] = new HoverImageInfo() { point = new Point(Canvas.GetLeft(r3ConBtn), Canvas.GetTop(r3ConBtn)),
-                size = new Size(r3ConBtn.Width, r3ConBtn.Height) };
-            hoverLocations[rsdConBtn] = new HoverImageInfo() { point = new Point(Canvas.GetLeft(r3ConBtn), Canvas.GetTop(r3ConBtn)),
-                size = new Size(r3ConBtn.Width, r3ConBtn.Height) };
-            hoverLocations[rslConBtn] = new HoverImageInfo() { point = new Point(Canvas.GetLeft(r3ConBtn), Canvas.GetTop(r3ConBtn)),
-                size = new Size(r3ConBtn.Width, r3ConBtn.Height) };
+            hoverLocations[r3ConBtn] = new HoverImageInfo()
+            {
+                point = new Point(Canvas.GetLeft(r3ConBtn), Canvas.GetTop(r3ConBtn)),
+                size = new Size(r3ConBtn.Width, r3ConBtn.Height)
+            };
+            hoverLocations[rsuConBtn] = new HoverImageInfo()
+            {
+                point = new Point(Canvas.GetLeft(r3ConBtn), Canvas.GetTop(r3ConBtn)),
+                size = new Size(r3ConBtn.Width, r3ConBtn.Height)
+            };
+            hoverLocations[rsrConBtn] = new HoverImageInfo()
+            {
+                point = new Point(Canvas.GetLeft(r3ConBtn), Canvas.GetTop(r3ConBtn)),
+                size = new Size(r3ConBtn.Width, r3ConBtn.Height)
+            };
+            hoverLocations[rsdConBtn] = new HoverImageInfo()
+            {
+                point = new Point(Canvas.GetLeft(r3ConBtn), Canvas.GetTop(r3ConBtn)),
+                size = new Size(r3ConBtn.Width, r3ConBtn.Height)
+            };
+            hoverLocations[rslConBtn] = new HoverImageInfo()
+            {
+                point = new Point(Canvas.GetLeft(r3ConBtn), Canvas.GetTop(r3ConBtn)),
+                size = new Size(r3ConBtn.Width, r3ConBtn.Height)
+            };
 
-            hoverLocations[upConBtn] = new HoverImageInfo() { point = new Point(Canvas.GetLeft(upConBtn), Canvas.GetTop(upConBtn)),
-                size = new Size(upConBtn.Width, upConBtn.Height) };
-            hoverLocations[rightConBtn] = new HoverImageInfo() { point = new Point(Canvas.GetLeft(rightConBtn), Canvas.GetTop(rightConBtn)),
-                size = new Size(rightConBtn.Width, rightConBtn.Height) };
-            hoverLocations[downConBtn] = new HoverImageInfo() { point = new Point(Canvas.GetLeft(downConBtn), Canvas.GetTop(downConBtn)),
-                size = new Size(downConBtn.Width, downConBtn.Height) };
-            hoverLocations[leftConBtn] = new HoverImageInfo() { point = new Point(Canvas.GetLeft(leftConBtn), Canvas.GetTop(leftConBtn)),
-                size = new Size(leftConBtn.Width, leftConBtn.Height) };
+            hoverLocations[upConBtn] = new HoverImageInfo()
+            {
+                point = new Point(Canvas.GetLeft(upConBtn), Canvas.GetTop(upConBtn)),
+                size = new Size(upConBtn.Width, upConBtn.Height)
+            };
+            hoverLocations[rightConBtn] = new HoverImageInfo()
+            {
+                point = new Point(Canvas.GetLeft(rightConBtn), Canvas.GetTop(rightConBtn)),
+                size = new Size(rightConBtn.Width, rightConBtn.Height)
+            };
+            hoverLocations[downConBtn] = new HoverImageInfo()
+            {
+                point = new Point(Canvas.GetLeft(downConBtn), Canvas.GetTop(downConBtn)),
+                size = new Size(downConBtn.Width, downConBtn.Height)
+            };
+            hoverLocations[leftConBtn] = new HoverImageInfo()
+            {
+                point = new Point(Canvas.GetLeft(leftConBtn), Canvas.GetTop(leftConBtn)),
+                size = new Size(leftConBtn.Width, leftConBtn.Height)
+            };
         }
 
         private void RemoveHoverBtnText()
@@ -662,7 +730,7 @@ namespace DS4WinWPF.DS4Forms
         {
             if (profileSettingsVM.FuncDevNum < ControlService.CURRENT_DS4_CONTROLLER_LIMIT)
             {
-                App.rootHub.setRumble(0, 0, profileSettingsVM.FuncDevNum);
+                App.rootHub.SetRumble(0, 0, profileSettingsVM.FuncDevNum);
             }
             Global.outDevTypeTemp[deviceNum] = OutContType.X360;
             Global.LoadProfile(deviceNum, false, App.rootHub);
@@ -775,7 +843,7 @@ namespace DS4WinWPF.DS4Forms
             bool result = false;
             if (profileSettingsVM.FuncDevNum < ControlService.CURRENT_DS4_CONTROLLER_LIMIT)
             {
-                App.rootHub.setRumble(0, 0, profileSettingsVM.FuncDevNum);
+                App.rootHub.SetRumble(0, 0, profileSettingsVM.FuncDevNum);
             }
 
             string temp = profileNameTxt.Text;
@@ -838,7 +906,7 @@ namespace DS4WinWPF.DS4Forms
         {
             if (profileSettingsVM.FuncDevNum < ControlService.CURRENT_DS4_CONTROLLER_LIMIT)
             {
-                App.rootHub.setRumble(0, 0, profileSettingsVM.FuncDevNum);
+                App.rootHub.SetRumble(0, 0, profileSettingsVM.FuncDevNum);
             }
 
             Closed?.Invoke(this, EventArgs.Empty);
@@ -908,14 +976,14 @@ namespace DS4WinWPF.DS4Forms
                     if (!rumbleActive)
                     {
                         profileSettingsVM.HeavyRumbleActive = true;
-                        d.setRumble(d.RightLightFastRumble,
+                        d.SetRumble(d.RightLightFastRumble,
                             (byte)Math.Min(255, 255 * profileSettingsVM.RumbleBoost / 100));
                         heavyRumbleTestBtn.Content = Properties.Resources.StopHText;
                     }
                     else
                     {
                         profileSettingsVM.HeavyRumbleActive = false;
-                        d.setRumble(d.RightLightFastRumble, 0);
+                        d.SetRumble(d.RightLightFastRumble, 0);
                         heavyRumbleTestBtn.Content = Properties.Resources.TestHText;
                     }
                 }
@@ -934,14 +1002,14 @@ namespace DS4WinWPF.DS4Forms
                     if (!rumbleActive)
                     {
                         profileSettingsVM.LightRumbleActive = true;
-                        d.setRumble((byte)Math.Min(255, 255 * profileSettingsVM.RumbleBoost / 100),
+                        d.SetRumble((byte)Math.Min(255, 255 * profileSettingsVM.RumbleBoost / 100),
                             d.LeftHeavySlowRumble);
                         lightRumbleTestBtn.Content = Properties.Resources.StopLText;
                     }
                     else
                     {
                         profileSettingsVM.LightRumbleActive = false;
-                        d.setRumble(0, d.LeftHeavySlowRumble);
+                        d.SetRumble(0, d.LeftHeavySlowRumble);
                         lightRumbleTestBtn.Content = Properties.Resources.TestLText;
                     }
                 }
@@ -952,12 +1020,30 @@ namespace DS4WinWPF.DS4Forms
         {
             Button btn = sender as Button;
             string tag = btn.Tag.ToString();
-            if (tag == "LS") LaunchCurveEditor(profileSettingsVM.LSCustomCurve);
-            else if (tag == "RS") LaunchCurveEditor(profileSettingsVM.RSCustomCurve);
-            else if (tag == "L2") LaunchCurveEditor(profileSettingsVM.L2CustomCurve);
-            else if (tag == "R2") LaunchCurveEditor(profileSettingsVM.R2CustomCurve);
-            else if (tag == "SX") LaunchCurveEditor(profileSettingsVM.SXCustomCurve);
-            else if (tag == "SZ") LaunchCurveEditor(profileSettingsVM.SZCustomCurve);
+            if (tag == "LS")
+            {
+                LaunchCurveEditor(profileSettingsVM.LSCustomCurve);
+            }
+            else if (tag == "RS")
+            {
+                LaunchCurveEditor(profileSettingsVM.RSCustomCurve);
+            }
+            else if (tag == "L2")
+            {
+                LaunchCurveEditor(profileSettingsVM.L2CustomCurve);
+            }
+            else if (tag == "R2")
+            {
+                LaunchCurveEditor(profileSettingsVM.R2CustomCurve);
+            }
+            else if (tag == "SX")
+            {
+                LaunchCurveEditor(profileSettingsVM.SXCustomCurve);
+            }
+            else if (tag == "SZ")
+            {
+                LaunchCurveEditor(profileSettingsVM.SZCustomCurve);
+            }
         }
 
         private void LaunchCurveEditor(string customDefinition)
@@ -1234,7 +1320,7 @@ namespace DS4WinWPF.DS4Forms
             if (activeWin && profileSettingsVM.UseControllerReadout)
             {
                 int index = -1;
-                switch(Program.rootHub.GetActiveInputControl(tempDeviceNum))
+                switch (Program.rootHub.GetActiveInputControl(tempDeviceNum))
                 {
                     case DS4Controls.None: break;
                     case DS4Controls.Cross: index = 0; break;
@@ -1385,7 +1471,7 @@ namespace DS4WinWPF.DS4Forms
             {
                 List<DS4Controls> controls =
                     profileSettingsVM.PresetMenuUtil.ModifySettingWithPreset(baseTag, subTag);
-                foreach(DS4Controls control in controls)
+                foreach (DS4Controls control in controls)
                 {
                     MappedControl mpControl = mappingListVM.ControlMap[control];
                     mpControl.UpdateMappingName();
@@ -1436,7 +1522,7 @@ namespace DS4WinWPF.DS4Forms
             window.ShowDialog();
             mpControl.UpdateMappingName();
             Global.CacheProfileCustomsFlags(profileSettingsVM.Device);
-		}
+        }
 
         private void GyroCalibration_Click(object sender, RoutedEventArgs e)
         {

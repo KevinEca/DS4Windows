@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using DS4Windows;
+﻿using DS4Windows;
 using DS4WinWPF.DS4Control;
+using System;
+using System.Collections.Generic;
+using System.Windows;
 
 namespace DS4WinWPF.DS4Forms.ViewModels
 {
@@ -18,7 +14,11 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             get => selectedIndex;
             set
             {
-                if (selectedIndex == value) return;
+                if (selectedIndex == value)
+                {
+                    return;
+                }
+
                 selectedIndex = value;
                 SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -84,12 +84,12 @@ namespace DS4WinWPF.DS4Forms.ViewModels
         }
         public event EventHandler UnpluginEnabledChanged;
 
-        private DS4Windows.OutputSlotManager outSlotManager;
-        private List<SlotDeviceEntry> slotDeviceEntries;
+        private readonly DS4Windows.OutputSlotManager outSlotManager;
+        private readonly List<SlotDeviceEntry> slotDeviceEntries;
 
         public List<SlotDeviceEntry> SlotDeviceEntries { get => slotDeviceEntries; }
 
-        private ControlService controlService;
+        private readonly ControlService controlService;
 
         public CurrentOutDeviceViewModel(ControlService controlService,
             OutputSlotManager outputMan)
@@ -98,7 +98,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             // Set initial capacity at input controller limit in app
             slotDeviceEntries = new List<SlotDeviceEntry>(ControlService.CURRENT_DS4_CONTROLLER_LIMIT);
             int idx = 0;
-            foreach(OutSlotDevice tempDev in outputMan.OutputSlots)
+            foreach (OutSlotDevice tempDev in outputMan.OutputSlots)
             {
                 SlotDeviceEntry tempEntry = new SlotDeviceEntry(tempDev, idx);
                 tempEntry.PluginRequest += OutSlot_PluginRequest;
@@ -174,7 +174,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
     public class SlotDeviceEntry
     {
-        private OutSlotDevice outSlotDevice;
+        private readonly OutSlotDevice outSlotDevice;
         public OutSlotDevice OutSlotDevice { get => outSlotDevice; }
 
         public string CurrentType
@@ -220,7 +220,11 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             get => desiredTypeChoiceIndex;
             set
             {
-                if (desiredTypeChoiceIndex == value) return;
+                if (desiredTypeChoiceIndex == value)
+                {
+                    return;
+                }
+
                 desiredTypeChoiceIndex = value;
                 DesiredTypeChoiceChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -233,7 +237,11 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             get => reserveChoiceIndex;
             set
             {
-                if (reserveChoiceIndex == value) return;
+                if (reserveChoiceIndex == value)
+                {
+                    return;
+                }
+
                 reserveChoiceIndex = value;
                 ReserveChoiceChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -246,7 +254,11 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             get => dirty;
             set
             {
-                if (dirty == value) return;
+                if (dirty == value)
+                {
+                    return;
+                }
+
                 dirty = value;
                 DirtyChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -255,7 +267,8 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
         public event EventHandler PluginRequest;
         public event EventHandler UnplugRequest;
-        int idx;
+
+        readonly int idx;
 
         public SlotDeviceEntry(OutSlotDevice outSlotDevice, int idx)
         {
@@ -354,7 +367,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
         private OutSlotDevice.ReserveStatus DetermineReserveChoiceFromIdx()
         {
             OutSlotDevice.ReserveStatus result = OutSlotDevice.ReserveStatus.Dynamic;
-            switch(reserveChoiceIndex)
+            switch (reserveChoiceIndex)
             {
                 case 0:
                     result = OutSlotDevice.ReserveStatus.Dynamic;

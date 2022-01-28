@@ -20,9 +20,13 @@ namespace DS4Windows
             if (TrayIconLog != null)
             {
                 if (ignoreSettings)
+                {
                     TrayIconLog(ignoreSettings, new DebugEventArgs(data, warning));
+                }
                 else
+                {
                     TrayIconLog(null, new DebugEventArgs(data, warning));
+                }
             }
         }
     }

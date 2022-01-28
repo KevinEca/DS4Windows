@@ -1,17 +1,10 @@
-﻿using System;
+﻿using DS4WinWPF.DS4Forms.ViewModels;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using DS4WinWPF.DS4Forms.ViewModels;
 
 namespace DS4WinWPF.DS4Forms
 {
@@ -20,16 +13,16 @@ namespace DS4WinWPF.DS4Forms
     /// </summary>
     public partial class BindingWindow : Window
     {
-        private Dictionary<Button, BindAssociation> associatedBindings =
+        private readonly Dictionary<Button, BindAssociation> associatedBindings =
             new Dictionary<Button, BindAssociation>();
-        private Dictionary<int, Button> keyBtnMap = new Dictionary<int, Button>();
-        private Dictionary<DS4Windows.X360Controls, Button> conBtnMap =
+        private readonly Dictionary<int, Button> keyBtnMap = new Dictionary<int, Button>();
+        private readonly Dictionary<DS4Windows.X360Controls, Button> conBtnMap =
             new Dictionary<DS4Windows.X360Controls, Button>();
-        private Dictionary<DS4Windows.X360Controls, Button> mouseBtnMap =
+        private readonly Dictionary<DS4Windows.X360Controls, Button> mouseBtnMap =
             new Dictionary<DS4Windows.X360Controls, Button>();
-        private BindingWindowViewModel bindingVM;
+        private readonly BindingWindowViewModel bindingVM;
         private Button highlightBtn;
-        private ExposeMode expose;
+        private readonly ExposeMode expose;
 
         public enum ExposeMode : uint
         {
@@ -249,7 +242,7 @@ namespace DS4WinWPF.DS4Forms
 
         private void InitInfoMaps()
         {
-            foreach(KeyValuePair<Button, BindAssociation> pair in associatedBindings)
+            foreach (KeyValuePair<Button, BindAssociation> pair in associatedBindings)
             {
                 Button button = pair.Key;
                 BindAssociation binding = pair.Value;
@@ -823,14 +816,14 @@ namespace DS4WinWPF.DS4Forms
                     if (!bindingVM.RumbleActive)
                     {
                         bindingVM.RumbleActive = true;
-                        d.setRumble((byte)Math.Min(255, bindingVM.ActionBinding.LightRumble),
+                        d.SetRumble((byte)Math.Min(255, bindingVM.ActionBinding.LightRumble),
                             (byte)Math.Min(255, bindingVM.ActionBinding.HeavyRumble));
                         testRumbleBtn.Content = Properties.Resources.StopText;
                     }
                     else
                     {
                         bindingVM.RumbleActive = false;
-                        d.setRumble(0, 0);
+                        d.SetRumble(0, 0);
                         testRumbleBtn.Content = Properties.Resources.TestText;
                     }
                 }

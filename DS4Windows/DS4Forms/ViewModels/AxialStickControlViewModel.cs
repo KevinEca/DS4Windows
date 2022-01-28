@@ -1,11 +1,11 @@
-﻿using System;
-using DS4Windows;
+﻿using DS4Windows;
+using System;
 
 namespace DS4WinWPF.DS4Forms.ViewModels
 {
     public class AxialStickControlViewModel
     {
-        private StickDeadZoneInfo stickInfo;
+        private readonly StickDeadZoneInfo stickInfo;
 
         public double DeadZoneX
         {
@@ -13,7 +13,11 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             set
             {
                 double temp = Math.Round(stickInfo.xAxisDeadInfo.deadZone / 127d, 2);
-                if (temp == value) return;
+                if (temp == value)
+                {
+                    return;
+                }
+
                 stickInfo.xAxisDeadInfo.deadZone = (int)Math.Round(value * 127d);
                 DeadZoneXChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -26,7 +30,11 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             set
             {
                 double temp = Math.Round(stickInfo.yAxisDeadInfo.deadZone / 127d, 2);
-                if (temp == value) return;
+                if (temp == value)
+                {
+                    return;
+                }
+
                 stickInfo.yAxisDeadInfo.deadZone = (int)Math.Round(value * 127d);
                 DeadZoneYChanged?.Invoke(this, EventArgs.Empty);
             }

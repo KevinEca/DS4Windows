@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Text;
 using System.Xml;
 
@@ -63,7 +62,7 @@ namespace DS4Windows
             {
                 string migratedText;
                 int tempVersion = configFileVersion;
-                switch(configFileVersion)
+                switch (configFileVersion)
                 {
                     case 1:
                         migratedText = Version0002Migration();
@@ -242,40 +241,40 @@ namespace DS4Windows
                 bool readNext = true;
                 if (profileReader.IsStartElement() && profileReader.Depth == 1)
                 {
-                    switch(profileReader.Name)
+                    switch (profileReader.Name)
                     {
                         case "GyroSmoothing":
-                        {
-                            gyroSmoothSettings.hasGyroMouseSmoothing = true;
-                            string useSmooth = profileReader.ReadElementContentAsString();
-                            bool.TryParse(useSmooth, out gyroSmoothSettings.useGyroMouseSmoothing);
-                            readNext = false;
-                            break;
-                        }
+                            {
+                                gyroSmoothSettings.hasGyroMouseSmoothing = true;
+                                string useSmooth = profileReader.ReadElementContentAsString();
+                                bool.TryParse(useSmooth, out gyroSmoothSettings.useGyroMouseSmoothing);
+                                readNext = false;
+                                break;
+                            }
                         case "GyroSmoothingWeight":
-                        {
-                            gyroSmoothSettings.hasGyroMouseSmoothingWeight = true;
-                            string weight = profileReader.ReadElementContentAsString();
-                            double.TryParse(weight, out gyroSmoothSettings.gyroMouseSmoothingWeight);
-                            readNext = false;
-                            break;
-                        }
+                            {
+                                gyroSmoothSettings.hasGyroMouseSmoothingWeight = true;
+                                string weight = profileReader.ReadElementContentAsString();
+                                double.TryParse(weight, out gyroSmoothSettings.gyroMouseSmoothingWeight);
+                                readNext = false;
+                                break;
+                            }
                         case "GyroMouseStickSmoothing":
-                        {
-                            gyroSmoothSettings.hasGyroMouseStickSmoothing = true;
-                            string useSmooth = profileReader.ReadElementContentAsString();
-                            bool.TryParse(useSmooth, out gyroSmoothSettings.useGyroMouseStickSmoothing);
-                            readNext = false;
-                            break;
-                        }
+                            {
+                                gyroSmoothSettings.hasGyroMouseStickSmoothing = true;
+                                string useSmooth = profileReader.ReadElementContentAsString();
+                                bool.TryParse(useSmooth, out gyroSmoothSettings.useGyroMouseStickSmoothing);
+                                readNext = false;
+                                break;
+                            }
                         case "GyroMouseStickSmoothingWeight":
-                        {
-                            gyroSmoothSettings.hasGyroMouseStickSmoothingWeight = true;
-                            string weight = profileReader.ReadElementContentAsString();
-                            double.TryParse(weight, out gyroSmoothSettings.gyroMouseStickSmoothingWeight);
-                            readNext = false;
-                            break;
-                        }
+                            {
+                                gyroSmoothSettings.hasGyroMouseStickSmoothingWeight = true;
+                                string weight = profileReader.ReadElementContentAsString();
+                                double.TryParse(weight, out gyroSmoothSettings.gyroMouseStickSmoothingWeight);
+                                readNext = false;
+                                break;
+                            }
                         default:
                             break;
                     }
@@ -308,33 +307,33 @@ namespace DS4Windows
                     switch (profileReader.Name)
                     {
                         case "GyroSmoothing":
-                        {
-                            // Place new GyroMouseSmoothingSettings group where GyroSmoothing used to be
-                            MigrateGyroMouseSmoothingSettings(tempWriter);
-                            // Consume reset of element
-                            profileReader.ReadElementContentAsString();
-                            break;
-                        }
+                            {
+                                // Place new GyroMouseSmoothingSettings group where GyroSmoothing used to be
+                                MigrateGyroMouseSmoothingSettings(tempWriter);
+                                // Consume reset of element
+                                profileReader.ReadElementContentAsString();
+                                break;
+                            }
                         case "GyroSmoothingWeight":
-                        {
-                            // Consume reset of element
-                            profileReader.ReadElementContentAsString();
-                            break;
-                        }
+                            {
+                                // Consume reset of element
+                                profileReader.ReadElementContentAsString();
+                                break;
+                            }
                         case "GyroMouseStickSmoothing":
-                        {
-                            // Place new GyroMouseStickSmoothingSettings group where GyroSmoothing used to be
-                            MigrateGyroMouseStickSmoothingSettings(tempWriter);
-                            // Consume reset of element
-                            profileReader.ReadElementContentAsString();
-                            break;
-                        }
+                            {
+                                // Place new GyroMouseStickSmoothingSettings group where GyroSmoothing used to be
+                                MigrateGyroMouseStickSmoothingSettings(tempWriter);
+                                // Consume reset of element
+                                profileReader.ReadElementContentAsString();
+                                break;
+                            }
                         case "GyroMouseStickSmoothingWeight":
-                        {
-                            // Consume reset of element
-                            profileReader.ReadElementContentAsString();
-                            break;
-                        }
+                            {
+                                // Consume reset of element
+                                profileReader.ReadElementContentAsString();
+                                break;
+                            }
                         default:
                             tempWriter.WriteNode(profileReader, true);
                             break;
@@ -380,29 +379,29 @@ namespace DS4Windows
                     switch (profileReader.Name)
                     {
                         case "LSDeadZone":
-                        {
-                            string lsdead = profileReader.ReadElementContentAsString();
-                            bool valid = int.TryParse(lsdead, out int temp);
-                            if (valid && temp <= 0)
                             {
-                                temp = 10;
-                                tempWriter.WriteElementString("LSDeadZone", temp.ToString());
-                            }
+                                string lsdead = profileReader.ReadElementContentAsString();
+                                bool valid = int.TryParse(lsdead, out int temp);
+                                if (valid && temp <= 0)
+                                {
+                                    temp = 10;
+                                    tempWriter.WriteElementString("LSDeadZone", temp.ToString());
+                                }
 
-                            break;
-                        }
+                                break;
+                            }
                         case "RSDeadZone":
-                        {
-                            string rsdead = profileReader.ReadElementContentAsString();
-                            bool valid = int.TryParse(rsdead, out int temp);
-                            if (valid && temp <= 0)
                             {
-                                temp = 10;
-                                tempWriter.WriteElementString("RSDeadZone", temp.ToString());
-                            }
+                                string rsdead = profileReader.ReadElementContentAsString();
+                                bool valid = int.TryParse(rsdead, out int temp);
+                                if (valid && temp <= 0)
+                                {
+                                    temp = 10;
+                                    tempWriter.WriteElementString("RSDeadZone", temp.ToString());
+                                }
 
-                            break;
-                        }
+                                break;
+                            }
                         default:
                             tempWriter.WriteNode(profileReader, true);
                             break;
@@ -412,7 +411,7 @@ namespace DS4Windows
                 {
                     profileReader.Read();
                 }
-             }
+            }
 
             // End XML document and flush IO stream
             tempWriter.WriteEndElement();

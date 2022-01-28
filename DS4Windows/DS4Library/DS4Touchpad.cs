@@ -33,10 +33,10 @@ namespace DS4Windows
         public Touch previousTouch;
         internal Touch(int X, int Y, byte tID, Touch prevTouch = null)
         {
-            populate(X, Y, tID, prevTouch);
+            Populate(X, Y, tID, prevTouch);
         }
 
-        internal void populate(int X, int Y, byte tID, Touch prevTouch = null)
+        internal void Populate(int X, int Y, byte tID, Touch prevTouch = null)
         {
             hwX = X;
             hwY = Y;
@@ -63,7 +63,7 @@ namespace DS4Windows
         public event TouchHandler<EventArgs> PreTouchProcess = null; // used to publish that a touch packet is about to be processed
         //public event EventHandler<EventArgs> PreTouchProcess = null; // used to publish that a touch packet is about to be processed
 
-        public readonly static int DS4_TOUCHPAD_DATA_OFFSET = 35;
+        public static readonly int DS4_TOUCHPAD_DATA_OFFSET = 35;
         public const int RESOLUTION_X_MAX = 1920;
         public const int RESOLUTION_Y_MAX = 942;
         public const int RES_HALFED_X = (int)(RESOLUTION_X_MAX * 0.5);
@@ -75,7 +75,7 @@ namespace DS4Windows
         internal bool lastIsActive1, lastIsActive2;
         internal byte lastTouchID1, lastTouchID2;
         internal byte[] previousPacket = new byte[8];
-        private Touch tPrev0, tPrev1, t0, t1;
+        private readonly Touch tPrev0, tPrev1, t0, t1;
 
         public DS4Touchpad()
         {
@@ -94,13 +94,15 @@ namespace DS4Windows
                 //byte oldValue = previousPacket[i];
                 //previousPacket[i] = data[i + TOUCHPAD_DATA_OFFSET + touchPacketOffset];
                 if (previousPacket[i] != data[i + touchDataOffset + touchPacketOffset])
+                {
                     changed = true;
+                }
             }
 
             return changed;
         }
 
-        public void handleTouchpad(byte[] data, DS4State sensors, int touchDataOffset, int touchPacketOffset = 0)
+        public void HandleTouchpad(byte[] data, DS4State sensors, int touchDataOffset, int touchPacketOffset = 0)
         {
             PreTouchProcess?.Invoke(this, EventArgs.Empty);
 
@@ -108,7 +110,10 @@ namespace DS4Windows
             if (!PacketChanged(data, touchDataOffset, touchPacketOffset) && touchPadIsDown == lastTouchPadIsDown)
             {
                 if (TouchUnchanged != null)
+                {
                     TouchUnchanged(this, EventArgs.Empty);
+                }
+
                 return;
             }
 
@@ -129,17 +134,17 @@ namespace DS4Windows
                     {
                         if (sensors.Touch1 && sensors.Touch2)
                         {
-                            t0.populate(currentX1, currentY1, touchID1); t1.populate(currentX2, currentY2, touchID2);
+                            t0.Populate(currentX1, currentY1, touchID1); t1.Populate(currentX2, currentY2, touchID2);
                             args = new TouchpadEventArgs(sensors.ReportTimeStamp, sensors.TouchButton, t0, t1);
                         }
                         else if (sensors.Touch1)
                         {
-                            t0.populate(currentX1, currentY1, touchID1);
+                            t0.Populate(currentX1, currentY1, touchID1);
                             args = new TouchpadEventArgs(sensors.ReportTimeStamp, sensors.TouchButton, t0);
                         }
                         else
                         {
-                            t0.populate(currentX2, currentY2, touchID2);
+                            t0.Populate(currentX2, currentY2, touchID2);
                             args = new TouchpadEventArgs(sensors.ReportTimeStamp, sensors.TouchButton, t0);
                         }
 
@@ -152,25 +157,25 @@ namespace DS4Windows
 
                     if (sensors.Touch1 && sensors.Touch2)
                     {
-                        tPrev0.populate(lastTouchPadX1, lastTouchPadY1, lastTouchID1);
-                        t0.populate(currentX1, currentY1, touchID1, tPrev0);
+                        tPrev0.Populate(lastTouchPadX1, lastTouchPadY1, lastTouchID1);
+                        t0.Populate(currentX1, currentY1, touchID1, tPrev0);
                         currentT0 = t0;
 
-                        tPrev1.populate(lastTouchPadX2, lastTouchPadY2, lastTouchID2);
-                        t1.populate(currentX2, currentY2, touchID2, tPrev1);
+                        tPrev1.Populate(lastTouchPadX2, lastTouchPadY2, lastTouchID2);
+                        t1.Populate(currentX2, currentY2, touchID2, tPrev1);
                         currentT1 = t1;
                     }
                     else if (sensors.Touch1)
                     {
-                        tPrev0.populate(lastTouchPadX1, lastTouchPadY1, lastTouchID1);
-                        t0.populate(currentX1, currentY1, touchID1, tPrev0);
+                        tPrev0.Populate(lastTouchPadX1, lastTouchPadY1, lastTouchID1);
+                        t0.Populate(currentX1, currentY1, touchID1, tPrev0);
                         currentT0 = t0;
                         currentT1 = null;
                     }
                     else
                     {
-                        tPrev0.populate(lastTouchPadX2, lastTouchPadY2, lastTouchID2);
-                        t0.populate(currentX2, currentY2, touchID2, tPrev0);
+                        tPrev0.Populate(lastTouchPadX2, lastTouchPadY2, lastTouchID2);
+                        t0.Populate(currentX2, currentY2, touchID2, tPrev0);
                         currentT0 = t0;
                         currentT1 = null;
                     }
@@ -184,18 +189,18 @@ namespace DS4Windows
                 {
                     if (sensors.Touch1 && sensors.Touch2)
                     {
-                        t0.populate(currentX1, currentY1, touchID1);
-                        t1.populate(currentX2, currentY2, touchID2);
+                        t0.Populate(currentX1, currentY1, touchID1);
+                        t1.Populate(currentX2, currentY2, touchID2);
                         args = new TouchpadEventArgs(sensors.ReportTimeStamp, sensors.TouchButton, t0, t1);
                     }
                     else if (sensors.Touch1)
                     {
-                        t0.populate(currentX1, currentY1, touchID1);
+                        t0.Populate(currentX1, currentY1, touchID1);
                         args = new TouchpadEventArgs(sensors.ReportTimeStamp, sensors.TouchButton, t0);
                     }
                     else
                     {
-                        t0.populate(currentX2, currentY2, touchID2);
+                        t0.Populate(currentX2, currentY2, touchID2);
                         args = new TouchpadEventArgs(sensors.ReportTimeStamp, sensors.TouchButton, t0);
                     }
 
@@ -205,18 +210,18 @@ namespace DS4Windows
                 {
                     if (sensors.Touch1 && sensors.Touch2)
                     {
-                        t0.populate(currentX1, currentY1, touchID1);
-                        t1.populate(currentX2, currentY2, touchID2);
+                        t0.Populate(currentX1, currentY1, touchID1);
+                        t1.Populate(currentX2, currentY2, touchID2);
                         args = new TouchpadEventArgs(sensors.ReportTimeStamp, sensors.TouchButton, t0, t1);
                     }
                     else if (sensors.Touch1)
                     {
-                        t0.populate(currentX1, currentY1, touchID1);
+                        t0.Populate(currentX1, currentY1, touchID1);
                         args = new TouchpadEventArgs(sensors.ReportTimeStamp, sensors.TouchButton, t0);
                     }
                     else
                     {
-                        t0.populate(currentX2, currentY2, touchID2);
+                        t0.Populate(currentX2, currentY2, touchID2);
                         args = new TouchpadEventArgs(sensors.ReportTimeStamp, sensors.TouchButton, t0);
                     }
 
@@ -241,30 +246,34 @@ namespace DS4Windows
                 if (touchPadIsDown && !lastTouchPadIsDown)
                 {
                     if (TouchButtonDown != null)
+                    {
                         TouchButtonDown(this, new TouchpadEventArgs(sensors.ReportTimeStamp, sensors.TouchButton, null, null));
+                    }
                 }
                 else if (!touchPadIsDown && lastTouchPadIsDown)
                 {
                     if (TouchButtonUp != null)
+                    {
                         TouchButtonUp(this, new TouchpadEventArgs(sensors.ReportTimeStamp, sensors.TouchButton, null, null));
+                    }
                 }
 
                 if ((lastIsActive1 || lastIsActive2) && TouchesEnded != null)
                 {
                     if (lastIsActive1 && lastIsActive2)
                     {
-                        t0.populate(lastTouchPadX1, lastTouchPadY1, touchID1);
-                        t1.populate(lastTouchPadX2, lastTouchPadY2, touchID2);
+                        t0.Populate(lastTouchPadX1, lastTouchPadY1, touchID1);
+                        t1.Populate(lastTouchPadX2, lastTouchPadY2, touchID2);
                         args = new TouchpadEventArgs(sensors.ReportTimeStamp, sensors.TouchButton, t0, t1);
                     }
                     else if (lastIsActive1)
                     {
-                        t0.populate(lastTouchPadX1, lastTouchPadY1, touchID1);
+                        t0.Populate(lastTouchPadX1, lastTouchPadY1, touchID1);
                         args = new TouchpadEventArgs(sensors.ReportTimeStamp, sensors.TouchButton, t0);
                     }
                     else
                     {
-                        t0.populate(lastTouchPadX2, lastTouchPadY2, touchID2);
+                        t0.Populate(lastTouchPadX2, lastTouchPadY2, touchID2);
                         args = new TouchpadEventArgs(sensors.ReportTimeStamp, sensors.TouchButton, t0);
                     }
 

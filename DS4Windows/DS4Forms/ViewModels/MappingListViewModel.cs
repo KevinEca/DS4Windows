@@ -1,18 +1,15 @@
-﻿using System;
+﻿using DS4Windows;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
-using DS4Windows;
 
 namespace DS4WinWPF.DS4Forms.ViewModels
 {
     public class MappingListViewModel
     {
         //private int devIndex;
-        private ObservableCollection<MappedControl> mappings = new ObservableCollection<MappedControl>();
+        private readonly ObservableCollection<MappedControl> mappings = new ObservableCollection<MappedControl>();
         public ObservableCollection<MappedControl> Mappings { get => mappings; }
 
         private int selectedIndex = -1;
@@ -21,46 +18,50 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             get => selectedIndex;
             set
             {
-                if (selectedIndex == value) return;
+                if (selectedIndex == value)
+                {
+                    return;
+                }
+
                 selectedIndex = value;
                 SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
             }
         }
         public event EventHandler SelectedIndexChanged;
 
-        private Dictionary<DS4Controls, MappedControl> controlMap =
+        private readonly Dictionary<DS4Controls, MappedControl> controlMap =
             new Dictionary<DS4Controls, MappedControl>();
         public Dictionary<DS4Controls, MappedControl> ControlMap { get => controlMap; }
 
         /// <summary>
         /// DS4Controls -> Int index map. Store approriate list index for a stored MappedControl instance
         /// </summary>
-        private Dictionary<DS4Controls, int> controlIndexMap =
+        private readonly Dictionary<DS4Controls, int> controlIndexMap =
             new Dictionary<DS4Controls, int>();
         public Dictionary<DS4Controls, int> ControlIndexMap { get => controlIndexMap; }
 
-        private MappedControl l2FullPullControl;
+        private readonly MappedControl l2FullPullControl;
         public MappedControl L2FullPullControl { get => l2FullPullControl; }
 
-        private MappedControl r2FullPullControl;
+        private readonly MappedControl r2FullPullControl;
         public MappedControl R2FullPullControl { get => r2FullPullControl; }
 
-        private MappedControl lsOuterBindControl;
+        private readonly MappedControl lsOuterBindControl;
         public MappedControl LsOuterBindControl { get => lsOuterBindControl; }
 
-        private MappedControl rsOuterBindControl;
+        private readonly MappedControl rsOuterBindControl;
         public MappedControl RsOuterBindControl { get => rsOuterBindControl; }
 
-        private MappedControl gyroSwipeLeftControl;
-        private MappedControl gyroSwipeRightControl;
-        private MappedControl gyroSwipeUpControl;
-        private MappedControl gyroSwipeDownControl;
+        private readonly MappedControl gyroSwipeLeftControl;
+        private readonly MappedControl gyroSwipeRightControl;
+        private readonly MappedControl gyroSwipeUpControl;
+        private readonly MappedControl gyroSwipeDownControl;
 
-        private List<MappedControl> extraControls = new List<MappedControl>();
+        private readonly List<MappedControl> extraControls = new List<MappedControl>();
 
         public MappingListViewModel(int devIndex, OutContType devType)
         {
-            mappings.Add(new MappedControl(devIndex, DS4Controls.Cross, "Cross",  devType));
+            mappings.Add(new MappedControl(devIndex, DS4Controls.Cross, "Cross", devType));
             mappings.Add(new MappedControl(devIndex, DS4Controls.Circle, "Circle", devType));
             mappings.Add(new MappedControl(devIndex, DS4Controls.Square, "Square", devType));
             mappings.Add(new MappedControl(devIndex, DS4Controls.Triangle, "Triangle", devType));
@@ -150,12 +151,12 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
         public void UpdateMappingDevType(OutContType devType)
         {
-            foreach(MappedControl mapped in mappings)
+            foreach (MappedControl mapped in mappings)
             {
                 mapped.DevType = devType;
             }
 
-            foreach(MappedControl mapped in extraControls)
+            foreach (MappedControl mapped in extraControls)
             {
                 mapped.DevType = devType;
             }
@@ -177,11 +178,11 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
     public class MappedControl
     {
-        private int devIndex;
+        private readonly int devIndex;
         private OutContType devType;
-        private DS4Controls control;
-        private DS4ControlSettings setting;
-        private string controlName;
+        private readonly DS4Controls control;
+        private readonly DS4ControlSettings setting;
+        private readonly string controlName;
         private string mappingName;
         private string shiftMappingName;
 
@@ -207,7 +208,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
         public event EventHandler MappingNameChanged;
 
         public MappedControl(int devIndex, DS4Controls control, string controlName,
-            OutContType devType, bool initMap=false)
+            OutContType devType, bool initMap = false)
         {
             this.devIndex = devIndex;
             this.devType = devType;
@@ -223,7 +224,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
                     shiftMappingName = ShiftTrigger(setting.shiftTrigger) + " -> " + GetMappingString(true);
                 }
             }
-            
+
             DevTypeChanged += MappedControl_DevTypeChanged;
         }
 
@@ -269,12 +270,12 @@ namespace DS4WinWPF.DS4Forms.ViewModels
                 else if (actionType == DS4ControlSettings.ActionType.Button)
                 {
                     string tag;
-                    tag = Global.getX360ControlString((X360Controls)action.actionBtn, devType);
+                    tag = Global.GetX360ControlString(action.actionBtn, devType);
                     temp = tag;
                 }
                 else
                 {
-                    temp = Global.getX360ControlString(Global.defaultButtonMapping[(int)control], devType);
+                    temp = Global.GetX360ControlString(Global.defaultButtonMapping[(int)control], devType);
                 }
             }
             else if (!extra && !shift)
@@ -282,11 +283,13 @@ namespace DS4WinWPF.DS4Forms.ViewModels
                 X360Controls tempOutControl = Global.defaultButtonMapping[(int)control];
                 if (tempOutControl != X360Controls.None)
                 {
-                    temp = Global.getX360ControlString(tempOutControl, devType);
+                    temp = Global.GetX360ControlString(tempOutControl, devType);
                 }
             }
             else if (shift)
+            {
                 temp = "";
+            }
 
             return temp;
         }

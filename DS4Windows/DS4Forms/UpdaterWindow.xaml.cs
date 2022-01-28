@@ -12,7 +12,7 @@ namespace DS4WinWPF.DS4Forms
         private MessageBoxResult result = MessageBoxResult.No;
         public MessageBoxResult Result { get => result; }
 
-        private UpdaterWindowViewModel updaterWinVM;
+        private readonly UpdaterWindowViewModel updaterWinVM;
 
         public UpdaterWindow(string newversion)
         {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DS4Windows;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -7,14 +8,13 @@ using System.Threading;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
-using DS4Windows;
 
 namespace DS4WinWPF.DS4Forms.ViewModels
 {
     public class ControllerListViewModel
     {
         //private object _colLockobj = new object();
-        private ReaderWriterLockSlim _colListLocker = new ReaderWriterLockSlim();
+        private readonly ReaderWriterLockSlim _colListLocker = new ReaderWriterLockSlim();
         private ObservableCollection<CompositeDeviceModel> controllerCol =
             new ObservableCollection<CompositeDeviceModel>();
         private Dictionary<int, CompositeDeviceModel> controllerDict =
@@ -23,14 +23,19 @@ namespace DS4WinWPF.DS4Forms.ViewModels
         public ObservableCollection<CompositeDeviceModel> ControllerCol
         { get => controllerCol; set => controllerCol = value; }
 
-        private ProfileList profileListHolder;
-        private ControlService controlService;
+        private readonly ProfileList profileListHolder;
+        private readonly ControlService controlService;
         private int currentIndex;
         public int CurrentIndex { get => currentIndex; set => currentIndex = value; }
-        public CompositeDeviceModel CurrentItem {
+        public CompositeDeviceModel CurrentItem
+        {
             get
             {
-                if (currentIndex == -1) return null;
+                if (currentIndex == -1)
+                {
+                    return null;
+                }
+
                 controllerDict.TryGetValue(currentIndex, out CompositeDeviceModel item);
                 return item;
             }
@@ -192,7 +197,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
         private ProfileList profileListHolder;
         private ProfileEntity selectedEntity;
         private int selectedIndex = 1;
-        private int devIndex;
+        private readonly int devIndex;
 
         public DS4Device Device { get => device; set => device = value; }
         public string SelectedProfile { get => selectedProfile; set => selectedProfile = value; }
@@ -243,7 +248,11 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             get => selectedIndex;
             set
             {
-                if (selectedIndex == value) return;
+                if (selectedIndex == value)
+                {
+                    return;
+                }
+
                 selectedIndex = value;
                 SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -266,7 +275,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             {
                 string imgName = (string)App.Current.FindResource("CancelImg");
                 string source = $"/DS4Windows;component/Resources/{imgName}";
-                switch(device.CurrentExclusiveStatus)
+                switch (device.CurrentExclusiveStatus)
                 {
                     case DS4Device.ExclusiveStatus.Exclusive:
                         imgName = (string)App.Current.FindResource("CheckedImg");
@@ -294,7 +303,11 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             set
             {
                 bool temp = Global.linkedProfileCheck[devIndex];
-                if (temp == value) return;
+                if (temp == value)
+                {
+                    return;
+                }
+
                 Global.linkedProfileCheck[devIndex] = value;
                 SaveLinked(value);
             }
@@ -331,7 +344,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             get
             {
                 string temp = Translations.Strings.SharedAccess;
-                switch(device.CurrentExclusiveStatus)
+                switch (device.CurrentExclusiveStatus)
                 {
                     case DS4Device.ExclusiveStatus.Exclusive:
                         temp = Translations.Strings.ExclusiveAccess;
@@ -392,7 +405,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             string prof = Global.ProfilePath[devIndex] = ProfileListCol[selectedIndex].Name;
             if (LinkedProfile)
             {
-                Global.changeLinkedProfile(device.getMacAddress(), Global.ProfilePath[devIndex]);
+                Global.ChangeLinkedProfile(device.GetMacAddress(), Global.ProfilePath[devIndex]);
                 Global.SaveLinkedProfiles();
             }
             else
@@ -453,18 +466,18 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
         private void SaveLinked(bool status)
         {
-            if (device != null && device.isSynced())
+            if (device != null && device.IsSynced())
             {
                 if (status)
                 {
-                    if (device.isValidSerial())
+                    if (device.IsValidSerial())
                     {
-                        Global.changeLinkedProfile(device.getMacAddress(), Global.ProfilePath[devIndex]);
+                        Global.ChangeLinkedProfile(device.GetMacAddress(), Global.ProfilePath[devIndex]);
                     }
                 }
                 else
                 {
-                    Global.removeLinkedProfile(device.getMacAddress());
+                    Global.RemoveLinkedProfile(device.GetMacAddress());
                     Global.ProfilePath[devIndex] = Global.OlderProfilePath[devIndex];
                 }
 
@@ -527,7 +540,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
                 if (device.ConnectionType == ConnectionType.BT)
                 {
                     //device.StopUpdate();
-                    device.queueEvent(() =>
+                    device.QueueEvent(() =>
                     {
                         device.DisconnectBT();
                     });

@@ -1,11 +1,7 @@
 ﻿using DS4Windows;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Xml;
 
@@ -13,8 +9,8 @@ namespace DS4WinWPF
 {
     public class AutoProfileHolder
     {
-        private object _colLockobj = new object();
-        private ObservableCollection<AutoProfileEntity> autoProfileColl;
+        private readonly object _colLockobj = new object();
+        private readonly ObservableCollection<AutoProfileEntity> autoProfileColl;
         public ObservableCollection<AutoProfileEntity> AutoProfileColl { get => autoProfileColl; }
         //public Dictionary<string, AutoProfileEntity> AutoProfileDict { get => autoProfileDict; }
 
@@ -36,7 +32,9 @@ namespace DS4WinWPF
                 XmlDocument doc = new XmlDocument();
 
                 if (!File.Exists(DS4Windows.Global.appdatapath + "\\Auto Profiles.xml"))
+                {
                     return;
+                }
 
                 doc.Load(DS4Windows.Global.appdatapath + "\\Auto Profiles.xml");
                 XmlNodeList programslist = doc.SelectNodes("Programs/Program");
@@ -49,7 +47,7 @@ namespace DS4WinWPF
                     XmlNode item;
                     for (int i = 0; i < ControlService.CURRENT_DS4_CONTROLLER_LIMIT; i++)
                     {
-                        item = x.SelectSingleNode($"Controller{i+1}");
+                        item = x.SelectSingleNode($"Controller{i + 1}");
                         if (item != null)
                         {
                             autoprof.ProfileNames[i] = item.InnerText;
@@ -185,12 +183,24 @@ namespace DS4WinWPF
 
                 if (path.Length >= 2)
                 {
-                    if (path[0] == '^') path_lowercase = path_lowercase.Substring(1);
-                    else if (path[path.Length - 1] == '$') path_lowercase = path_lowercase.Substring(0, path_lowercase.Length - 1);
-                    else if (path[0] == '*') path_lowercase = path_lowercase.Substring(1);
+                    if (path[0] == '^')
+                    {
+                        path_lowercase = path_lowercase.Substring(1);
+                    }
+                    else if (path[path.Length - 1] == '$')
+                    {
+                        path_lowercase = path_lowercase.Substring(0, path_lowercase.Length - 1);
+                    }
+                    else if (path[0] == '*')
+                    {
+                        path_lowercase = path_lowercase.Substring(1);
+                    }
                 }
             }
-            else path = path_lowercase = string.Empty;
+            else
+            {
+                path = path_lowercase = string.Empty;
+            }
         }
 
         private void SetSearchTitle(string titleStr)
@@ -202,12 +212,24 @@ namespace DS4WinWPF
 
                 if (title.Length >= 2)
                 {
-                    if (title[0] == '^') title_lowercase = title_lowercase.Substring(1);
-                    else if (title[title.Length - 1] == '$') title_lowercase = title_lowercase.Substring(0, title_lowercase.Length - 1);
-                    else if (title[0] == '*') title_lowercase = title_lowercase.Substring(1);
+                    if (title[0] == '^')
+                    {
+                        title_lowercase = title_lowercase.Substring(1);
+                    }
+                    else if (title[title.Length - 1] == '$')
+                    {
+                        title_lowercase = title_lowercase.Substring(0, title_lowercase.Length - 1);
+                    }
+                    else if (title[0] == '*')
+                    {
+                        title_lowercase = title_lowercase.Substring(1);
+                    }
                 }
             }
-            else title = title_lowercase = string.Empty;
+            else
+            {
+                title = title_lowercase = string.Empty;
+            }
         }
     }
 }

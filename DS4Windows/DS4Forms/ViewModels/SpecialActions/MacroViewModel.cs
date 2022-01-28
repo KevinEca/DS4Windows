@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DS4Windows;
+﻿using DS4Windows;
 using DS4WinWPF.DS4Forms.ViewModels.Util;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DS4WinWPF.DS4Forms.ViewModels.SpecialActions
 {
@@ -26,7 +22,9 @@ namespace DS4WinWPF.DS4Forms.ViewModels.SpecialActions
         public bool KeepKeyState { get => keepKeyState; set => keepKeyState = value; }
         public bool RepeatHeld { get => repeatHeld; set => repeatHeld = value; }
         public List<int> Macro { get => macro; set => macro = value; }
-        public string Macrostring { get => macrostring;
+        public string Macrostring
+        {
+            get => macrostring;
             set
             {
                 macrostring = value;

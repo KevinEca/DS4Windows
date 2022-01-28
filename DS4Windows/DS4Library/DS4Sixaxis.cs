@@ -39,10 +39,10 @@ namespace DS4Windows
             int aX, int aY, int aZ,
             double elapsedDelta, SixAxis prevAxis = null)
         {
-            populate(X, Y, Z, aX, aY, aZ, elapsedDelta, prevAxis);
+            Populate(X, Y, Z, aX, aY, aZ, elapsedDelta, prevAxis);
         }
 
-        public void copy(SixAxis src)
+        public void Copy(SixAxis src)
         {
             gyroYaw = src.gyroYaw;
             gyroPitch = src.gyroPitch;
@@ -72,7 +72,7 @@ namespace DS4Windows
             outputGyroControls = src.outputGyroControls;
         }
 
-        public void populate(int X, int Y, int Z,
+        public void Populate(int X, int Y, int Z,
             int aX, int aY, int aZ,
             double elapsedDelta, SixAxis prevAxis = null)
         {
@@ -152,12 +152,20 @@ namespace DS4Windows
             DateTime end = DateTime.UtcNow;
             TimeSpan timeDiff = end - start;
             bool shouldStop = Convert.ToInt32(timeDiff.TotalMilliseconds) >= ms;
-            if (!shouldStop) stop = end;
+            if (!shouldStop)
+            {
+                stop = end;
+            }
+
             return shouldStop;
         }
         public double GetWeight(int expectedMs)
         {
-            if (expectedMs == 0) return 0;
+            if (expectedMs == 0)
+            {
+                return 0;
+            }
+
             return Math.Min(1.0, DurationMs / expectedMs);
         }
     }
@@ -166,8 +174,8 @@ namespace DS4Windows
     {
         //public event EventHandler<SixAxisEventArgs> SixAccelMoved = null;
         public event SixAxisHandler<SixAxisEventArgs> SixAccelMoved = null;
-        private SixAxis sPrev = null, now = null;
-        private CalibData[] calibrationData = new CalibData[6] { new CalibData(), new CalibData(),
+        private readonly SixAxis sPrev = null, now = null;
+        private readonly CalibData[] calibrationData = new CalibData[6] { new CalibData(), new CalibData(),
             new CalibData(), new CalibData(), new CalibData(), new CalibData()
         };
         private bool calibrationDone = false;
@@ -176,12 +184,12 @@ namespace DS4Windows
         const int num_gyro_average_windows = 3;
         private int gyro_average_window_front_index = 0;
         const int gyro_average_window_ms = 5000;
-        private GyroAverageWindow[] gyro_average_window = new GyroAverageWindow[num_gyro_average_windows];
+        private readonly GyroAverageWindow[] gyro_average_window = new GyroAverageWindow[num_gyro_average_windows];
         private int gyro_offset_x = 0;
         private int gyro_offset_y = 0;
         private int gyro_offset_z = 0;
         private double gyro_accel_magnitude = 1.0f;
-        private Stopwatch gyroAverageTimer = new Stopwatch();
+        private readonly Stopwatch gyroAverageTimer = new Stopwatch();
         public long CntCalibrating
         {
             get
@@ -198,7 +206,7 @@ namespace DS4Windows
         }
 
         int temInt = 0;
-        public void setCalibrationData(ref byte[] calibData, bool useAltGyroCalib)
+        public void SetCalibrationData(ref byte[] calibData, bool useAltGyroCalib)
         {
             int pitchPlus, pitchMinus, yawPlus, yawMinus, rollPlus, rollMinus,
                 accelXPlus, accelXMinus, accelYPlus, accelYMinus, accelZPlus, accelZMinus,
@@ -239,13 +247,13 @@ namespace DS4Windows
             accelZMinus = temInt = (short)((ushort)(calibData[34] << 8) | calibData[33]);
 
             int gyroSpeed2x = temInt = (gyroSpeedPlus + gyroSpeedMinus);
-            calibrationData[0].sensNumer = gyroSpeed2x* SixAxis.GYRO_RES_IN_DEG_SEC;
+            calibrationData[0].sensNumer = gyroSpeed2x * SixAxis.GYRO_RES_IN_DEG_SEC;
             calibrationData[0].sensDenom = pitchPlus - pitchMinus;
 
-            calibrationData[1].sensNumer = gyroSpeed2x* SixAxis.GYRO_RES_IN_DEG_SEC;
+            calibrationData[1].sensNumer = gyroSpeed2x * SixAxis.GYRO_RES_IN_DEG_SEC;
             calibrationData[1].sensDenom = yawPlus - yawMinus;
 
-            calibrationData[2].sensNumer = gyroSpeed2x* SixAxis.GYRO_RES_IN_DEG_SEC;
+            calibrationData[2].sensNumer = gyroSpeed2x * SixAxis.GYRO_RES_IN_DEG_SEC;
             calibrationData[2].sensDenom = rollPlus - rollMinus;
 
             int accelRange = temInt = accelXPlus - accelXMinus;
@@ -270,7 +278,7 @@ namespace DS4Windows
                 accelRange != 0;
         }
 
-        private void applyCalibs(ref int yaw, ref int pitch, ref int roll,
+        private void ApplyCalibs(ref int yaw, ref int pitch, ref int roll,
             ref int accelX, ref int accelY, ref int accelZ)
         {
             CalibData current = calibrationData[0];
@@ -298,7 +306,7 @@ namespace DS4Windows
             accelZ = temInt = (int)(temInt * (current.sensNumer / (float)current.sensDenom));
         }
 
-        public unsafe void handleSixaxis(byte* gyro, byte* accel, DS4State state,
+        public unsafe void HandleSixaxis(byte* gyro, byte* accel, DS4State state,
             double elapsedDelta)
         {
             unchecked
@@ -313,7 +321,9 @@ namespace DS4Windows
                 //Console.WriteLine("AccelZ: {0}", AccelZ);
 
                 if (calibrationDone)
-                    applyCalibs(ref currentYaw, ref currentPitch, ref currentRoll, ref AccelX, ref AccelY, ref AccelZ);
+                {
+                    ApplyCalibs(ref currentYaw, ref currentPitch, ref currentRoll, ref AccelX, ref AccelY, ref AccelZ);
+                }
 
                 if (gyroAverageTimer.IsRunning)
                 {
@@ -329,8 +339,8 @@ namespace DS4Windows
                 {
                     if (SixAccelMoved != null)
                     {
-                        sPrev.copy(now);
-                        now.populate(currentYaw, currentPitch, currentRoll,
+                        sPrev.Copy(now);
+                        now.Populate(currentYaw, currentPitch, currentRoll,
                             AccelX, AccelY, AccelZ, elapsedDelta, sPrev);
 
                         args = new SixAxisEventArgs(state.ReportTimeStamp, now);
@@ -375,7 +385,7 @@ namespace DS4Windows
             }
         }
 
-        public bool fixupInvertedGyroAxis()
+        public bool FixupInvertedGyroAxis()
         {
             bool result = false;
             // Some, not all, DS4 rev1 gamepads have an inverted YAW gyro axis calibration value (sensNumber>0 but at the same time sensDenom value is <0 while other two axies have both attributes >0).
@@ -396,7 +406,11 @@ namespace DS4Windows
 
         public void StartContinuousCalibration()
         {
-            for (int i = 0; i < gyro_average_window.Length; i++) gyro_average_window[i] = new GyroAverageWindow();
+            for (int i = 0; i < gyro_average_window.Length; i++)
+            {
+                gyro_average_window[i] = new GyroAverageWindow();
+            }
+
             gyroAverageTimer.Start();
         }
 
@@ -404,7 +418,10 @@ namespace DS4Windows
         {
             gyroAverageTimer.Stop();
             gyroAverageTimer.Reset();
-            for (int i = 0; i < gyro_average_window.Length; i++) gyro_average_window[i].Reset();
+            for (int i = 0; i < gyro_average_window.Length; i++)
+            {
+                gyro_average_window[i].Reset();
+            }
         }
 
         public void ResetContinuousCalibration()
@@ -450,7 +467,10 @@ namespace DS4Windows
             {
                 int cycledIndex = (i + gyro_average_window_front_index) % num_gyro_average_windows;
                 GyroAverageWindow windowPointer = gyro_average_window[cycledIndex];
-                if (windowPointer.numSamples == 0 || windowPointer.DurationMs == 0) continue;
+                if (windowPointer.numSamples == 0 || windowPointer.DurationMs == 0)
+                {
+                    continue;
+                }
 
                 double thisWeight;
                 double fNumSamples = windowPointer.numSamples;

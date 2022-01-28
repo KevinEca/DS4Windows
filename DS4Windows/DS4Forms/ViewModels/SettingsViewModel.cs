@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Drawing;
-using System.Windows.Media;
-using System.Windows.Interop;
-using System.Windows;
-using System.Windows.Media.Imaging;
+using System.IO;
 using System.Runtime.InteropServices;
+using System.Windows;
+using System.Windows.Interop;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace DS4WinWPF.DS4Forms.ViewModels
 {
@@ -23,8 +19,11 @@ namespace DS4WinWPF.DS4Forms.ViewModels
         }
 
 
-        public bool SwipeTouchSwitchProfile { get => DS4Windows.Global.SwipeProfiles;
-            set => DS4Windows.Global.SwipeProfiles = value; }
+        public bool SwipeTouchSwitchProfile
+        {
+            get => DS4Windows.Global.SwipeProfiles;
+            set => DS4Windows.Global.SwipeProfiles = value;
+        }
 
         private bool runAtStartup;
         public bool RunAtStartup
@@ -62,7 +61,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
         }
         public event EventHandler RunStartTaskChanged;
 
-        private bool canWriteTask;
+        private readonly bool canWriteTask;
         public bool CanWriteTask { get => canWriteTask; }
 
         public ImageSource uacSource;
@@ -72,11 +71,16 @@ namespace DS4WinWPF.DS4Forms.ViewModels
         public ImageSource QuestionMarkSource { get => questionMarkSource; }
 
         private Visibility showRunStartPanel = Visibility.Collapsed;
-        public Visibility ShowRunStartPanel {
+        public Visibility ShowRunStartPanel
+        {
             get => showRunStartPanel;
             set
             {
-                if (showRunStartPanel == value) return;
+                if (showRunStartPanel == value)
+                {
+                    return;
+                }
+
                 showRunStartPanel = value;
                 ShowRunStartPanelChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -99,7 +103,11 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             set
             {
                 int temp = (int)DS4Windows.Global.UseIconChoice;
-                if (temp == value) return;
+                if (temp == value)
+                {
+                    return;
+                }
+
                 DS4Windows.Global.UseIconChoice = (DS4Windows.TrayIconChoice)value;
                 IconChoiceIndexChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -112,7 +120,11 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             set
             {
                 int temp = (int)DS4Windows.Global.UseCurrentTheme;
-                if (temp == value) return;
+                if (temp == value)
+                {
+                    return;
+                }
+
                 DS4Windows.Global.UseCurrentTheme = (DS4Windows.AppThemeChoice)value;
                 AppChoiceIndexChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -175,7 +187,11 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             }
             set
             {
-                if (checkEveryUnitIdx == value) return;
+                if (checkEveryUnitIdx == value)
+                {
+                    return;
+                }
+
                 checkEveryUnitIdx = value;
                 CheckEveryUnitChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -183,19 +199,26 @@ namespace DS4WinWPF.DS4Forms.ViewModels
         public event EventHandler CheckEveryUnitChanged;
         public bool UseUDPServer
         {
-            get => DS4Windows.Global.isUsingUDPServer();
+            get => DS4Windows.Global.IsUsingUDPServer();
             set
             {
-                if (DS4Windows.Global.isUsingUDPServer() == value) return;
-                DS4Windows.Global.setUsingUDPServer(value);
+                if (DS4Windows.Global.IsUsingUDPServer() == value)
+                {
+                    return;
+                }
+
+                DS4Windows.Global.SetUsingUDPServer(value);
                 UseUDPServerChanged?.Invoke(this, EventArgs.Empty);
             }
         }
         public event EventHandler UseUDPServerChanged;
 
-        public string UdpIpAddress { get => DS4Windows.Global.getUDPServerListenAddress();
-            set => DS4Windows.Global.setUDPServerListenAddress(value); }
-        public int UdpPort { get => DS4Windows.Global.getUDPServerPortNum(); set => DS4Windows.Global.setUDPServerPort(value); }
+        public string UdpIpAddress
+        {
+            get => DS4Windows.Global.GetUDPServerListenAddress();
+            set => DS4Windows.Global.SetUDPServerListenAddress(value);
+        }
+        public int UdpPort { get => DS4Windows.Global.GetUDPServerPortNum(); set => DS4Windows.Global.SetUDPServerPort(value); }
 
         public bool UseUdpSmoothing
         {
@@ -203,7 +226,11 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             set
             {
                 bool temp = DS4Windows.Global.UseUDPSeverSmoothing;
-                if (temp == value) return;
+                if (temp == value)
+                {
+                    return;
+                }
+
                 DS4Windows.Global.UseUDPSeverSmoothing = value;
                 UseUdpSmoothingChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -212,7 +239,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
         public Visibility UdpServerOneEuroPanelVisibility
         {
-            get => DS4Windows.Global.isUsingUDPServer() && DS4Windows.Global.UseUDPSeverSmoothing ? Visibility.Visible : Visibility.Collapsed;
+            get => DS4Windows.Global.IsUsingUDPServer() && DS4Windows.Global.UseUDPSeverSmoothing ? Visibility.Visible : Visibility.Collapsed;
         }
         public event EventHandler UdpServerOneEuroPanelVisibilityChanged;
 
@@ -222,7 +249,11 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             set
             {
                 double temp = DS4Windows.Global.UDPServerSmoothingMincutoff;
-                if (temp == value) return;
+                if (temp == value)
+                {
+                    return;
+                }
+
                 DS4Windows.Global.UDPServerSmoothingMincutoff = value;
                 UdpSmoothMinCutoffChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -235,7 +266,11 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             set
             {
                 double temp = DS4Windows.Global.UDPServerSmoothingBeta;
-                if (temp == value) return;
+                if (temp == value)
+                {
+                    return;
+                }
+
                 DS4Windows.Global.UDPServerSmoothingBeta = value;
                 UdpSmoothBetaChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -259,7 +294,11 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             set
             {
                 string temp = DS4Windows.Global.CustomSteamFolder;
-                if (temp == value) return;
+                if (temp == value)
+                {
+                    return;
+                }
+
                 if (Directory.Exists(value) || value == string.Empty)
                 {
                     DS4Windows.Global.CustomSteamFolder = value;
@@ -285,7 +324,11 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             set
             {
                 string temp = DS4Windows.Global.FakeExeName;
-                if (temp == value) return;
+                if (temp == value)
+                {
+                    return;
+                }
+
                 DS4Windows.Global.FakeExeName = value;
                 FakeExeNameChanged?.Invoke(this, EventArgs.Empty);
                 FakeExeNameChangeCompare?.Invoke(this, temp, value);

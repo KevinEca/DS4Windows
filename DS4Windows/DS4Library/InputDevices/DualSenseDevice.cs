@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using DS4Windows;
 
 namespace DS4Windows.InputDevices
 {
@@ -137,7 +133,7 @@ namespace DS4Windows.InputDevices
         private uint deltaTimeCurrent = 0;
         private bool outputDirty = false;
         private DS4HapticState previousHapticState = new DS4HapticState();
-        private byte[] outputBTCrc32Head = new byte[] { 0xA2 };
+        private readonly byte[] outputBTCrc32Head = new byte[] { 0xA2 };
         //private byte outputPendCount = 0;
         private new GyroMouseSensDualSense gyroMouseSensSettings;
         public override GyroMouseSens GyroMouseSensSettings { get => gyroMouseSensSettings; }
@@ -145,7 +141,8 @@ namespace DS4Windows.InputDevices
         private byte activePlayerLEDMask = 0x00;
 
         private byte hapticsIntensityByte = 0x02;
-        public HapticIntensity HapticChoice {
+        public HapticIntensity HapticChoice
+        {
             set
             {
                 switch (value)
@@ -180,7 +177,8 @@ namespace DS4Windows.InputDevices
             base(hidDevice, disName, featureSet)
         {
             synced = true;
-            DeviceSlotNumberChanged += (sender, e) => {
+            DeviceSlotNumberChanged += (sender, e) =>
+            {
                 CalculateDeviceSlotMask();
             };
 
@@ -221,11 +219,13 @@ namespace DS4Windows.InputDevices
                 outReportBuffer = new byte[BT_OUTPUT_REPORT_LENGTH];
 
                 warnInterval = WARN_INTERVAL_BT;
-                synced = isValidSerial();
+                synced = IsValidSerial();
             }
 
             if (runCalib)
+            {
                 RefreshCalibration();
+            }
 
             if (!hDevice.IsFileStreamOpen())
             {
@@ -286,7 +286,7 @@ namespace DS4Windows.InputDevices
                 bool found = false;
                 for (int tries = 0; !found && tries < 5; tries++)
                 {
-                    hDevice.readFeatureData(calibration);
+                    hDevice.ReadFeatureData(calibration);
                     uint recvCrc32 = calibration[DS4_FEATURE_REPORT_5_CRC32_POS] |
                                 (uint)(calibration[DS4_FEATURE_REPORT_5_CRC32_POS + 1] << 8) |
                                 (uint)(calibration[DS4_FEATURE_REPORT_5_CRC32_POS + 2] << 16) |
@@ -306,12 +306,12 @@ namespace DS4Windows.InputDevices
                     }
                 }
 
-                sixAxis.setCalibrationData(ref calibration, true);
+                sixAxis.SetCalibrationData(ref calibration, true);
             }
             else
             {
-                hDevice.readFeatureData(calibration);
-                sixAxis.setCalibrationData(ref calibration, true);
+                hDevice.ReadFeatureData(calibration);
+                sixAxis.SetCalibrationData(ref calibration, true);
             }
         }
 
@@ -351,7 +351,9 @@ namespace DS4Windows.InputDevices
                 ds4Input.Start();
             }
             else
+            {
                 Console.WriteLine("Thread already running for DS4: " + Mac);
+            }
         }
 
         private void TimeoutTestThread()
@@ -366,7 +368,7 @@ namespace DS4Windows.InputDevices
                     // device.
                     byte[] tmpFeatureData = new byte[64];
                     tmpFeatureData[0] = SERIAL_FEATURE_ID;
-                    hDevice.readFeatureData(tmpFeatureData); // Kick Windows into noticing the disconnection.
+                    hDevice.ReadFeatureData(tmpFeatureData); // Kick Windows into noticing the disconnection.
                 }
                 else
                 {
@@ -381,7 +383,7 @@ namespace DS4Windows.InputDevices
             unchecked
             {
                 firstActive = DateTime.UtcNow;
-                NativeMethods.HidD_SetNumInputBuffers(hDevice.safeReadHandle.DangerousGetHandle(), 3);
+                NativeMethods.HidD_SetNumInputBuffers(hDevice.SafeReadHandle.DangerousGetHandle(), 3);
                 Queue<long> latencyQueue = new Queue<long>(21); // Set capacity at max + 1 to avoid any resizing
                 int tempLatencyCount = 0;
                 long oldtime = 0;
@@ -639,10 +641,10 @@ namespace DS4Windows.InputDevices
                         cState.Battery = 99;
                     }
 
-                    tempStamp = inputReport[28+reportOffset] |
-                                (uint)(inputReport[29+reportOffset] << 8) |
-                                (uint)(inputReport[30+reportOffset] << 16) |
-                                (uint)(inputReport[31+reportOffset] << 24);
+                    tempStamp = inputReport[28 + reportOffset] |
+                                (uint)(inputReport[29 + reportOffset] << 8) |
+                                (uint)(inputReport[30 + reportOffset] << 16) |
+                                (uint)(inputReport[31 + reportOffset] << 24);
 
                     if (timeStampInit == false)
                     {
@@ -689,17 +691,17 @@ namespace DS4Windows.InputDevices
                     //cState.totalMicroSec = pState.totalMicroSec + (uint)(elapsedDeltaTime * 1000000);
 
                     // Simpler touch storing
-                    cState.TrackPadTouch0.RawTrackingNum = inputReport[33+reportOffset];
-                    cState.TrackPadTouch0.Id = (byte)(inputReport[33+reportOffset] & 0x7f);
-                    cState.TrackPadTouch0.IsActive = (inputReport[33+reportOffset] & 0x80) == 0;
-                    cState.TrackPadTouch0.X = (short)(((ushort)(inputReport[35+reportOffset] & 0x0f) << 8) | (ushort)(inputReport[34+reportOffset]));
-                    cState.TrackPadTouch0.Y = (short)(((ushort)(inputReport[36+reportOffset]) << 4) | ((ushort)(inputReport[35+reportOffset] & 0xf0) >> 4));
+                    cState.TrackPadTouch0.RawTrackingNum = inputReport[33 + reportOffset];
+                    cState.TrackPadTouch0.Id = (byte)(inputReport[33 + reportOffset] & 0x7f);
+                    cState.TrackPadTouch0.IsActive = (inputReport[33 + reportOffset] & 0x80) == 0;
+                    cState.TrackPadTouch0.X = (short)(((ushort)(inputReport[35 + reportOffset] & 0x0f) << 8) | inputReport[34 + reportOffset]);
+                    cState.TrackPadTouch0.Y = (short)((inputReport[36 + reportOffset] << 4) | ((ushort)(inputReport[35 + reportOffset] & 0xf0) >> 4));
 
-                    cState.TrackPadTouch0.RawTrackingNum = inputReport[37+reportOffset];
-                    cState.TrackPadTouch1.Id = (byte)(inputReport[37+reportOffset] & 0x7f);
-                    cState.TrackPadTouch1.IsActive = (inputReport[37+reportOffset] & 0x80) == 0;
-                    cState.TrackPadTouch1.X = (short)(((ushort)(inputReport[39+reportOffset] & 0x0f) << 8) | (ushort)(inputReport[38+reportOffset]));
-                    cState.TrackPadTouch1.Y = (short)(((ushort)(inputReport[40+reportOffset]) << 4) | ((ushort)(inputReport[39+reportOffset] & 0xf0) >> 4));
+                    cState.TrackPadTouch0.RawTrackingNum = inputReport[37 + reportOffset];
+                    cState.TrackPadTouch1.Id = (byte)(inputReport[37 + reportOffset] & 0x7f);
+                    cState.TrackPadTouch1.IsActive = (inputReport[37 + reportOffset] & 0x80) == 0;
+                    cState.TrackPadTouch1.X = (short)(((ushort)(inputReport[39 + reportOffset] & 0x0f) << 8) | inputReport[38 + reportOffset]);
+                    cState.TrackPadTouch1.Y = (short)((inputReport[40 + reportOffset] << 4) | ((ushort)(inputReport[39 + reportOffset] & 0xf0) >> 4));
 
                     // XXX DS4State mapping needs fixup, turn touches into an array[4] of structs.  And include the touchpad details there instead.
                     try
@@ -721,12 +723,12 @@ namespace DS4Windows.InputDevices
                         // Even when idling there is still a touch packet indicating no touch 1 or 2
                         if (synced)
                         {
-                            touchpad.handleTouchpad(inputReport, cState, TOUCHPAD_DATA_OFFSET + reportOffset, touchOffset);
+                            touchpad.HandleTouchpad(inputReport, cState, TOUCHPAD_DATA_OFFSET + reportOffset, touchOffset);
                         }
                     }
                     catch (Exception ex) { currerror = $"Touchpad: {ex.Message}"; }
 
-                    fixed (byte* pbInput = &inputReport[16+reportOffset], pbGyro = gyro, pbAccel = accel)
+                    fixed (byte* pbInput = &inputReport[16 + reportOffset], pbGyro = gyro, pbAccel = accel)
                     {
                         for (int i = 0; i < 6; i++)
                         {
@@ -740,7 +742,7 @@ namespace DS4Windows.InputDevices
 
                         if (synced)
                         {
-                            sixAxis.handleSixaxis(pbGyro, pbAccel, cState, elapsedDeltaTime);
+                            sixAxis.HandleSixaxis(pbGyro, pbAccel, cState, elapsedDeltaTime);
                         }
                     }
 
@@ -762,7 +764,7 @@ namespace DS4Windows.InputDevices
                         }
                         else
                         {
-                            idleInput = isDS4Idle();
+                            idleInput = IsDS4Idle();
                             if (!idleInput)
                             {
                                 lastActive = utcNow;
@@ -774,12 +776,14 @@ namespace DS4Windows.InputDevices
                         bool shouldDisconnect = false;
                         if (!isRemoved && idleTimeout > 0)
                         {
-                            idleInput = isDS4Idle();
+                            idleInput = IsDS4Idle();
                             if (idleInput)
                             {
                                 DateTime timeout = lastActive + TimeSpan.FromSeconds(idleTimeout);
                                 if (!charging)
+                                {
                                     shouldDisconnect = utcNow >= timeout;
+                                }
                             }
                             else
                             {
@@ -820,9 +824,13 @@ namespace DS4Windows.InputDevices
                     //forceWrite = false;
 
                     if (!string.IsNullOrEmpty(currerror))
+                    {
                         error = currerror;
+                    }
                     else if (!string.IsNullOrEmpty(error))
+                    {
                         error = string.Empty;
+                    }
 
                     cState.CopyTo(pState);
 
@@ -958,9 +966,9 @@ namespace DS4Windows.InputDevices
                 outputReport[11] = r2EffectData.triggerMotorMode; // right trigger motor mode (0 = no resistance, 1 = continuous resistance, 2 = section resistance, 0x20 and 0x04 enable additional effects together with 1 and 2 (configuration yet unknown), 252 = likely a calibration program* / PS Remote Play defaults this to 5; bit 4 only disables the motor?)
                 outputReport[12] = r2EffectData.triggerStartResistance; // right trigger start of resistance section 0-255 (0 = released state; 0xb0 roughly matches trigger value 0xff); in mode 26 this field has something to do with motor re-extension after a press-release-cycle (0 = no re-extension)
                 outputReport[13] = r2EffectData.triggerEffectForce; // right trigger
-                                         // (mode1) amount of force exerted; 0-255
-                                         // (mode2) end of resistance section (>= begin of resistance section is enforced); 0xff makes it behave like mode1
-                                         // (supplemental mode 4+20) flag(s?) 0x02 = do not pause effect when fully pressed
+                                                                    // (mode1) amount of force exerted; 0-255
+                                                                    // (mode2) end of resistance section (>= begin of resistance section is enforced); 0xff makes it behave like mode1
+                                                                    // (supplemental mode 4+20) flag(s?) 0x02 = do not pause effect when fully pressed
                 outputReport[14] = r2EffectData.triggerRangeForce; // right trigger force exerted in range (mode2), 0-255
                 outputReport[15] = r2EffectData.triggerNearReleaseStrength; // strength of effect near release state (requires supplement modes 4 and 20)
                 outputReport[16] = r2EffectData.triggerNearMiddleStrength; // strength of effect near middle (requires supplement modes 4 and 20)
@@ -972,9 +980,9 @@ namespace DS4Windows.InputDevices
                 outputReport[22] = l2EffectData.triggerMotorMode; // left trigger motor mode (0 = no resistance, 1 = continuous resistance, 2 = section resistance, 0x20 and 0x04 enable additional effects together with 1 and 2 (configuration yet unknown), 252 = likely a calibration program* / PS Remote Play defaults this to 5; bit 4 only disables the motor?)
                 outputReport[23] = l2EffectData.triggerStartResistance; // left trigger start of resistance section 0-255 (0 = released state; 0xb0 roughly matches trigger value 0xff); in mode 26 this field has something to do with motor re-extension after a press-release-cycle (0 = no re-extension)
                 outputReport[24] = l2EffectData.triggerEffectForce; // left trigger
-                                         // (mode1) amount of force exerted; 0-255
-                                         // (mode2) end of resistance section (>= begin of resistance section is enforced); 0xff makes it behave like mode1
-                                         // (supplemental mode 4+20) flag(s?) 0x02 = do not pause effect when fully pressed
+                                                                    // (mode1) amount of force exerted; 0-255
+                                                                    // (mode2) end of resistance section (>= begin of resistance section is enforced); 0xff makes it behave like mode1
+                                                                    // (supplemental mode 4+20) flag(s?) 0x02 = do not pause effect when fully pressed
                 outputReport[25] = l2EffectData.triggerRangeForce; // left trigger: (mode2) amount of force exerted within range; 0-255
                 outputReport[26] = l2EffectData.triggerNearReleaseStrength; // strength of effect near release state (requires supplement modes 4 and 20)
                 outputReport[27] = l2EffectData.triggerNearMiddleStrength; // strength of effect near middle (requires supplement modes 4 and 20)
@@ -1322,7 +1330,7 @@ namespace DS4Windows.InputDevices
                 throw new ArgumentOutOfRangeException("Invalid Trigger Id");
             }
 
-            queueEvent(() =>
+            QueueEvent(() =>
             {
                 outputDirty = true;
                 PrepareOutReport();
@@ -1333,17 +1341,29 @@ namespace DS4Windows.InputDevices
         {
             byte batteryMask;
             if (deviceBattery >= 95)
+            {
                 batteryMask = 0x01 | 0x02 | 0x08 | 0x10;
+            }
             else if (deviceBattery >= 70)
+            {
                 batteryMask = 0x01 | 0x02 | 0x08;
+            }
             else if (deviceBattery >= 50)
+            {
                 batteryMask = 0x01 | 0x02;
+            }
             else if (deviceBattery >= 20)
+            {
                 batteryMask = 0x01;
+            }
             else if (deviceBattery >= 5)
+            {
                 batteryMask = 0x01 | 0x02 | 0x04;
+            }
             else
+            {
                 batteryMask = 0x00;
+            }
 
             return batteryMask;
         }
@@ -1366,7 +1386,7 @@ namespace DS4Windows.InputDevices
                 }
             }
 
-            queueEvent(() =>
+            QueueEvent(() =>
             {
                 outputDirty = true;
                 //PrepareOutReport();
@@ -1380,24 +1400,24 @@ namespace DS4Windows.InputDevices
                 nativeOptionsStore.EnableRumbleChanged += (sender, e) =>
                 {
                     UseRumble = nativeOptionsStore.EnableRumble;
-                    queueEvent(() => { outputDirty = true; });
+                    QueueEvent(() => { outputDirty = true; });
                 };
                 nativeOptionsStore.HapticIntensityChanged += (sender, e) =>
                 {
                     HapticChoice = nativeOptionsStore.HapticIntensity;
-                    queueEvent(() => { outputDirty = true; });
+                    QueueEvent(() => { outputDirty = true; });
                 };
 
                 nativeOptionsStore.MuteLedModeChanged += (sender, e) =>
                 {
                     PrepareMuteLEDByte();
-                    queueEvent(() => { outputDirty = true; });
+                    QueueEvent(() => { outputDirty = true; });
                 };
 
                 nativeOptionsStore.LedModeChanged += (sender, e) =>
                 {
                     PreparePlayerLEDBarByte();
-                    queueEvent(() => { outputDirty = true; });
+                    QueueEvent(() => { outputDirty = true; });
                 };
             }
         }

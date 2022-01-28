@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DS4Windows;
+﻿using DS4Windows;
 using DS4WinWPF.DS4Forms.ViewModels.Util;
+using System.Collections.Generic;
 
 namespace DS4WinWPF.DS4Forms.ViewModels.SpecialActions
 {

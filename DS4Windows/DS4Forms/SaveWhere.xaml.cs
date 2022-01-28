@@ -10,7 +10,7 @@ namespace DS4WinWPF.DS4Forms
     /// </summary>
     public partial class SaveWhere : Window
     {
-        private bool multisaves;
+        private readonly bool multisaves;
         private bool choiceMade = false;
 
         public SaveWhere(bool multisavespots)

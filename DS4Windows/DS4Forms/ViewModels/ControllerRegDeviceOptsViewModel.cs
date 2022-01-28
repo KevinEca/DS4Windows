@@ -1,20 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DS4Windows;
+﻿using DS4Windows;
 using DS4WinWPF.DS4Forms.ViewModels.Util;
-using LEDBarMode = DS4Windows.DualSenseControllerOptions.LEDBarMode;
-using MuteLEDMode = DS4Windows.DualSenseControllerOptions.MuteLEDMode;
-using LinkMode = DS4Windows.JoyConDeviceOptions.LinkMode;
+using System;
+using System.Collections.Generic;
 using JoinedGyroProvider = DS4Windows.JoyConDeviceOptions.JoinedGyroProvider;
+using LEDBarMode = DS4Windows.DualSenseControllerOptions.LEDBarMode;
+using LinkMode = DS4Windows.JoyConDeviceOptions.LinkMode;
+using MuteLEDMode = DS4Windows.DualSenseControllerOptions.MuteLEDMode;
 
 namespace DS4WinWPF.DS4Forms.ViewModels
 {
     public class ControllerRegDeviceOptsViewModel
     {
-        private ControlServiceDeviceOptions serviceDeviceOpts;
+        private readonly ControlServiceDeviceOptions serviceDeviceOpts;
 
         public bool EnableDS4 { get => serviceDeviceOpts.DS4DeviceOpts.Enabled; }
 
@@ -31,12 +28,12 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
         public bool VerboseLogMessages { get => serviceDeviceOpts.VerboseLogMessages; set => serviceDeviceOpts.VerboseLogMessages = value; }
 
-        private List<DeviceListItem> currentInputDevices = new List<DeviceListItem>();
+        private readonly List<DeviceListItem> currentInputDevices = new List<DeviceListItem>();
         public List<DeviceListItem> CurrentInputDevices { get => currentInputDevices; }
 
         // Serial, ControllerOptionsStore instance
-        private Dictionary<string, ControllerOptionsStore> inputDeviceSettings = new Dictionary<string, ControllerOptionsStore>();
-        private List<ControllerOptionsStore> controllerOptionsStores = new List<ControllerOptionsStore>();
+        private readonly Dictionary<string, ControllerOptionsStore> inputDeviceSettings = new Dictionary<string, ControllerOptionsStore>();
+        private readonly List<ControllerOptionsStore> controllerOptionsStores = new List<ControllerOptionsStore>();
 
         private int controllerSelectedIndex = -1;
         public int ControllerSelectedIndex
@@ -44,7 +41,11 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             get => controllerSelectedIndex;
             set
             {
-                if (controllerSelectedIndex == value) return;
+                if (controllerSelectedIndex == value)
+                {
+                    return;
+                }
+
                 controllerSelectedIndex = value;
                 ControllerSelectedIndexChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -77,7 +78,11 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             get => currentTabSelectedIndex;
             set
             {
-                if (currentTabSelectedIndex == value) return;
+                if (currentTabSelectedIndex == value)
+                {
+                    return;
+                }
+
                 currentTabSelectedIndex = value;
                 CurrentTabSelectedIndexChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -90,7 +95,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             this.serviceDeviceOpts = serviceDeviceOpts;
 
             int idx = 0;
-            foreach(DS4Device device in service.DS4Controllers)
+            foreach (DS4Device device in service.DS4Controllers)
             {
                 if (device != null)
                 {
@@ -169,7 +174,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
     public class DeviceListItem
     {
-        private DS4Device device;
+        private readonly DS4Device device;
         public DS4Device Device { get => device; }
 
         public string IdText
@@ -186,10 +191,10 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
     public class DS4ControllerOptionsWrapper
     {
-        private DS4ControllerOptions options;
+        private readonly DS4ControllerOptions options;
         public DS4ControllerOptions Options { get => options; }
 
-        private DS4DeviceOptions parentOptions;
+        private readonly DS4DeviceOptions parentOptions;
         public bool Visible
         {
             get => parentOptions.Enabled;
@@ -206,14 +211,14 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
     public class DualSenseControllerOptionsWrapper
     {
-        private DualSenseControllerOptions options;
+        private readonly DualSenseControllerOptions options;
         public DualSenseControllerOptions Options { get => options; }
 
-        private DualSenseDeviceOptions parentOptions;
+        private readonly DualSenseDeviceOptions parentOptions;
         public bool Visible { get => parentOptions.Enabled; }
         public event EventHandler VisibleChanged;
 
-        private List<DSHapticsChoiceEnum> dsHapticOptions = new List<DSHapticsChoiceEnum>()
+        private readonly List<DSHapticsChoiceEnum> dsHapticOptions = new List<DSHapticsChoiceEnum>()
         {
             new DSHapticsChoiceEnum("Low", DS4Windows.InputDevices.DualSenseDevice.HapticIntensity.Low),
             new DSHapticsChoiceEnum("Medium", DS4Windows.InputDevices.DualSenseDevice.HapticIntensity.Medium),
@@ -221,7 +226,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
         };
         public List<DSHapticsChoiceEnum> DSHapticOptions { get => dsHapticOptions; }
 
-        private List<EnumChoiceSelection<LEDBarMode>> dsLEDModeOptions = new List<EnumChoiceSelection<LEDBarMode>>()
+        private readonly List<EnumChoiceSelection<LEDBarMode>> dsLEDModeOptions = new List<EnumChoiceSelection<LEDBarMode>>()
         {
             new EnumChoiceSelection<LEDBarMode>("Off", LEDBarMode.Off),
             new EnumChoiceSelection<LEDBarMode>("Only for multiple controllers", LEDBarMode.MultipleControllers),
@@ -230,7 +235,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
         };
         public List<EnumChoiceSelection<LEDBarMode>> DsLEDModes { get => dsLEDModeOptions; }
 
-        private List<EnumChoiceSelection<MuteLEDMode>> dsMuteLEDModes = new List<EnumChoiceSelection<MuteLEDMode>>()
+        private readonly List<EnumChoiceSelection<MuteLEDMode>> dsMuteLEDModes = new List<EnumChoiceSelection<MuteLEDMode>>()
         {
             new EnumChoiceSelection<MuteLEDMode>("Off", MuteLEDMode.Off),
             new EnumChoiceSelection<MuteLEDMode>("On", MuteLEDMode.On),
@@ -249,10 +254,10 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
     public class SwitchProControllerOptionsWrapper
     {
-        private SwitchProControllerOptions options;
+        private readonly SwitchProControllerOptions options;
         public SwitchProControllerOptions Options { get => options; }
 
-        private SwitchProDeviceOptions parentOptions;
+        private readonly SwitchProDeviceOptions parentOptions;
         public bool Visible { get => parentOptions.Enabled; }
         public event EventHandler VisibleChanged;
 
@@ -267,23 +272,23 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
     public class JoyConControllerOptionsWrapper
     {
-        private JoyConControllerOptions options;
+        private readonly JoyConControllerOptions options;
         public JoyConControllerOptions Options { get => options; }
 
-        private JoyConDeviceOptions parentOptions;
+        private readonly JoyConDeviceOptions parentOptions;
         public JoyConDeviceOptions ParentOptions { get => parentOptions; }
 
         public bool Visible { get => parentOptions.Enabled; }
         public event EventHandler VisibleChanged;
 
-        private List<EnumChoiceSelection<LinkMode>> linkModes = new List<EnumChoiceSelection<LinkMode>>()
+        private readonly List<EnumChoiceSelection<LinkMode>> linkModes = new List<EnumChoiceSelection<LinkMode>>()
         {
             new EnumChoiceSelection<LinkMode>("Split", LinkMode.Split),
             new EnumChoiceSelection<LinkMode>("Joined", LinkMode.Joined),
         };
         public List<EnumChoiceSelection<LinkMode>> LinkModes { get => linkModes; }
 
-        private List<EnumChoiceSelection<JoinedGyroProvider>> joinGyroOptions = new List<EnumChoiceSelection<JoinedGyroProvider>>()
+        private readonly List<EnumChoiceSelection<JoinedGyroProvider>> joinGyroOptions = new List<EnumChoiceSelection<JoinedGyroProvider>>()
         {
             new EnumChoiceSelection<JoinedGyroProvider>("Left", JoinedGyroProvider.JoyConL),
             new EnumChoiceSelection<JoinedGyroProvider>("Right", JoinedGyroProvider.JoyConR),
@@ -301,7 +306,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
     public class DSHapticsChoiceEnum
     {
-        private string displayName = string.Empty;
+        private readonly string displayName = string.Empty;
         public string DisplayName { get => displayName; }
 
         private DS4Windows.InputDevices.DualSenseDevice.HapticIntensity choiceValue;

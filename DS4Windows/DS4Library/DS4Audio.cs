@@ -1,6 +1,6 @@
-﻿using System;
+﻿using DS4Windows.DS4Library.CoreAudio;
+using System;
 using System.Runtime.InteropServices;
-using DS4Windows.DS4Library.CoreAudio;
 using System.Text.RegularExpressions;
 
 namespace DS4Windows.DS4Library
@@ -8,7 +8,7 @@ namespace DS4Windows.DS4Library
     public class DS4Audio : IAudioEndpointVolumeCallback
     {
         private IAudioEndpointVolume endpointVolume;
-    
+
         private static Guid IID_IAudioEndpointVolume = new Guid("5CDF2C82-841E-4546-9722-0CF74078229A");
         private static readonly PropertyKey PKEY_Device_FriendlyName =
             new PropertyKey(new Guid(unchecked((int)0xa45c254e), unchecked((short)0xdf1c), 0x4efd, 0x80, 0x20, 0x67, 0xd1, 0x46, 0xa8, 0x50, 0xe0), 14);
@@ -27,13 +27,13 @@ namespace DS4Windows.DS4Library
             }
         }
 
-        public uint getVolume()
+        public uint GetVolume()
         {
             return vol;
         }
 
-        private DataFlow instAudioFlags = DataFlow.Render;
-        private Regex regex = new Regex(@"^\{\d+\}\.{1}(?<parent>(?:\S+)*\\VID_(?:[0-9]|[A-F])+&PID_(?:[0-9A-F]+)(?:\S+)){1}$",
+        private readonly DataFlow instAudioFlags = DataFlow.Render;
+        private readonly Regex regex = new Regex(@"^\{\d+\}\.{1}(?<parent>(?:\S+)*\\VID_(?:[0-9]|[A-F])+&PID_(?:[0-9A-F]+)(?:\S+)){1}$",
             RegexOptions.Compiled);
 
         public void RefreshVolume()
@@ -46,19 +46,25 @@ namespace DS4Windows.DS4Library
             float pfLevel = 0;
 
             if (endpointVolume != null)
+            {
                 endpointVolume.GetMasterVolumeLevelScalar(out pfLevel);
+            }
 
             if (instAudioFlags == DataFlow.Render)
+            {
                 // Use QuadraticEaseOut curve for headphone volume level
                 //vol = pfLevel != 0.0 ? Convert.ToUInt32((MAX_RENDER_VOLUME_LVL - MIN_RENDER_VOLUME_LVL) * -(pfLevel * (pfLevel - 2.0)) + MIN_RENDER_VOLUME_LVL) : 0;
                 // Use SineEaseOut curve for headphone volume level
                 vol = pfLevel != 0.0 ? Convert.ToUInt32((MAX_RENDER_VOLUME_LVL - MIN_RENDER_VOLUME_LVL) * Math.Sin(pfLevel * HALFPI) + MIN_RENDER_VOLUME_LVL) : 0;
-                // Use CubicEaseOut curve for headphone volume level
-                //vol = pfLevel != 0.0 ?  Convert.ToUInt32((MAX_RENDER_VOLUME_LVL - MIN_RENDER_VOLUME_LVL) * (--pfLevel * pfLevel * pfLevel + 1) + MIN_RENDER_VOLUME_LVL) : 0;
-                // Use Linear curve for headphone volume level
-                //vol = pfLevel != 0.0 ? Convert.ToUInt32((MAX_RENDER_VOLUME_LVL - MIN_RENDER_VOLUME_LVL) * pfLevel + MIN_RENDER_VOLUME_LVL) : 0;
+            }
+            // Use CubicEaseOut curve for headphone volume level
+            //vol = pfLevel != 0.0 ?  Convert.ToUInt32((MAX_RENDER_VOLUME_LVL - MIN_RENDER_VOLUME_LVL) * (--pfLevel * pfLevel * pfLevel + 1) + MIN_RENDER_VOLUME_LVL) : 0;
+            // Use Linear curve for headphone volume level
+            //vol = pfLevel != 0.0 ? Convert.ToUInt32((MAX_RENDER_VOLUME_LVL - MIN_RENDER_VOLUME_LVL) * pfLevel + MIN_RENDER_VOLUME_LVL) : 0;
             else if (instAudioFlags == DataFlow.Capture)
+            {
                 vol = Convert.ToUInt32((MAX_CAPTURE_VOLUME_LVL - MIN_CAPTURE_VOLUME_LVL) * pfLevel + 0);
+            }
         }
 
         public void OnNotify(IntPtr pNotify)
@@ -210,13 +216,13 @@ namespace DS4Windows.DS4Library
                         tmp = tmp.TrimEnd('\0');
                         result = tmp;
                         break;
-                     }
+                    }
                 }
             }
 
             NativeMethods.SetupDiDestroyDeviceInfoList(deviceInfoSet);
             return result;
-         }
+        }
     }
 }
 
@@ -331,7 +337,7 @@ namespace DS4Windows.DS4Library.CoreAudio
         int Item(int deviceNumber, out IMMDevice device);
     }
 
-    [Guid("A95664D2-9614-4F35-A746-DE8DB63617E6"), 
+    [Guid("A95664D2-9614-4F35-A746-DE8DB63617E6"),
         InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     interface IMMDeviceEnumerator
     {

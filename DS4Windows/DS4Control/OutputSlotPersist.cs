@@ -1,10 +1,6 @@
 ﻿using DS4Windows;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 
 namespace DS4WinWPF.DS4Control
@@ -25,9 +21,12 @@ namespace DS4WinWPF.DS4Control
                 catch (XmlException) { }
 
                 XmlElement rootElement = m_Xdoc.DocumentElement;
-                if (rootElement == null) return false;
+                if (rootElement == null)
+                {
+                    return false;
+                }
 
-                foreach(XmlElement element in rootElement.GetElementsByTagName("Slot"))
+                foreach (XmlElement element in rootElement.GetElementsByTagName("Slot"))
                 {
                     OutSlotDevice tempDev = null;
                     string temp = element.GetAttribute("idx");

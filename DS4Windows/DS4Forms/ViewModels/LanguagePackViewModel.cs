@@ -1,13 +1,12 @@
-﻿using System;
+﻿using DS4Windows;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using DS4Windows;
 
 namespace DS4WinWPF.DS4Forms.ViewModels
 {
@@ -31,7 +30,11 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             get => selectedIndex;
             set
             {
-                if (selectedIndex == value) return;
+                if (selectedIndex == value)
+                {
+                    return;
+                }
+
                 selectedIndex = value;
                 SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -111,8 +114,8 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
     public class LangPackItem
     {
-        private string name;
-        private string nativeName;
+        private readonly string name;
+        private readonly string nativeName;
 
         public string Name { get => name; }
         public string NativeName { get => nativeName; }

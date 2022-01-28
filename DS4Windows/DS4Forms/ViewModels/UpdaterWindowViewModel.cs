@@ -1,14 +1,12 @@
-﻿using System;
+﻿using HttpProgress;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Documents;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using HttpProgress;
+using System.Threading.Tasks;
+using System.Windows.Documents;
 using MarkdownEngine = MdXaml.Markdown;
 
 namespace DS4WinWPF.DS4Forms.ViewModels
@@ -17,7 +15,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
     {
         public const string CHANGELOG_URI = "https://raw.githubusercontent.com/Ryochan7/DS4Windows/jay/DS4Windows/Changelog.min.json";
 
-        private string newversion;
+        private readonly string newversion;
         public string Newversion { get => newversion; }
 
         private FlowDocument changelogDocument;
@@ -26,7 +24,11 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             get => changelogDocument;
             private set
             {
-                if (changelogDocument == value) return;
+                if (changelogDocument == value)
+                {
+                    return;
+                }
+
                 changelogDocument = value;
                 ChangelogDocumentChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -53,7 +55,10 @@ namespace DS4WinWPF.DS4Forms.ViewModels
                 try
                 {
                     await temp.ConfigureAwait(true);
-                    if (temp.Result.IsSuccessStatusCode) readFile = true;
+                    if (temp.Result.IsSuccessStatusCode)
+                    {
+                        readFile = true;
+                    }
                 }
                 catch (System.Net.Http.HttpRequestException) { }
             }

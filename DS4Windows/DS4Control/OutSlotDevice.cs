@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DS4Windows;
+﻿using DS4Windows;
+using System;
 
 namespace DS4WinWPF.DS4Control
 {
@@ -33,7 +29,7 @@ namespace DS4WinWPF.DS4Control
         private InputBound inputBound;
         private OutContType permanentType;
         private OutContType currentType;
-        private int index;
+        private readonly int index;
         public int Index => index;
 
         /// <summary>
@@ -54,7 +50,11 @@ namespace DS4WinWPF.DS4Control
             get => reserveStatus;
             set
             {
-                if (reserveStatus == value) return;
+                if (reserveStatus == value)
+                {
+                    return;
+                }
+
                 reserveStatus = value;
                 CurrentReserveStatusChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -69,7 +69,11 @@ namespace DS4WinWPF.DS4Control
             get => inputBound;
             set
             {
-                if (inputBound == value) return;
+                if (inputBound == value)
+                {
+                    return;
+                }
+
                 inputBound = value;
                 CurrentInputBoundChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -84,10 +88,15 @@ namespace DS4WinWPF.DS4Control
             get => permanentType;
             set
             {
-                if (permanentType == value) return;
+                if (permanentType == value)
+                {
+                    return;
+                }
 
-                if(value != OutContType.None)
-                    AppLogger.LogToGui($"Output slot #{this.index+1} has permanent type {value}", false);
+                if (value != OutContType.None)
+                {
+                    AppLogger.LogToGui($"Output slot #{this.index + 1} has permanent type {value}", false);
+                }
 
                 permanentType = value;
                 PermanentTypeChanged?.Invoke(this, EventArgs.Empty);

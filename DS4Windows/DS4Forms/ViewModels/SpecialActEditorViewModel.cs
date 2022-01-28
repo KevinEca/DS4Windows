@@ -1,22 +1,16 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DS4Windows;
+﻿using DS4Windows;
 using DS4WinWPF.DS4Forms.ViewModels.Util;
+using System.Collections.Generic;
 
 namespace DS4WinWPF.DS4Forms.ViewModels
 {
     public class SpecialActEditorViewModel : NotifyDataErrorBase
     {
-        private int deviceNum;
+        private readonly int deviceNum;
         private int actionTypeIndex = 0;
         private string actionName;
-        private SpecialAction savedaction;
-        private SpecialAction.ActionTypeId[] typeAssoc = new SpecialAction.ActionTypeId[]
+        private readonly SpecialAction savedaction;
+        private readonly SpecialAction.ActionTypeId[] typeAssoc = new SpecialAction.ActionTypeId[]
         {
             SpecialAction.ActionTypeId.None, SpecialAction.ActionTypeId.Macro,
             SpecialAction.ActionTypeId.Program, SpecialAction.ActionTypeId.Profile,
@@ -25,9 +19,9 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             SpecialAction.ActionTypeId.SASteeringWheelEmulationCalibrate,
         };
 
-        private List<string> controlTriggerList = new List<string>();
-        private List<string> controlUnloadTriggerList = new List<string>();
-        private bool editMode;
+        private readonly List<string> controlTriggerList = new List<string>();
+        private readonly List<string> controlUnloadTriggerList = new List<string>();
+        private readonly bool editMode;
 
         public int DeviceNum { get => deviceNum; }
         public int ActionTypeIndex { get => actionTypeIndex; set => actionTypeIndex = value; }
@@ -77,7 +71,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             }
 
             actionName = action.name;
-            for(int i = 0; i < typeAssoc.Length; i++)
+            for (int i = 0; i < typeAssoc.Length; i++)
             {
                 SpecialAction.ActionTypeId type = typeAssoc[i];
                 if (type == action.typeID)

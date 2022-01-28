@@ -40,15 +40,15 @@ namespace DS4Windows
     {
         public enum AxisType { LSRS, L2R2, SA };
 
-        private static int kSplineTableSize = 11;
-        private static double kSampleStepSize = 1.0 / (kSplineTableSize - 1.0);
+        private static readonly int kSplineTableSize = 11;
+        private static readonly double kSampleStepSize = 1.0 / (kSplineTableSize - 1.0);
         private double[] arraySampleValues;
 
         // These values are established by empiricism with tests (tradeoff: performance VS precision) (comment by GRE)
-        private static int    NEWTON_ITERATIONS = 4;
-        private static double NEWTON_MIN_SLOPE = 0.001;
-        private static double SUBDIVISION_PRECISION = 0.0000001;
-        private static int    SUBDIVISION_MAX_ITERATIONS = 10;
+        private static readonly int NEWTON_ITERATIONS = 4;
+        private static readonly double NEWTON_MIN_SLOPE = 0.001;
+        private static readonly double SUBDIVISION_PRECISION = 0.0000001;
+        private static readonly int SUBDIVISION_MAX_ITERATIONS = 10;
 
         private double mX1 = 0, mY1 = 0, mX2 = 0, mY2 = 0;  // Bezier curve definition (0, 0, 0, 0 = Linear. 99, 99, 0, 0 = Pre-defined hard-coded EnhancedPrecision curve)
 
@@ -66,8 +66,10 @@ namespace DS4Windows
                 // The input string is expected to be always in "en-US" data format (ie. period as decimal separator and comma as list separator) and the string value should not have thousand separator chars
                 string[] bezierDef = value.Split(new Char[] { ',' }, 4);
                 CultureInfo usDataFormatCulture = CultureInfo.CreateSpecificCulture("en-US");
-                if (bezierDef.Length < 4 || !Double.TryParse(bezierDef[0], NumberStyles.Float, usDataFormatCulture, out mX1) || !Double.TryParse(bezierDef[1], NumberStyles.Float, usDataFormatCulture, out mY1) || !Double.TryParse(bezierDef[2], NumberStyles.Float, usDataFormatCulture, out mX2) || !Double.TryParse(bezierDef[3], NumberStyles.Float, usDataFormatCulture, out mY2) )
+                if (bezierDef.Length < 4 || !Double.TryParse(bezierDef[0], NumberStyles.Float, usDataFormatCulture, out mX1) || !Double.TryParse(bezierDef[1], NumberStyles.Float, usDataFormatCulture, out mY1) || !Double.TryParse(bezierDef[2], NumberStyles.Float, usDataFormatCulture, out mX2) || !Double.TryParse(bezierDef[3], NumberStyles.Float, usDataFormatCulture, out mY2))
+                {
                     mX1 = mY1 = mX2 = mY2 = 0;
+                }
             }
         }
 
@@ -80,7 +82,7 @@ namespace DS4Windows
         private double axisCenterPosDouble;     // Center pos of axis (LS/RS has 128 as "stick center", other axies has 0 as zero center point)
 
         // Lookup result table is always either in 0..128 or 0..255 range depending on the DS4 analog axis range. LUT table set as public to let DS4Win reading thread to access it directly (every CPU cycle matters)
-        public byte[] arrayBezierLUT = null;  
+        public byte[] arrayBezierLUT = null;
 
         public BezierCurve()
         {
@@ -90,7 +92,9 @@ namespace DS4Windows
         public bool InitBezierCurve(string bezierCurveDefinition, AxisType gamepadAxisType, bool setCustomDefinitionProperty = false)
         {
             if (setCustomDefinitionProperty)
+            {
                 this.CustomDefinition = bezierCurveDefinition;
+            }
 
             this.AsString = bezierCurveDefinition;
             return InitBezierCurve(mX1, mY1, mX2, mY2, gamepadAxisType);
@@ -101,7 +105,9 @@ namespace DS4Windows
             bool bRetValue = true;
 
             if (arrayBezierLUT == null)
+            {
                 arrayBezierLUT = new byte[256];
+            }
 
             // Axis type and max range per axis
             axisType = gamepadAxisType;
@@ -160,7 +166,9 @@ namespace DS4Windows
             if (x1 == 0 && y1 == 0 && ((x2 == 0 && y2 == 0) || (x2 == 1 && y2 == 1)))
             {
                 for (int idx = 0; idx <= 255; idx++)
+                {
                     arrayBezierLUT[idx] = (byte)idx;
+                }
 
                 return bRetValue;
             }
@@ -169,19 +177,26 @@ namespace DS4Windows
             {
                 arraySampleValues = new double[BezierCurve.kSplineTableSize];
                 for (int idx = 0; idx < BezierCurve.kSplineTableSize; idx++)
+                {
                     arraySampleValues[idx] = CalcBezier(idx * BezierCurve.kSampleStepSize, mX1, mX2);
+                }
 
                 // Pre-populate lookup result table for GetBezierEasing function (performance optimization)
                 for (byte idx = 0; idx <= (byte)axisMaxDouble; idx++)
                 {
-                    arrayBezierLUT[idx + (byte)axisCenterPosDouble] = (byte)(Global.Clamp(0, Math.Round(CalcBezier(getTForX(idx / axisMaxDouble), mY1, mY2) * axisMaxDouble), axisMaxDouble) + axisCenterPosDouble);
+                    arrayBezierLUT[idx + (byte)axisCenterPosDouble] = (byte)(Global.Clamp(0, Math.Round(CalcBezier(GetTForX(idx / axisMaxDouble), mY1, mY2) * axisMaxDouble), axisMaxDouble) + axisCenterPosDouble);
 
                     // Invert curve from a right side of the center position (128) to the left tilted stick axis (or from up tilt to down tilt)
                     if (gamepadAxisType == AxisType.LSRS)
+                    {
                         arrayBezierLUT[127 - idx] = (byte)(255 - arrayBezierLUT[idx + (byte)axisCenterPosDouble]);
+                    }
 
                     // If the axisMaxDouble is 255 then we need this to break the look (byte is unsigned 0..255, so the FOR loop never reaches 256 idx value. C# would throw an overflow exceptio)
-                    if (idx == axisMaxDouble) break;
+                    if (idx == axisMaxDouble)
+                    {
+                        break;
+                    }
                 }
             }
             finally
@@ -199,22 +214,33 @@ namespace DS4Windows
 
             for (byte idx = 0; idx <= axisMaxDouble; idx++)
             {
-                abs = idx / axisMaxDouble; 
+                abs = idx / axisMaxDouble;
                 if (abs <= 0.4)
+                {
                     output = 0.55 * abs;
+                }
                 else if (abs <= 0.75)
+                {
                     output = abs - 0.18;
+                }
                 else //if (abs > 0.75)
+                {
                     output = (abs * 1.72) - 0.72;
+                }
 
                 arrayBezierLUT[idx + (byte)axisCenterPosDouble] = (byte)(output * axisMaxDouble + axisCenterPosDouble);
 
                 // Invert curve from a right side of the center position (128) to the left tilted stick axis (or from up tilt to down tilt)
                 if (this.axisType == AxisType.LSRS)
+                {
                     arrayBezierLUT[127 - idx] = (byte)(255 - arrayBezierLUT[idx + (byte)axisCenterPosDouble]);
+                }
 
                 // If the axisMaxDouble is 255 then we need this to break the look (byte is unsigned 0..255, so the FOR loop never reaches 256 idx value. C# would throw an overflow exceptio)
-                if (idx == axisMaxDouble) break;
+                if (idx == axisMaxDouble)
+                {
+                    break;
+                }
             }
             return true;
         }
@@ -229,10 +255,15 @@ namespace DS4Windows
 
                 // Invert curve from a right side of the center position (128) to the left tilted stick axis (or from up tilt to down tilt)
                 if (this.axisType == AxisType.LSRS)
+                {
                     arrayBezierLUT[127 - idx] = (byte)(255 - arrayBezierLUT[idx + (byte)axisCenterPosDouble]);
+                }
 
                 // If the axisMaxDouble is 255 then we need this to break the look (byte is unsigned 0..255, so the FOR loop never reaches 256 idx value. C# would throw an overflow exceptio)
-                if (idx == axisMaxDouble) break;
+                if (idx == axisMaxDouble)
+                {
+                    break;
+                }
             }
             return true;
         }
@@ -247,10 +278,15 @@ namespace DS4Windows
 
                 // Invert curve from a right side of the center position (128) to the left tilted stick axis (or from up tilt to down tilt)
                 if (this.axisType == AxisType.LSRS)
+                {
                     arrayBezierLUT[127 - idx] = (byte)(255 - arrayBezierLUT[idx + (byte)axisCenterPosDouble]);
+                }
 
                 // If the axisMaxDouble is 255 then we need this to break the look (byte is unsigned 0..255, so the FOR loop never reaches 256 idx value. C# would throw an overflow exceptio)
-                if (idx == axisMaxDouble) break;
+                if (idx == axisMaxDouble)
+                {
+                    break;
+                }
             }
             return true;
         }
@@ -266,10 +302,15 @@ namespace DS4Windows
 
                 // Invert curve from a right side of the center position (128) to the left tilted stick axis (or from up tilt to down tilt)
                 if (this.axisType == AxisType.LSRS)
+                {
                     arrayBezierLUT[127 - idx] = (byte)(255 - arrayBezierLUT[idx + (byte)axisCenterPosDouble]);
+                }
 
                 // If the axisMaxDouble is 255 then we need this to break the look (byte is unsigned 0..255, so the FOR loop never reaches 256 idx value. C# would throw an overflow exceptio)
-                if (idx == axisMaxDouble) break;
+                if (idx == axisMaxDouble)
+                {
+                    break;
+                }
             }
             return true;
         }
@@ -285,15 +326,20 @@ namespace DS4Windows
 
                 // Invert curve from a right side of the center position (128) to the left tilted stick axis (or from up tilt to down tilt)
                 if (this.axisType == AxisType.LSRS)
+                {
                     arrayBezierLUT[127 - idx] = (byte)(255 - arrayBezierLUT[idx + (byte)axisCenterPosDouble]);
+                }
 
                 // If the axisMaxDouble is 255 then we need this to break the look (byte is unsigned 0..255, so the FOR loop never reaches 256 idx value. C# would throw an overflow exceptio)
-                if (idx == axisMaxDouble) break;
+                if (idx == axisMaxDouble)
+                {
+                    break;
+                }
             }
             return true;
         }
 
-        public byte GetBezierEasing(byte inputXValue) 
+        public byte GetBezierEasing(byte inputXValue)
         {
             unchecked
             {
@@ -311,7 +357,7 @@ namespace DS4Windows
             return ((A(aA1, aA2) * aT + B(aA1, aA2)) * aT + C(aA1)) * aT;
         }
 
-        private double getTForX(double aX)
+        private double GetTForX(double aX)
         {
             double intervalStart = 0.0;
             int currentSample = 1;
@@ -327,10 +373,10 @@ namespace DS4Windows
             double dist = (aX - arraySampleValues[currentSample]) / (arraySampleValues[currentSample + 1] - arraySampleValues[currentSample]);
             double guessForT = intervalStart + dist * kSampleStepSize;
 
-            double initialSlope = getSlope(guessForT, mX1, mX2);
+            double initialSlope = GetSlope(guessForT, mX1, mX2);
             if (initialSlope >= NEWTON_MIN_SLOPE)
             {
-                return newtonRaphsonIterate(aX, guessForT /*, mX1, mX2*/);
+                return NewtonRaphsonIterate(aX, guessForT /*, mX1, mX2*/);
             }
             else if (initialSlope == 0.0)
             {
@@ -338,21 +384,21 @@ namespace DS4Windows
             }
             else
             {
-                return binarySubdivide(aX, intervalStart, intervalStart + kSampleStepSize /*, mX1, mX2*/);
+                return BinarySubdivide(aX, intervalStart, intervalStart + kSampleStepSize /*, mX1, mX2*/);
             }
         }
 
         // Returns dx/dt given t, x1, and x2, or dy/dt given t, y1, and y2.
-        private double getSlope(double aT, double aA1, double aA2)
+        private double GetSlope(double aT, double aA1, double aA2)
         {
             return 3.0 * A(aA1, aA2) * aT * aT + 2.0 * B(aA1, aA2) * aT + C(aA1);
         }
 
-        private double newtonRaphsonIterate(double aX, double aGuessT /*, double mX1, double mX2*/)
+        private double NewtonRaphsonIterate(double aX, double aGuessT /*, double mX1, double mX2*/)
         {
             for (int i = 0; i < BezierCurve.NEWTON_ITERATIONS; ++i)
             {
-                double currentSlope = getSlope(aGuessT, mX1, mX2);
+                double currentSlope = GetSlope(aGuessT, mX1, mX2);
                 if (currentSlope == 0.0)
                 {
                     return aGuessT;
@@ -363,7 +409,7 @@ namespace DS4Windows
             return aGuessT;
         }
 
-        private double binarySubdivide(double aX, double aA, double aB /*, double mX1, double mX2*/)
+        private double BinarySubdivide(double aX, double aA, double aB /*, double mX1, double mX2*/)
         {
             double currentX, currentT, i = 0;
             do

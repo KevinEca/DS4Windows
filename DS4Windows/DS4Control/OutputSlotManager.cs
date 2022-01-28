@@ -1,26 +1,22 @@
-﻿using System;
+﻿using DS4WinWPF.DS4Control;
+using Nefarius.ViGEm.Client;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Threading;
-using DS4WinWPF.DS4Control;
-using Nefarius.ViGEm.Client;
 
 namespace DS4Windows
 {
     public class OutputSlotManager
     {
         public const int DELAY_TIME = 500; // measured in ms
-        private OutSlotDevice[] outputSlots;/* = new OutSlotDevice[Global.MAX_DS4_CONTROLLER_COUNT]
+        private readonly OutSlotDevice[] outputSlots;/* = new OutSlotDevice[Global.MAX_DS4_CONTROLLER_COUNT]
         {
             new OutSlotDevice(0), new OutSlotDevice(1),
             new OutSlotDevice(2), new OutSlotDevice(3)
         };
         */
-        private int lastSlotIndex;
+        private readonly int lastSlotIndex;
 
         public int NumAttachedDevices
         {
@@ -40,12 +36,12 @@ namespace DS4Windows
             }
         }
 
-        private Dictionary<int, OutputDevice> deviceDict = new Dictionary<int, OutputDevice>();
-        private Dictionary<OutputDevice, int> revDeviceDict = new Dictionary<OutputDevice, int>();
-        private OutputDevice[] outputDevices = new OutputDevice[ControlService.CURRENT_DS4_CONTROLLER_LIMIT];
+        private readonly Dictionary<int, OutputDevice> deviceDict = new Dictionary<int, OutputDevice>();
+        private readonly Dictionary<OutputDevice, int> revDeviceDict = new Dictionary<OutputDevice, int>();
+        private readonly OutputDevice[] outputDevices = new OutputDevice[ControlService.CURRENT_DS4_CONTROLLER_LIMIT];
 
         private int queuedTasks = 0;
-        private ReaderWriterLockSlim queueLocker;
+        private readonly ReaderWriterLockSlim queueLocker;
 
         public bool RunningQueue { get => queuedTasks > 0; }
         public OutSlotDevice[] OutputSlots { get => outputSlots; }
@@ -92,7 +88,7 @@ namespace DS4Windows
         public OutputDevice AllocateController(OutContType contType, ViGEmClient client)
         {
             OutputDevice outputDevice = null;
-            switch(contType)
+            switch (contType)
             {
                 case OutContType.X360:
                     outputDevice = new Xbox360OutDevice(client);
@@ -269,7 +265,7 @@ namespace DS4Windows
             return temp;
         }
 
-        public void UnplugRemainingControllers(bool immediate=false)
+        public void UnplugRemainingControllers(bool immediate = false)
         {
             _ = immediate;
 

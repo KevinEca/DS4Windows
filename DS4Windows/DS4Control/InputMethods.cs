@@ -106,11 +106,11 @@ namespace DS4Windows
             uint result = SendInput(1, tempInput, Marshal.SizeOf(tempInput[0]));
         }
 
-        public static void performSCKeyPress(ushort key)
+        public static void PerformSCKeyPress(ushort key)
         {
             INPUT[] tempInput = new INPUT[1];
             ref INPUT temp = ref tempInput[0];
-            ushort scancode = scancodeFromVK(key);
+            ushort scancode = ScancodeFromVK(key);
             bool extended = (scancode & 0x100) != 0;
             uint curflags = extended ? KEYEVENTF_EXTENDEDKEY : 0;
 
@@ -123,11 +123,11 @@ namespace DS4Windows
             uint result = SendInput(1, tempInput, Marshal.SizeOf(tempInput[0]));
         }
 
-        public static void performKeyPress(ushort key)
+        public static void PerformKeyPress(ushort key)
         {
             INPUT[] tempInput = new INPUT[1];
             ref INPUT temp = ref tempInput[0];
-            ushort scancode = scancodeFromVK(key);
+            ushort scancode = ScancodeFromVK(key);
             bool extended = (scancode & 0x100) != 0;
             uint curflags = extended ? KEYEVENTF_EXTENDEDKEY : 0;
 
@@ -142,11 +142,11 @@ namespace DS4Windows
             uint result = SendInput(1, tempInput, Marshal.SizeOf(tempInput[0]));
         }
 
-        public static void performSCKeyRelease(ushort key)
+        public static void PerformSCKeyRelease(ushort key)
         {
             INPUT[] tempInput = new INPUT[1];
             ref INPUT temp = ref tempInput[0];
-            ushort scancode = scancodeFromVK(key);
+            ushort scancode = ScancodeFromVK(key);
             bool extended = (scancode & 0x100) != 0;
             uint curflags = extended ? KEYEVENTF_EXTENDEDKEY : 0;
 
@@ -159,11 +159,11 @@ namespace DS4Windows
             uint result = SendInput(1, tempInput, Marshal.SizeOf(tempInput[0]));
         }
 
-        public static void performKeyRelease(ushort key)
+        public static void PerformKeyRelease(ushort key)
         {
             INPUT[] tempInput = new INPUT[1];
             ref INPUT temp = ref tempInput[0];
-            ushort scancode = scancodeFromVK(key);
+            ushort scancode = ScancodeFromVK(key);
             bool extended = (scancode & 0x100) != 0;
             uint curflags = extended ? KEYEVENTF_EXTENDEDKEY : 0;
 
@@ -178,7 +178,7 @@ namespace DS4Windows
             uint result = SendInput(1, tempInput, Marshal.SizeOf(tempInput[0]));
         }
 
-        private static ushort scancodeFromVK(uint vkey)
+        private static ushort ScancodeFromVK(uint vkey)
         {
             ushort scancode = 0;
             if (vkey == VK_PAUSE)
@@ -218,10 +218,10 @@ namespace DS4Windows
                 case VK_LAUNCH_APP1:
                 case VK_LAUNCH_APP2:
                 case VK_APPS:
-                {
-                    scancode |= (ushort)EXTENDED_FLAG; // set extended bit
-                    break;
-                }
+                    {
+                        scancode |= (ushort)EXTENDED_FLAG; // set extended bit
+                        break;
+                    }
             }
 
             return scancode;
@@ -317,7 +317,7 @@ namespace DS4Windows
         //Not used, just here
         public static void DownKeys(ushort key)
         {
-            keybd_event((byte)key, 0, (int)0, 0);
+            keybd_event((byte)key, 0, 0, 0);
         }
 
         public static void PressKeys(ushort key)

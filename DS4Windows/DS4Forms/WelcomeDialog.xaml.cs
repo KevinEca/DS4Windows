@@ -1,9 +1,9 @@
-﻿using System;
+﻿using HttpProgress;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
 using System.Windows;
-using HttpProgress;
 using NonFormTimer = System.Timers.Timer;
 
 namespace DS4WinWPF.DS4Forms
@@ -27,16 +27,16 @@ namespace DS4WinWPF.DS4Forms
         private const string InstFileName1_16 = "ViGEmBus_Setup_1.16.116.exe";
         private const string InstFileNameX64 = "ViGEmBusSetup_x64.msi";
         private const string InstFileNameX86 = "ViGEmBusSetup_x86.msi";
-        private string tempInstFileName;
+        private readonly string tempInstFileName;
 
         private const string InstHidHideFileNameX64 = "HidHideMSI.msi";
 
-        private string installFakerInputDL = "";
-        private string instFakerInputFileName = "";
+        private readonly string installFakerInputDL = "";
+        private readonly string instFakerInputFileName = "";
 
         // Default to latest known ViGEmBus installer
-        private string installDL = InstallerDLX64;
-        private string installFileName = InstFileNameX64;
+        private readonly string installDL = InstallerDLX64;
+        private readonly string installFileName = InstFileNameX64;
 
         Process monitorProc;
         NonFormTimer monitorTimer;

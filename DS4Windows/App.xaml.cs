@@ -1,12 +1,12 @@
-﻿using System;
+﻿using Microsoft.Win32.SafeHandles;
+using NLog;
+using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.IO.MemoryMappedFiles;
-using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -14,11 +14,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
-using WPFLocalizeExtension.Engine;
-using NLog;
 using System.Windows.Media;
-using System.Net;
-using Microsoft.Win32.SafeHandles;
+using WPFLocalizeExtension.Engine;
 
 namespace DS4WinWPF
 {
@@ -67,7 +64,7 @@ namespace DS4WinWPF
         private MemoryMappedFile ipcResultDataMMF = null; // MemoryMappedFile for inter-process communication used to exchange string result data between cmdline client process and the background running DS4Windows app
         private MemoryMappedViewAccessor ipcResultDataMMA = null;
 
-        private static Dictionary<DS4Windows.AppThemeChoice, string> themeLocs = new
+        private static readonly Dictionary<DS4Windows.AppThemeChoice, string> themeLocs = new
             Dictionary<DS4Windows.AppThemeChoice, string>()
         {
             [DS4Windows.AppThemeChoice.Default] = "DS4Forms/Themes/DefaultTheme.xaml",
@@ -352,7 +349,7 @@ namespace DS4WinWPF
             }
             else if (parser.ReenableDevice)
             {
-                DS4Windows.DS4Devices.reEnableDevice(parser.DeviceInstanceId);
+                DS4Windows.DS4Devices.ReEnableDevice(parser.DeviceInstanceId);
                 runShutdown = false;
                 exitApp = true;
                 Current.Shutdown();
@@ -404,8 +401,10 @@ namespace DS4WinWPF
                                 ipcNotifyEvent = new EventWaitHandle(false, EventResetMode.AutoReset, "DS4Windows_IPCResultData_ReadyEvent");
                             }
                             else
+                            {
                                 // If the mtx failed then something must be seriously wrong. Cannot do anything in that case because MMF file may be modified by concurrent processes.
                                 bDoSendMsg = false;
+                            }
                         }
 
                         if (bDoSendMsg)
@@ -416,23 +415,37 @@ namespace DS4WinWPF
                             SendMessage(hWndDS4WindowsForm, DS4Forms.MainWindow.WM_COPYDATA, IntPtr.Zero, ref cds);
 
                             if (bWaitResultData)
+                            {
                                 Console.WriteLine(WaitAndReadIPCResultDataMMF(ipcNotifyEvent));
+                            }
                         }
                     }
                     finally
                     {
                         // Release the result MMF file in the client process before releasing the mtx and letting other client process to proceed with the same MMF file
-                        if (ipcResultDataMMA != null) ipcResultDataMMA.Dispose();
-                        if (ipcResultDataMMF != null) ipcResultDataMMF.Dispose();
+                        if (ipcResultDataMMA != null)
+                        {
+                            ipcResultDataMMA.Dispose();
+                        }
+
+                        if (ipcResultDataMMF != null)
+                        {
+                            ipcResultDataMMF.Dispose();
+                        }
+
                         ipcResultDataMMA = null;
                         ipcResultDataMMF = null;
 
                         // If this was "Query.xxx" cmdline client call then release the inter-process mutex and let other concurrent clients to proceed (if there are anyone waiting for the MMF result file)
                         if (bOwnsMutex && ipcSingleTaskMutex != null)
+                        {
                             ipcSingleTaskMutex.ReleaseMutex();
+                        }
 
                         if (cds.lpData != IntPtr.Zero)
+                        {
                             Marshal.FreeHGlobal(cds.lpData);
+                        }
                     }
                 }
 
@@ -444,7 +457,8 @@ namespace DS4WinWPF
 
         private void CreateControlService(ArgumentParser parser)
         {
-            controlThread = new Thread(() => {
+            controlThread = new Thread(() =>
+            {
 
                 if (!DS4Windows.Global.IsWin8OrGreater())
                 {
@@ -462,12 +476,15 @@ namespace DS4WinWPF
             controlThread.IsBackground = true;
             controlThread.Start();
             while (controlThread.IsAlive)
+            {
                 Thread.SpinWait(500);
+            }
         }
 
         private void CreateBaseThread()
         {
-            controlThread = new Thread(() => {
+            controlThread = new Thread(() =>
+            {
                 if (!DS4Windows.Global.IsWin8OrGreater())
                 {
                     ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;
@@ -481,7 +498,9 @@ namespace DS4WinWPF
             controlThread.IsBackground = true;
             controlThread.Start();
             while (controlThread.IsAlive)
+            {
                 Thread.SpinWait(500);
+            }
         }
 
         private void GarbageTask(object state)
@@ -522,7 +541,10 @@ namespace DS4WinWPF
 
         public void CreateIPCClassNameMMF(IntPtr hWnd)
         {
-            if (ipcClassNameMMA != null) return; // Already holding a handle to MMF file. No need to re-write the data
+            if (ipcClassNameMMA != null)
+            {
+                return; // Already holding a handle to MMF file. No need to re-write the data
+            }
 
             try
             {
@@ -562,8 +584,15 @@ namespace DS4WinWPF
             }
             finally
             {
-                if (mma != null) mma.Dispose();
-                if (mmf != null) mmf.Dispose();
+                if (mma != null)
+                {
+                    mma.Dispose();
+                }
+
+                if (mmf != null)
+                {
+                    mmf.Dispose();
+                }
             }
 
             return null;
@@ -573,7 +602,10 @@ namespace DS4WinWPF
         {
             // Cmdline client process calls this to create the MMF file used in inter-process-communications. The background DS4Windows process 
             // uses WriteIPCResultDataMMF method to write a command result and the client process reads the result from the same MMF file.
-            if (ipcResultDataMMA != null) return; // Already holding a handle to MMF file. No need to re-write the data
+            if (ipcResultDataMMA != null)
+            {
+                return; // Already holding a handle to MMF file. No need to re-write the data
+            }
 
             try
             {
@@ -620,7 +652,7 @@ namespace DS4WinWPF
             MemoryMappedFile mmf = null;
             MemoryMappedViewAccessor mma = null;
             EventWaitHandle ipcNotifyEvent = null;
-          
+
             try
             {
                 ipcNotifyEvent = EventWaitHandle.OpenExisting("DS4Windows_IPCResultData_ReadyEvent");
@@ -636,10 +668,20 @@ namespace DS4WinWPF
             }
             finally
             {
-                if (mma != null) mma.Dispose();
-                if (mmf != null) mmf.Dispose();
+                if (mma != null)
+                {
+                    mma.Dispose();
+                }
 
-                if (ipcNotifyEvent != null) ipcNotifyEvent.Set();
+                if (mmf != null)
+                {
+                    mmf.Dispose();
+                }
+
+                if (ipcNotifyEvent != null)
+                {
+                    ipcNotifyEvent.Set();
+                }
             }
         }
 
@@ -662,7 +704,7 @@ namespace DS4WinWPF
         }
 
         public void ChangeTheme(DS4Windows.AppThemeChoice themeChoice,
-            bool fireChanged=true)
+            bool fireChanged = true)
         {
             if (themeLocs.TryGetValue(themeChoice, out string loc))
             {
@@ -719,12 +761,22 @@ namespace DS4WinWPF
                 {
                     threadComEvent.Set();  // signal the other instance.
                     while (testThread.IsAlive)
+                    {
                         Thread.SpinWait(500);
+                    }
+
                     threadComEvent.Close();
                 }
 
-                if (ipcClassNameMMA != null) ipcClassNameMMA.Dispose();
-                if (ipcClassNameMMF != null) ipcClassNameMMF.Dispose();
+                if (ipcClassNameMMA != null)
+                {
+                    ipcClassNameMMA.Dispose();
+                }
+
+                if (ipcClassNameMMF != null)
+                {
+                    ipcClassNameMMF.Dispose();
+                }
 
                 LogManager.Flush();
                 LogManager.Shutdown();

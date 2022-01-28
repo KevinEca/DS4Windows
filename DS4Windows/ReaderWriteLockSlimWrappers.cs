@@ -5,7 +5,7 @@ namespace DS4Windows
 {
     public class ReadLocker : IDisposable
     {
-        private ReaderWriterLockSlim _lockerInstance;
+        private readonly ReaderWriterLockSlim _lockerInstance;
 
         public ReadLocker(ReaderWriterLockSlim lockerInstance)
         {

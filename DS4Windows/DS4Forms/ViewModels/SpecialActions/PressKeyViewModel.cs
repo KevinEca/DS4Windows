@@ -1,12 +1,9 @@
-﻿using System;
+﻿using DS4Windows;
+using DS4WinWPF.DS4Forms.ViewModels.Util;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using DS4Windows;
-using DS4WinWPF.DS4Forms.ViewModels.Util;
 
 namespace DS4WinWPF.DS4Forms.ViewModels.SpecialActions
 {
@@ -97,7 +94,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels.SpecialActions
 
         public void ReadSettings(DS4ControlSettings settings)
         {
-            value = (int)settings.action.actionKey;
+            value = settings.action.actionKey;
             keyType = settings.keyType;
         }
 

@@ -1,20 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using DS4WinWPF.DS4Forms.ViewModels;
+﻿using DS4WinWPF.DS4Forms.ViewModels;
 using DS4WinWPF.DS4Forms.ViewModels.SpecialActions;
 using Microsoft.Win32;
+using System;
+using System.Collections.Generic;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace DS4WinWPF.DS4Forms
 {
@@ -23,18 +14,18 @@ namespace DS4WinWPF.DS4Forms
     /// </summary>
     public partial class SpecialActionEditor : UserControl
     {
-        private List<CheckBox> triggerBoxes;
-        private List<CheckBox> unloadTriggerBoxes;
+        private readonly List<CheckBox> triggerBoxes;
+        private readonly List<CheckBox> unloadTriggerBoxes;
 
-        private SpecialActEditorViewModel specialActVM;
-        private MacroViewModel macroActVM;
-        private LaunchProgramViewModel launchProgVM;
-        private LoadProfileViewModel loadProfileVM;
-        private PressKeyViewModel pressKeyVM;
-        private DisconnectBTViewModel disconnectBtVM;
-        private CheckBatteryViewModel checkBatteryVM;
-        private MultiActButtonViewModel multiActButtonVM;
-        private SASteeringWheelViewModel saSteeringWheelVM;
+        private readonly SpecialActEditorViewModel specialActVM;
+        private readonly MacroViewModel macroActVM;
+        private readonly LaunchProgramViewModel launchProgVM;
+        private readonly LoadProfileViewModel loadProfileVM;
+        private readonly PressKeyViewModel pressKeyVM;
+        private readonly DisconnectBTViewModel disconnectBtVM;
+        private readonly CheckBatteryViewModel checkBatteryVM;
+        private readonly MultiActButtonViewModel multiActButtonVM;
+        private readonly SASteeringWheelViewModel saSteeringWheelVM;
 
         public event EventHandler Cancel;
         public delegate void SaveHandler(object sender, string actionName);
@@ -339,7 +330,7 @@ namespace DS4WinWPF.DS4Forms
             recordWin.Saved += (sender2, args) =>
             {
                 macroActVM.Macro.Clear();
-                macroActVM.Macro.AddRange((int[])settings.action.actionMacro);
+                macroActVM.Macro.AddRange(settings.action.actionMacro);
                 macroActVM.UpdateMacroString();
             };
 
@@ -419,7 +410,7 @@ namespace DS4WinWPF.DS4Forms
             recordWin.Saved += (sender2, args) =>
             {
                 multiActButtonVM.TapMacro.Clear();
-                multiActButtonVM.TapMacro.AddRange((int[])settings.action.actionMacro);
+                multiActButtonVM.TapMacro.AddRange(settings.action.actionMacro);
                 multiActButtonVM.UpdateTapDisplayText();
             };
 
@@ -433,7 +424,7 @@ namespace DS4WinWPF.DS4Forms
             recordWin.Saved += (sender2, args) =>
             {
                 multiActButtonVM.HoldMacro.Clear();
-                multiActButtonVM.HoldMacro.AddRange((int[])settings.action.actionMacro);
+                multiActButtonVM.HoldMacro.AddRange(settings.action.actionMacro);
                 multiActButtonVM.UpdateHoldDisplayText();
             };
 
@@ -447,7 +438,7 @@ namespace DS4WinWPF.DS4Forms
             recordWin.Saved += (sender2, args) =>
             {
                 multiActButtonVM.DoubleTapMacro.Clear();
-                multiActButtonVM.DoubleTapMacro.AddRange((int[])settings.action.actionMacro);
+                multiActButtonVM.DoubleTapMacro.AddRange(settings.action.actionMacro);
                 multiActButtonVM.UpdateDoubleTapDisplayText();
             };
 

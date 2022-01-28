@@ -1,10 +1,8 @@
-﻿using System;
-
-namespace DS4WinWPF.DS4Forms.ViewModels.Util
+﻿namespace DS4WinWPF.DS4Forms.ViewModels.Util
 {
     public class EnumChoiceSelection<T>
     {
-        private string displayName;
+        private readonly string displayName;
         public string DisplayName { get => displayName; }
 
         private T choiceValue;

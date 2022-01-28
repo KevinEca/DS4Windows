@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using DS4WinWPF.DS4Control;
+﻿using DS4WinWPF.DS4Control;
 using DS4WinWPF.DS4Forms.ViewModels.Util;
+using System;
+using System.Collections.Generic;
 
 namespace DS4WinWPF.DS4Forms.ViewModels
 {
@@ -16,14 +16,18 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             get => presetIndex;
             set
             {
-                if (presetIndex == value) return;
+                if (presetIndex == value)
+                {
+                    return;
+                }
+
                 presetIndex = value;
                 PresetIndexChanged?.Invoke(this, EventArgs.Empty);
             }
         }
         public event EventHandler PresetIndexChanged;
 
-        private List<PresetOption> presetList;
+        private readonly List<PresetOption> presetList;
         public List<PresetOption> PresetsList { get => presetList; }
 
         public string PresetDescription
@@ -44,7 +48,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             set => controllerChoice = value;
         }
 
-        private List<EnumChoiceSelection<PresetOption.OutputContChoice>> outputChoices =
+        private readonly List<EnumChoiceSelection<PresetOption.OutputContChoice>> outputChoices =
             new List<EnumChoiceSelection<PresetOption.OutputContChoice>>()
             {
                 new EnumChoiceSelection<PresetOption.OutputContChoice>("Xbox 360", PresetOption.OutputContChoice.Xbox360),

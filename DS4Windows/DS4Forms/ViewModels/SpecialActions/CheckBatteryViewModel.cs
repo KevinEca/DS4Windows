@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media;
-using DS4Windows;
+﻿using DS4Windows;
 using DS4WinWPF.DS4Forms.ViewModels.Util;
+using System;
+using System.Collections.Generic;
+using System.Windows.Media;
 
 namespace DS4WinWPF.DS4Forms.ViewModels.SpecialActions
 {
@@ -27,7 +24,11 @@ namespace DS4WinWPF.DS4Forms.ViewModels.SpecialActions
             get => emptyColor;
             set
             {
-                if (emptyColor == value) return;
+                if (emptyColor == value)
+                {
+                    return;
+                }
+
                 emptyColor = value;
                 EmptyColorChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -38,7 +39,11 @@ namespace DS4WinWPF.DS4Forms.ViewModels.SpecialActions
             get => fullColor;
             set
             {
-                if (fullColor == value) return;
+                if (fullColor == value)
+                {
+                    return;
+                }
+
                 fullColor = value;
                 FullColorChanged?.Invoke(this, EventArgs.Empty);
             }
