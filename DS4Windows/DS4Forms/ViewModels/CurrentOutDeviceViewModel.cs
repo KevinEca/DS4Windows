@@ -128,11 +128,11 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             if (entry.OutSlotDevice.CurrentAttachedStatus == OutSlotDevice.AttachedStatus.UnAttached &&
                 entry.OutSlotDevice.CurrentInputBound == OutSlotDevice.InputBound.Unbound)
             {
-                controlService.EventDispatcher.BeginInvoke((Action)(() =>
+                controlService.EventDispatcher.BeginInvoke(() =>
                 {
                     controlService.AttachUnboundOutDev(entry.OutSlotDevice, entry.OutSlotDevice.CurrentType);
                     //SidePanelVisibilityChanged?.Invoke(this, EventArgs.Empty);
-                }));
+                });
             }
         }
 
@@ -142,11 +142,11 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             if (entry.OutSlotDevice.CurrentAttachedStatus == OutSlotDevice.AttachedStatus.Attached &&
                 entry.OutSlotDevice.CurrentInputBound == OutSlotDevice.InputBound.Unbound)
             {
-                controlService.EventDispatcher.BeginInvoke((Action)(() =>
+                controlService.EventDispatcher.BeginInvoke(() =>
                 {
                     controlService.DetachUnboundOutDev(entry.OutSlotDevice);
                     //SidePanelVisibilityChanged?.Invoke(this, EventArgs.Empty);
-                }));
+                });
             }
         }
 

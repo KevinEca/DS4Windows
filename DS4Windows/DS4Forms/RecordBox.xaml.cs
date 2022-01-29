@@ -83,14 +83,14 @@ namespace DS4WinWPF.DS4Forms
         {
             if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
             {
-                Dispatcher.BeginInvoke((Action)(() =>
+                Dispatcher.BeginInvoke(() =>
                 {
                     int count = recordBoxVM.MacroSteps.Count;
                     if (count > 0)
                     {
                         macroListBox.ScrollIntoView(recordBoxVM.MacroSteps[count - 1]);
                     }
-                }));
+                });
             }
         }
 

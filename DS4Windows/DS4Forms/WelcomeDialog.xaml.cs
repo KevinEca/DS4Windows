@@ -212,19 +212,19 @@ namespace DS4WinWPF.DS4Forms
                 DS4Windows.Global.RefreshViGEmBusInfo();
                 if (DS4Windows.Global.IsViGEmBusInstalled())
                 {
-                    Dispatcher.BeginInvoke((Action)(() =>
+                    Dispatcher.BeginInvoke(() =>
                     {
                         vigemInstallBtn.Content = Properties.Resources.InstallComplete;
                         EnableControls(true);
-                    }));
+                    });
                 }
                 else
                 {
-                    Dispatcher.BeginInvoke((Action)(() =>
+                    Dispatcher.BeginInvoke(() =>
                     {
                         vigemInstallBtn.Content = Properties.Resources.InstallFailed;
                         EnableControls(true);
-                    }), null);
+                    }, null);
                 }
 
                 File.Delete(DS4Windows.Global.exedirpath + $"\\{installFileName}");
@@ -327,19 +327,19 @@ namespace DS4WinWPF.DS4Forms
             {
                 if (DS4Windows.Global.IsHidHideInstalled())
                 {
-                    Dispatcher.BeginInvoke((Action)(() =>
+                    Dispatcher.BeginInvoke(() =>
                     {
                         hidHideInstallBtn.Content = Properties.Resources.InstallComplete;
                         EnableControls(true);
-                    }));
+                    });
                 }
                 else
                 {
-                    Dispatcher.BeginInvoke((Action)(() =>
+                    Dispatcher.BeginInvoke(() =>
                     {
                         hidHideInstallBtn.Content = Properties.Resources.InstallFailed;
                         EnableControls(true);
-                    }), null);
+                    }, null);
                 }
 
                 File.Delete(DS4Windows.Global.exedirpath + $"\\{InstHidHideFileNameX64}");
@@ -432,19 +432,19 @@ namespace DS4WinWPF.DS4Forms
             {
                 if (DS4Windows.Global.IsFakerInputInstalled())
                 {
-                    Dispatcher.BeginInvoke((Action)(() =>
+                    Dispatcher.BeginInvoke(() =>
                     {
                         fakerInputInstallBtn.Content = Properties.Resources.InstallComplete;
                         EnableControls(true);
-                    }));
+                    });
                 }
                 else
                 {
-                    Dispatcher.BeginInvoke((Action)(() =>
+                    Dispatcher.BeginInvoke(() =>
                     {
                         fakerInputInstallBtn.Content = Properties.Resources.InstallFailed;
                         EnableControls(true);
-                    }), null);
+                    }, null);
                 }
 
                 File.Delete(DS4Windows.Global.exedirpath + $"\\{instFakerInputFileName}");

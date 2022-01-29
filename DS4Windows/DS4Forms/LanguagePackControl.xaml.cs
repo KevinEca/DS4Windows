@@ -35,11 +35,11 @@ namespace DS4WinWPF.DS4Forms
 
         private void LangPackVM_ScanFinished(object sender, EventArgs e)
         {
-            Dispatcher.BeginInvoke((Action)(() =>
+            Dispatcher.BeginInvoke(() =>
             {
                 cbCulture.IsEnabled = true;
                 this.DataContext = langPackVM;
-            }));
+            });
         }
     }
 }

@@ -1369,11 +1369,11 @@ namespace DS4WinWPF.DS4Forms
 
                 if (index >= 0)
                 {
-                    Dispatcher.BeginInvoke((Action)(() =>
+                    Dispatcher.BeginInvoke(() =>
                     {
                         mappingListVM.SelectedIndex = index;
                         ShowControlBindingWindow();
-                    }));
+                    });
                 }
             }
 

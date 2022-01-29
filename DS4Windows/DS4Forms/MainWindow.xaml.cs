@@ -147,10 +147,10 @@ namespace DS4WinWPF.DS4Forms
                 CheckDrivers();
                 if (!parser.Stop)
                 {
-                    Dispatcher.BeginInvoke((Action)(() =>
+                    Dispatcher.BeginInvoke(() =>
                     {
                         StartStopBtn.IsEnabled = false;
-                    }));
+                    });
                     Thread.Sleep(1000);
                     App.rootHub.Start();
                     //root.rootHubtest.Start();
@@ -293,11 +293,11 @@ namespace DS4WinWPF.DS4Forms
 
                     if (launch)
                     {
-                        Dispatcher.BeginInvoke((Action)(() =>
+                        Dispatcher.BeginInvoke(() =>
                         {
                             contextclose = true;
                             Close();
-                        }));
+                        });
                     }
                     else
                     {
@@ -396,7 +396,7 @@ namespace DS4WinWPF.DS4Forms
 
         private void ShowNotification(object sender, DS4Windows.DebugEventArgs e)
         {
-            Dispatcher.BeginInvoke((Action)(() =>
+            Dispatcher.BeginInvoke(() =>
             {
 
                 if (!IsActive && (Global.Notifications == 2 ||
@@ -406,7 +406,7 @@ namespace DS4WinWPF.DS4Forms
                     e.Data, !e.Warning ? Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info :
                     Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Warning);
                 }
-            }));
+            });
         }
 
         private void SetupEvents()
@@ -494,14 +494,14 @@ Suspend support not enabled.", true);
         {
             if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
             {
-                Dispatcher.BeginInvoke((Action)(() =>
+                Dispatcher.BeginInvoke(() =>
                 {
                     int count = logListView.Items.Count;
                     if (count > 0)
                     {
                         logListView.ScrollIntoView(logvm.LogItems[count - 1]);
                     }
-                }));
+                });
             }
         }
 
@@ -517,10 +517,10 @@ Suspend support not enabled.", true);
 
         private void AutoprofileChecker_RequestServiceChange(AutoProfileChecker sender, bool state)
         {
-            Dispatcher.BeginInvoke((Action)(() =>
+            Dispatcher.BeginInvoke(() =>
             {
                 ChangeService();
-            }));
+            });
         }
 
         private void AutoProfVM_AutoProfileSystemChange(AutoProfilesViewModel sender, bool state)
@@ -562,10 +562,10 @@ Suspend support not enabled.", true);
                     {
                         wasrunning = false;
                         Thread.Sleep(16000);
-                        Dispatcher.BeginInvoke((Action)(() =>
+                        Dispatcher.BeginInvoke(() =>
                         {
                             StartStopBtn.IsEnabled = false;
-                        }));
+                        });
 
                         App.rootHub.Start();
                     }
@@ -578,10 +578,10 @@ Suspend support not enabled.", true);
 
                     if (App.rootHub.running)
                     {
-                        Dispatcher.BeginInvoke((Action)(() =>
+                        Dispatcher.BeginInvoke(() =>
                         {
                             StartStopBtn.IsEnabled = false;
-                        }));
+                        });
 
                         App.rootHub.Stop(immediateUnplug: true);
                         wasrunning = true;
@@ -620,7 +620,7 @@ Suspend support not enabled.", true);
                     if (slide == "left")
                     {
                         //int ind = i;
-                        Dispatcher.BeginInvoke((Action)(() =>
+                        Dispatcher.BeginInvoke(() =>
                         {
                             if (item.SelectedIndex <= 0)
                             {
@@ -630,12 +630,12 @@ Suspend support not enabled.", true);
                             {
                                 item.SelectedIndex--;
                             }
-                        }));
+                        });
                     }
                     else if (slide == "right")
                     {
                         //int ind = i;
-                        Dispatcher.BeginInvoke((Action)(() =>
+                        Dispatcher.BeginInvoke(() =>
                         {
                             if (item.SelectedIndex == (item.ProfileListCol.Count - 1))
                             {
@@ -645,17 +645,17 @@ Suspend support not enabled.", true);
                             {
                                 item.SelectedIndex++;
                             }
-                        }));
+                        });
                     }
 
                     if (slide.Contains("t"))
                     {
                         //int ind = i;
-                        Dispatcher.BeginInvoke((Action)(() =>
+                        Dispatcher.BeginInvoke(() =>
                         {
                             string temp = string.Format(Properties.Resources.UsingProfile, (item.DevIndex + 1).ToString(), item.SelectedProfile, $"{item.Device.Battery}");
                             ShowHotkeyNotification(temp);
-                        }));
+                        });
                     }
                 }
             }
@@ -674,10 +674,10 @@ Suspend support not enabled.", true);
 
         private void PrepareForServiceStop(object sender, EventArgs e)
         {
-            Dispatcher.BeginInvoke((Action)(() =>
+            Dispatcher.BeginInvoke(() =>
             {
                 trayIconVM.ClearContextMenu();
-            }));
+            });
 
             ChangeHotkeysStatus(false);
         }
@@ -763,7 +763,7 @@ Suspend support not enabled.", true);
         private void ControllerCol_CollectionChanged(object sender,
             System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            Dispatcher.BeginInvoke((Action)(() =>
+            Dispatcher.BeginInvoke(() =>
             {
                 ChangeControllerPanel();
                 System.Collections.IList newitems = e.NewItems;
@@ -784,7 +784,7 @@ Suspend support not enabled.", true);
                 {
                     trayIconVM.PopulateContextMenu();
                 }
-            }));
+            });
         }
 
         private void Item_RequestColorPicker(CompositeDeviceModel sender)
@@ -803,17 +803,17 @@ Suspend support not enabled.", true);
 
         private void DS4Device_SyncChange(object sender, EventArgs e)
         {
-            Dispatcher.BeginInvoke((Action)(() =>
+            Dispatcher.BeginInvoke(() =>
             {
                 trayIconVM.PopulateContextMenu();
-            }));
+            });
         }
 
         private void ControlServiceChanged(object sender, EventArgs e)
         {
             //Tester service = sender as Tester;
             ControlService service = sender as ControlService;
-            Dispatcher.BeginInvoke((Action)(() =>
+            Dispatcher.BeginInvoke(() =>
             {
                 if (service.running)
                 {
@@ -826,7 +826,7 @@ Suspend support not enabled.", true);
 
                 StartStopBtn.IsEnabled = true;
                 slotManControl.IsEnabled = service.running;
-            }));
+            });
         }
 
         private void AboutBtn_Click(object sender, RoutedEventArgs e)

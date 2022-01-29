@@ -126,11 +126,11 @@ namespace DS4WinWPF.DS4Forms.ViewModels
         private void Service_RunningChanged(object sender, EventArgs e)
         {
             string temp = controlService.running ? "Stop" : "Start";
-            App.Current.Dispatcher.BeginInvoke((Action)(() =>
+            App.Current.Dispatcher.BeginInvoke(() =>
             {
                 changeServiceItem.Header = temp;
                 changeServiceItem.IsEnabled = true;
-            }));
+            });
         }
 
         private void ClearControllerList(object sender, EventArgs e)

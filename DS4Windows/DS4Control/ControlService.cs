@@ -304,7 +304,7 @@ namespace DS4Windows
 
         private void OutputslotMan_ViGEmFailure(object sender, EventArgs e)
         {
-            eventDispatcher.BeginInvoke((Action)(() =>
+            eventDispatcher.BeginInvoke(() =>
             {
                 loopControllers = false;
                 while (inServiceTask)
@@ -314,7 +314,7 @@ namespace DS4Windows
 
                 LogDebug(DS4WinWPF.Translations.Strings.ViGEmPluginFailure, true);
                 Stop();
-            }));
+            });
         }
 
         public void PostDS4DeviceInit(DS4Device device)

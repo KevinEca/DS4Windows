@@ -527,11 +527,11 @@ namespace DS4WinWPF
                     // That form is created in another thread, so we need some thread sync magic.
                     if (!exitComThread)
                     {
-                        Dispatcher.BeginInvoke((Action)(() =>
+                        Dispatcher.BeginInvoke(() =>
                         {
                             MainWindow.Show();
                             MainWindow.WindowState = WindowState.Normal;
-                        }));
+                        });
                     }
                 }
             }
