@@ -807,13 +807,13 @@ namespace DS4Windows
             double rotation = /*tempDoubleArray[device] =*/  GetLSRotation(device);
             if (rotation > 0.0 || rotation < 0.0)
             {
-                cState.rotateLSCoordinates(rotation);
+                cState.RotateLSCoordinates(rotation);
             }
 
             double rotationRS = /*tempDoubleArray[device] =*/ GetRSRotation(device);
             if (rotationRS > 0.0 || rotationRS < 0.0)
             {
-                cState.rotateRSCoordinates(rotationRS);
+                cState.RotateRSCoordinates(rotationRS);
             }
 
             StickAntiSnapbackInfo lsAntiSnapback = GetLSAntiSnapbackInfo(device);
@@ -2162,7 +2162,7 @@ namespace DS4Windows
             int mouseDeltaX = 0;
             int mouseDeltaY = 0;
 
-            cState.calculateStickAngles();
+            cState.CalculateStickAngles();
             DS4StateFieldMapping fieldMapping = fieldMappings[device];
             fieldMapping.PopulateFieldMapping(cState, eState, tp);
             DS4StateFieldMapping outputfieldMapping = outputFieldMappings[device];
@@ -2499,7 +2499,7 @@ namespace DS4Windows
                     {
                         const byte axisDead = 128;
                         DS4StateFieldMapping.ControlType controlType = DS4StateFieldMapping.mappedType[tempOutControl];
-                        bool alt = controlType == DS4StateFieldMapping.ControlType.AxisDir && tempOutControl % 2 == 0 ? true : false;
+                        bool alt = controlType == DS4StateFieldMapping.ControlType.AxisDir && tempOutControl % 2 == 0;
                         byte axisMapping = GetXYAxisMapping2(device, tempMap.ds4input, cState, eState, tp, fieldMapping, alt);
                         if (axisMapping != axisDead)
                         {
@@ -3461,7 +3461,7 @@ namespace DS4Windows
 
         private static bool IfAxisIsNotModified(int device, bool shift, DS4Controls dc)
         {
-            return shift ? false : GetDS4CSetting(device, dc).actionType == DS4ControlSettings.ActionType.Default;
+            return !shift && GetDS4CSetting(device, dc).actionType == DS4ControlSettings.ActionType.Default;
         }
 
         private static async void MapCustomAction(int device, DS4State cState, DS4State MappedState,
@@ -5114,10 +5114,10 @@ namespace DS4Windows
             {
                 switch (control)
                 {
-                    case DS4Controls.TouchLeft: result = (tp != null ? tp.leftDown : false); break;
-                    case DS4Controls.TouchRight: result = (tp != null ? tp.rightDown : false); break;
-                    case DS4Controls.TouchMulti: result = (tp != null ? tp.multiDown : false); break;
-                    case DS4Controls.TouchUpper: result = (tp != null ? tp.upperDown : false); break;
+                    case DS4Controls.TouchLeft: result = (tp != null && tp.leftDown); break;
+                    case DS4Controls.TouchRight: result = (tp != null && tp.rightDown); break;
+                    case DS4Controls.TouchMulti: result = (tp != null && tp.multiDown); break;
+                    case DS4Controls.TouchUpper: result = (tp != null && tp.upperDown); break;
                     default: break;
                 }
             }
@@ -5138,10 +5138,10 @@ namespace DS4Windows
 
                 switch (control)
                 {
-                    case DS4Controls.GyroXPos: result = saControls ? SXSens[device] * -eState.AccelX > 67 : false; break;
-                    case DS4Controls.GyroXNeg: result = saControls ? SXSens[device] * -eState.AccelX < -67 : false; break;
-                    case DS4Controls.GyroZPos: result = saControls ? SZSens[device] * eState.AccelZ > 67 : false; break;
-                    case DS4Controls.GyroZNeg: result = saControls ? SZSens[device] * eState.AccelZ < -67 : false; break;
+                    case DS4Controls.GyroXPos: result = saControls && SXSens[device] * -eState.AccelX > 67; break;
+                    case DS4Controls.GyroXNeg: result = saControls && SXSens[device] * -eState.AccelX < -67; break;
+                    case DS4Controls.GyroZPos: result = saControls && SZSens[device] * eState.AccelZ > 67; break;
+                    case DS4Controls.GyroZNeg: result = saControls && SZSens[device] * eState.AccelZ < -67; break;
                     default: break;
                 }
             }
@@ -5209,7 +5209,7 @@ namespace DS4Windows
                     default: break;
                 }
 
-                result = saControls ? safeTest : false;
+                result = saControls && safeTest;
             }
 
             return result;
@@ -5265,7 +5265,7 @@ namespace DS4Windows
                     default: break;
                 }
 
-                result = saControls ? safeTest : false;
+                result = saControls && safeTest;
             }
 
             return result;
@@ -5363,7 +5363,7 @@ namespace DS4Windows
                     default: break;
                 }
 
-                result = saControls ? safeTest : false;
+                result = saControls && safeTest;
             }
 
             return result;

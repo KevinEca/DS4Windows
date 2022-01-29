@@ -214,7 +214,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
         private int lightRumble = 0;
         private int flashRate;
         private int mouseSens = 25;
-        private DS4Color extrasColor = new DS4Color(255, 255, 255);
+        private DS4Color extrasColor = new(255, 255, 255);
 
         public bool HasScanCode { get => hasScanCode; set => hasScanCode = value; }
         public bool Toggle { get => toggle; set => toggle = value; }
@@ -362,17 +362,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
         {
             get
             {
-                string color = string.Empty;
-                if (outputType == OutType.Default)
-                {
-                    color = Colors.LimeGreen.ToString();
-                }
-                else
-                {
-                    color = Application.Current.FindResource("SecondaryColor").ToString();
-                    //color = SystemColors.ControlBrush.Color.ToString();
-                }
-
+                string color = (outputType == OutType.Default) ? Colors.LimeGreen.ToString() : Application.Current.FindResource("SecondaryColor").ToString();
                 return color;
             }
         }

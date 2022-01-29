@@ -21,8 +21,8 @@ namespace DS4WinWPF.DS4Forms.ViewModels
         private readonly int funcDevNum;
         public int FuncDevNum { get => funcDevNum; }
 
-        private readonly ImageBrush lightbarImgBrush = new ImageBrush();
-        private readonly SolidColorBrush lightbarColBrush = new SolidColorBrush();
+        private readonly ImageBrush lightbarImgBrush = new();
+        private readonly SolidColorBrush lightbarColBrush = new();
 
         public int LightbarModeIndex
         {
@@ -1467,12 +1467,12 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             set => Global.R2OutBezierCurveObj[device].InitBezierCurve(value, BezierCurve.AxisType.L2R2, true);
         }
 
-        private readonly List<TriggerModeChoice> triggerModeChoices = new List<TriggerModeChoice>()
+        private readonly List<TriggerModeChoice> triggerModeChoices = new()
         {
             new TriggerModeChoice("Normal", TriggerMode.Normal),
         };
 
-        private readonly List<TwoStageChoice> twoStageModeChoices = new List<TwoStageChoice>()
+        private readonly List<TwoStageChoice> twoStageModeChoices = new()
         {
             new TwoStageChoice("Disabled", TwoStageTriggerMode.Disabled),
             new TwoStageChoice("Normal", TwoStageTriggerMode.Normal),
@@ -1529,7 +1529,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             set => Global.R2OutputSettings[device].hipFireMS = value;
         }
 
-        private readonly List<TriggerEffectChoice> triggerEffectChoices = new List<TriggerEffectChoice>()
+        private readonly List<TriggerEffectChoice> triggerEffectChoices = new()
         {
             new TriggerEffectChoice("None", DS4Windows.InputDevices.TriggerEffects.None),
             new TriggerEffectChoice("Full Click", DS4Windows.InputDevices.TriggerEffects.FullClick),
@@ -2451,7 +2451,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
         public int GyroControlsEvalCondIndex
         {
             get => Global.GyroControlsInf[device].triggerCond ? 0 : 1;
-            set => Global.GyroControlsInf[device].triggerCond = value == 0 ? true : false;
+            set => Global.GyroControlsInf[device].triggerCond = value == 0;
         }
 
         public bool GyroControlsToggle
@@ -2510,7 +2510,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
         public int GyroSwipeEvalCondIndex
         {
             get => Global.GyroSwipeInf[device].triggerCond ? 0 : 1;
-            set => Global.GyroSwipeInf[device].triggerCond = value == 0 ? true : false;
+            set => Global.GyroSwipeInf[device].triggerCond = value == 0;
         }
 
         public int GyroSwipeXAxis
@@ -2569,8 +2569,8 @@ namespace DS4WinWPF.DS4Forms.ViewModels
                 ConvertFromString($"{Global.ASSEMBLY_RESOURCE_PREFIX}component/Resources/rainbowCCrop.png") as ImageSource;
             lightbarImgBrush.ImageSource = temp.Clone();
             */
-            Uri tempResourceUri = new Uri($"{Global.ASSEMBLY_RESOURCE_PREFIX}component/Resources/rainbowCCrop.png");
-            BitmapImage tempBitmap = new BitmapImage();
+            Uri tempResourceUri = new($"{Global.ASSEMBLY_RESOURCE_PREFIX}component/Resources/rainbowCCrop.png");
+            BitmapImage tempBitmap = new();
             tempBitmap.BeginInit();
             // Needed for some systems not using the System default color profile
             tempBitmap.CreateOptions = BitmapCreateOptions.IgnoreColorProfile;
@@ -2728,7 +2728,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
         {
             if (device < ControlService.CURRENT_DS4_CONTROLLER_LIMIT)
             {
-                DS4Color dcolor = new DS4Color() { red = color.R, green = color.G, blue = color.B };
+                DS4Color dcolor = new() { red = color.R, green = color.G, blue = color.B };
                 DS4LightBar.forcedColor[device] = dcolor;
                 DS4LightBar.forcedFlash[device] = 0;
                 DS4LightBar.forcelight[device] = true;
@@ -2739,7 +2739,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
         {
             if (device < ControlService.CURRENT_DS4_CONTROLLER_LIMIT)
             {
-                DS4Color dcolor = new DS4Color() { red = color.R, green = color.G, blue = color.B };
+                DS4Color dcolor = new() { red = color.R, green = color.G, blue = color.B };
                 DS4LightBar.forcedColor[device] = dcolor;
                 DS4LightBar.forcedFlash[device] = 0;
                 DS4LightBar.forcelight[device] = true;
@@ -2786,8 +2786,8 @@ namespace DS4WinWPF.DS4Forms.ViewModels
         public void UpdateTouchDisInvert(ContextMenu menu)
         {
             int index = 0;
-            List<int> triggerList = new List<int>();
-            List<string> triggerName = new List<string>();
+            List<int> triggerList = new();
+            List<string> triggerName = new();
 
             foreach (MenuItem item in menu.Items)
             {
@@ -2814,7 +2814,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
         {
             int[] triggers = Global.TouchDisInvertTriggers[device];
             int itemCount = menu.Items.Count;
-            List<string> triggerName = new List<string>();
+            List<string> triggerName = new();
             foreach (int trigid in triggers)
             {
                 if (trigid >= 0 && trigid < itemCount - 1)
@@ -2841,8 +2841,8 @@ namespace DS4WinWPF.DS4Forms.ViewModels
         public void UpdateGyroMouseTrig(ContextMenu menu, bool alwaysOnChecked)
         {
             int index = 0;
-            List<int> triggerList = new List<int>();
-            List<string> triggerName = new List<string>();
+            List<int> triggerList = new();
+            List<string> triggerName = new();
 
             int itemCount = menu.Items.Count;
             MenuItem alwaysOnItem = menu.Items[itemCount - 1] as MenuItem;
@@ -2884,7 +2884,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
         {
             string[] triggers = Global.SATriggers[device].Split(',');
             int itemCount = menu.Items.Count;
-            List<string> triggerName = new List<string>();
+            List<string> triggerName = new();
             foreach (string trig in triggers)
             {
                 bool valid = int.TryParse(trig, out int trigid);
@@ -2916,8 +2916,8 @@ namespace DS4WinWPF.DS4Forms.ViewModels
         public void UpdateGyroMouseStickTrig(ContextMenu menu, bool alwaysOnChecked)
         {
             int index = 0;
-            List<int> triggerList = new List<int>();
-            List<string> triggerName = new List<string>();
+            List<int> triggerList = new();
+            List<string> triggerName = new();
 
             int itemCount = menu.Items.Count;
             MenuItem alwaysOnItem = menu.Items[itemCount - 1] as MenuItem;
@@ -2959,7 +2959,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
         {
             string[] triggers = Global.SAMousestickTriggers[device].Split(',');
             int itemCount = menu.Items.Count;
-            List<string> triggerName = new List<string>();
+            List<string> triggerName = new();
             foreach (string trig in triggers)
             {
                 bool valid = int.TryParse(trig, out int trigid);
@@ -2991,8 +2991,8 @@ namespace DS4WinWPF.DS4Forms.ViewModels
         public void UpdateGyroSwipeTrig(ContextMenu menu, bool alwaysOnChecked)
         {
             int index = 0;
-            List<int> triggerList = new List<int>();
-            List<string> triggerName = new List<string>();
+            List<int> triggerList = new();
+            List<string> triggerName = new();
 
             int itemCount = menu.Items.Count;
             MenuItem alwaysOnItem = menu.Items[itemCount - 1] as MenuItem;
@@ -3034,7 +3034,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
         {
             string[] triggers = Global.GyroSwipeInf[device].triggers.Split(',');
             int itemCount = menu.Items.Count;
-            List<string> triggerName = new List<string>();
+            List<string> triggerName = new();
             foreach (string trig in triggers)
             {
                 bool valid = int.TryParse(trig, out int trigid);
@@ -3067,8 +3067,8 @@ namespace DS4WinWPF.DS4Forms.ViewModels
         public void UpdateGyroControlsTrig(ContextMenu menu, bool alwaysOnChecked)
         {
             int index = 0;
-            List<int> triggerList = new List<int>();
-            List<string> triggerName = new List<string>();
+            List<int> triggerList = new();
+            List<string> triggerName = new();
 
             int itemCount = menu.Items.Count;
             MenuItem alwaysOnItem = menu.Items[itemCount - 1] as MenuItem;
@@ -3110,7 +3110,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
         {
             string[] triggers = Global.GyroControlsInf[device].triggers.Split(',');
             int itemCount = menu.Items.Count;
-            List<string> triggerName = new List<string>();
+            List<string> triggerName = new();
             foreach (string trig in triggers)
             {
                 bool valid = int.TryParse(trig, out int trigid);
@@ -3235,15 +3235,14 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             FaceButtons,
         }
 
-        private readonly Dictionary<ControlSelection, string> presetInputLabelDict =
-            new Dictionary<ControlSelection, string>()
-            {
-                [ControlSelection.None] = "None",
-                [ControlSelection.DPad] = "DPad",
-                [ControlSelection.LeftStick] = "Left Stick",
-                [ControlSelection.RightStick] = "Right Stick",
-                [ControlSelection.FaceButtons] = "Face Buttons",
-            };
+        private readonly Dictionary<ControlSelection, string> presetInputLabelDict = new()
+        {
+            [ControlSelection.None] = "None",
+            [ControlSelection.DPad] = "DPad",
+            [ControlSelection.LeftStick] = "Left Stick",
+            [ControlSelection.RightStick] = "Right Stick",
+            [ControlSelection.FaceButtons] = "Face Buttons",
+        };
 
         public Dictionary<ControlSelection, string> PresetInputLabelDict
         {
@@ -3316,8 +3315,8 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
         public List<DS4Controls> ModifySettingWithPreset(int baseTag, int subTag)
         {
-            List<object> actionBtns = new List<object>(5);
-            List<DS4Controls> inputControls = new List<DS4Controls>(5);
+            List<object> actionBtns = new(5);
+            List<DS4Controls> inputControls = new(5);
             if (baseTag == 0)
             {
                 actionBtns.AddRange(new object[5]

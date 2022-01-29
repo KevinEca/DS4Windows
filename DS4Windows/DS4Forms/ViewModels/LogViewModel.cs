@@ -9,27 +9,23 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 {
     public class LogViewModel
     {
-        //private object _colLockobj = new object();
-        private readonly ReaderWriterLockSlim _logListLocker = new ReaderWriterLockSlim();
-        private readonly ObservableCollection<LogItem> logItems = new ObservableCollection<LogItem>();
+        public ObservableCollection<LogItem> LogItems { get; } = new ObservableCollection<LogItem>();
 
-        public ObservableCollection<LogItem> LogItems => logItems;
-
-        public ReaderWriterLockSlim LogListLocker => _logListLocker;
+        public ReaderWriterLockSlim LogListLocker { get; } = new ReaderWriterLockSlim();
 
         public LogViewModel(DS4Windows.ControlService service)
         {
             string version = DS4Windows.Global.exeversion;
-            logItems.Add(new LogItem { Datetime = DateTime.Now, Message = $"DS4Windows version {version}" });
-            logItems.Add(new LogItem { Datetime = DateTime.Now, Message = $"DS4Windows Assembly Architecture: {(Environment.Is64BitProcess ? "x64" : "x86")}" });
-            logItems.Add(new LogItem { Datetime = DateTime.Now, Message = $"OS Version: {Environment.OSVersion}" });
-            logItems.Add(new LogItem { Datetime = DateTime.Now, Message = $"OS Product Name: {DS4Windows.Util.GetOSProductName()}" });
-            logItems.Add(new LogItem { Datetime = DateTime.Now, Message = $"OS Release ID: {DS4Windows.Util.GetOSReleaseId()}" });
-            logItems.Add(new LogItem { Datetime = DateTime.Now, Message = $"System Architecture: {(Environment.Is64BitOperatingSystem ? "x64" : "x32")}" });
+            LogItems.Add(new LogItem { Datetime = DateTime.Now, Message = $"DS4Windows version {version}" });
+            LogItems.Add(new LogItem { Datetime = DateTime.Now, Message = $"DS4Windows Assembly Architecture: {(Environment.Is64BitProcess ? "x64" : "x86")}" });
+            LogItems.Add(new LogItem { Datetime = DateTime.Now, Message = $"OS Version: {Environment.OSVersion}" });
+            LogItems.Add(new LogItem { Datetime = DateTime.Now, Message = $"OS Product Name: {DS4Windows.Util.GetOSProductName()}" });
+            LogItems.Add(new LogItem { Datetime = DateTime.Now, Message = $"OS Release ID: {DS4Windows.Util.GetOSReleaseId()}" });
+            LogItems.Add(new LogItem { Datetime = DateTime.Now, Message = $"System Architecture: {(Environment.Is64BitOperatingSystem ? "x64" : "x32")}" });
 
             //logItems.Add(new LogItem { Datetime = DateTime.Now, Message = "DS4Windows version 2.0" });
             //BindingOperations.EnableCollectionSynchronization(logItems, _colLockobj);
-            BindingOperations.EnableCollectionSynchronization(logItems, _logListLocker, LogLockCallback);
+            BindingOperations.EnableCollectionSynchronization(LogItems, LogListLocker, LogLockCallback);
             service.Debug += AddLogMessage;
             DS4Windows.AppLogger.GuiLog += AddLogMessage;
         }
@@ -38,14 +34,14 @@ namespace DS4WinWPF.DS4Forms.ViewModels
         {
             if (writeAccess)
             {
-                using (WriteLocker locker = new WriteLocker(_logListLocker))
+                using (WriteLocker locker = new(LogListLocker))
                 {
                     accessMethod?.Invoke();
                 }
             }
             else
             {
-                using (ReadLocker locker = new ReadLocker(_logListLocker))
+                using (ReadLocker locker = new(LogListLocker))
                 {
                     accessMethod?.Invoke();
                 }
@@ -54,10 +50,10 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
         private void AddLogMessage(object sender, DS4Windows.DebugEventArgs e)
         {
-            LogItem item = new LogItem { Datetime = e.Time, Message = e.Data, Warning = e.Warning };
-            _logListLocker.EnterWriteLock();
-            logItems.Add(item);
-            _logListLocker.ExitWriteLock();
+            LogItem item = new() { Datetime = e.Time, Message = e.Data, Warning = e.Warning };
+            LogListLocker.EnterWriteLock();
+            LogItems.Add(item);
+            LogListLocker.ExitWriteLock();
             //lock (_colLockobj)
             //{
             //    logItems.Add(item);

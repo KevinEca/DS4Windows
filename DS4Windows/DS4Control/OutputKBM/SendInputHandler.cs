@@ -155,7 +155,7 @@ namespace DS4Windows.DS4Control
         {
             INPUT[] tempInput = new INPUT[1];
             ref INPUT temp = ref tempInput[0];
-            ushort scancode = scancodeFromVK(key);
+            ushort scancode = ScancodeFromVK(key);
             bool extended = (scancode & 0x100) != 0;
             uint curflags = extended ? KEYEVENTF_EXTENDEDKEY : 0;
 
@@ -178,7 +178,7 @@ namespace DS4Windows.DS4Control
         {
             INPUT[] tempInput = new INPUT[1];
             ref INPUT temp = ref tempInput[0];
-            ushort scancode = scancodeFromVK(key);
+            ushort scancode = ScancodeFromVK(key);
             bool extended = (scancode & 0x100) != 0;
             uint curflags = extended ? KEYEVENTF_EXTENDEDKEY : 0;
 
@@ -195,7 +195,7 @@ namespace DS4Windows.DS4Control
         {
             INPUT[] tempInput = new INPUT[1];
             ref INPUT temp = ref tempInput[0];
-            ushort scancode = scancodeFromVK(key);
+            ushort scancode = ScancodeFromVK(key);
             bool extended = (scancode & 0x100) != 0;
             uint curflags = extended ? KEYEVENTF_EXTENDEDKEY : 0;
 
@@ -218,7 +218,7 @@ namespace DS4Windows.DS4Control
         {
             INPUT[] tempInput = new INPUT[1];
             ref INPUT temp = ref tempInput[0];
-            ushort scancode = scancodeFromVK(key);
+            ushort scancode = ScancodeFromVK(key);
             bool extended = (scancode & 0x100) != 0;
             uint curflags = extended ? KEYEVENTF_EXTENDEDKEY : 0;
 
@@ -246,7 +246,7 @@ namespace DS4Windows.DS4Control
             return IDENTIFIER;
         }
 
-        private static ushort scancodeFromVK(uint vkey)
+        private static ushort ScancodeFromVK(uint vkey)
         {
             ushort scancode = 0;
             if (vkey == VK_PAUSE)

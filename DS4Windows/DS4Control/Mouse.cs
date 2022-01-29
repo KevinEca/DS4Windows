@@ -136,7 +136,7 @@ namespace DS4Windows
         bool currentToggleGyroM = false;
         bool currentToggleGyroStick = false;
 
-        public virtual void sixaxisMoved(DS4SixAxis sender, SixAxisEventArgs arg)
+        public virtual void SixaxisMoved(DS4SixAxis sender, SixAxisEventArgs arg)
         {
             GyroOutMode outMode = Global.GetGyroOutMode(deviceNum);
             if (outMode == GyroOutMode.Controls)
@@ -148,7 +148,7 @@ namespace DS4Windows
                 int i = 0;
                 string[] ss = controlsMapInfo.triggers.Split(',');
                 bool andCond = controlsMapInfo.triggerCond;
-                triggeractivated = andCond ? true : false;
+                triggeractivated = andCond;
                 if (!string.IsNullOrEmpty(ss[0]))
                 {
                     string s = string.Empty;
@@ -204,7 +204,7 @@ namespace DS4Windows
                 int i = 0;
                 string[] ss = Global.GetSATriggers(deviceNum).Split(',');
                 bool andCond = Global.GetSATriggerCond(deviceNum);
-                triggeractivated = andCond ? true : false;
+                triggeractivated = andCond;
                 if (!string.IsNullOrEmpty(ss[0]))
                 {
                     string s = string.Empty;
@@ -260,7 +260,7 @@ namespace DS4Windows
                 int i = 0;
                 string[] ss = Global.GetSAMouseStickTriggers(deviceNum).Split(',');
                 bool andCond = Global.GetSAMouseStickTriggerCond(deviceNum);
-                triggeractivated = andCond ? true : false;
+                triggeractivated = andCond;
                 if (!string.IsNullOrEmpty(ss[0]))
                 {
                     string s = string.Empty;
@@ -317,7 +317,7 @@ namespace DS4Windows
                 int i = 0;
                 string[] ss = swipeMapInfo.triggers.Split(',');
                 bool andCond = swipeMapInfo.triggerCond;
-                triggeractivated = andCond ? true : false;
+                triggeractivated = andCond;
                 if (!string.IsNullOrEmpty(ss[0]))
                 {
                     string s = string.Empty;
@@ -680,7 +680,7 @@ namespace DS4Windows
         }
 
         private bool tempBool = false;
-        public virtual void touchesMoved(DS4Touchpad sender, TouchpadEventArgs arg)
+        public virtual void TouchesMoved(DS4Touchpad sender, TouchpadEventArgs arg)
         {
             s = dev.GetCurrentStateRef();
 
@@ -784,7 +784,7 @@ namespace DS4Windows
             SynthesizeMouseButtons();
         }
 
-        public virtual void touchesBegan(DS4Touchpad sender, TouchpadEventArgs arg)
+        public virtual void TouchesBegan(DS4Touchpad sender, TouchpadEventArgs arg)
         {
             TouchpadOutMode tempMode = Global.TouchOutMode[deviceNum];
             bool mouseMode = tempMode == TouchpadOutMode.Mouse;
@@ -821,7 +821,7 @@ namespace DS4Windows
             SynthesizeMouseButtons();
         }
 
-        public virtual void touchesEnded(DS4Touchpad sender, TouchpadEventArgs arg)
+        public virtual void TouchesEnded(DS4Touchpad sender, TouchpadEventArgs arg)
         {
             s = dev.GetCurrentStateRef();
             slideright = slideleft = false;
@@ -966,7 +966,7 @@ namespace DS4Windows
             return t.hwX >= 1920 * 2 / 5;
         }
 
-        public virtual void touchUnchanged(DS4Touchpad sender, EventArgs unused)
+        public virtual void TouchUnchanged(DS4Touchpad sender, EventArgs unused)
         {
             s = dev.GetCurrentStateRef();
 
@@ -1112,7 +1112,7 @@ namespace DS4Windows
             }
         }
 
-        public virtual void touchButtonUp(DS4Touchpad sender, TouchpadEventArgs arg)
+        public virtual void TouchButtonUp(DS4Touchpad sender, TouchpadEventArgs arg)
         {
             pushed = DS4Controls.None;
             upperDown = leftDown = rightDown = multiDown = false;
@@ -1123,7 +1123,7 @@ namespace DS4Windows
             }
         }
 
-        public virtual void touchButtonDown(DS4Touchpad sender, TouchpadEventArgs arg)
+        public virtual void TouchButtonDown(DS4Touchpad sender, TouchpadEventArgs arg)
         {
             if (arg.touches == null)
             {

@@ -35,7 +35,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
         private void BuildTempDocument(string message)
         {
-            FlowDocument flow = new FlowDocument();
+            FlowDocument flow = new();
             flow.Blocks.Add(new Paragraph(new Run(message)));
             ChangelogDocument = flow;
         }
@@ -43,7 +43,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
         public async void RetrieveChangelogInfo()
         {
             // Sorry other devs, gonna have to find your own server
-            Uri url = new Uri(UpdaterWindowViewModel.CHANGELOG_URI);
+            Uri url = new(UpdaterWindowViewModel.CHANGELOG_URI);
             string filename = Path.Combine(Path.GetTempPath(), "Changelog.min.json");
             bool readFile = false;
             using (var downloadStream = new FileStream(filename, FileMode.Create))
@@ -66,7 +66,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
                 string temp = File.ReadAllText(filename).Trim();
                 try
                 {
-                    JsonSerializerOptions options = new JsonSerializerOptions()
+                    JsonSerializerOptions options = new()
                     {
                         PropertyNameCaseInsensitive = true,
                     };
@@ -89,14 +89,14 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
         private void BuildChangelogDocument(ChangelogInfo tempInfo)
         {
-            MarkdownEngine engine = new MarkdownEngine();
-            FlowDocument flow = new FlowDocument();
+            MarkdownEngine engine = new();
+            FlowDocument flow = new();
             foreach (ChangeVersionInfo versionInfo in tempInfo.Changelog.Versions)
             {
                 VersionLogLocale tmpLog = versionInfo.ApplicableInfo(DS4Windows.Global.UseLang);
                 if (tmpLog != null)
                 {
-                    Paragraph tmpPar = new Paragraph();
+                    Paragraph tmpPar = new();
                     string tmp = tmpLog.Header;
                     tmpPar.Inlines.Add(new Run(tmp) { Tag = "Header" });
                     flow.Blocks.Add(tmpPar);

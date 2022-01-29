@@ -225,7 +225,7 @@ namespace DS4Windows
             state.TrackPadTouch1 = TrackPadTouch1;
         }
 
-        public void calculateStickAngles()
+        public void CalculateStickAngles()
         {
             double lsangle = Math.Atan2(-(LY - 128), (LX - 128));
             LSAngleRad = lsangle;
@@ -242,7 +242,7 @@ namespace DS4Windows
             RYUnit = Math.Abs(Math.Sin(RSAngleRad));
         }
 
-        public void rotateLSCoordinates(double rotation)
+        public void RotateLSCoordinates(double rotation)
         {
             double sinAngle = Math.Sin(rotation), cosAngle = Math.Cos(rotation);
             double tempLX = LX - 128.0, tempLY = LY - 128.0;
@@ -250,7 +250,7 @@ namespace DS4Windows
             LY = (Byte)(Global.Clamp(-128.0, (tempLX * sinAngle + tempLY * cosAngle), 127.0) + 128.0);
         }
 
-        public void rotateRSCoordinates(double rotation)
+        public void RotateRSCoordinates(double rotation)
         {
             double sinAngle = Math.Sin(rotation), cosAngle = Math.Cos(rotation);
             double tempRX = RX - 128.0, tempRY = RY - 128.0;

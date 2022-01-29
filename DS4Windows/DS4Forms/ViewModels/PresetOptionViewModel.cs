@@ -48,14 +48,11 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             set => controllerChoice = value;
         }
 
-        private readonly List<EnumChoiceSelection<PresetOption.OutputContChoice>> outputChoices =
-            new List<EnumChoiceSelection<PresetOption.OutputContChoice>>()
+        public List<EnumChoiceSelection<PresetOption.OutputContChoice>> OutputChoices { get; } = new List<EnumChoiceSelection<PresetOption.OutputContChoice>>()
             {
                 new EnumChoiceSelection<PresetOption.OutputContChoice>("Xbox 360", PresetOption.OutputContChoice.Xbox360),
                 new EnumChoiceSelection<PresetOption.OutputContChoice>("DualShock 4", PresetOption.OutputContChoice.DualShock4),
             };
-
-        public List<EnumChoiceSelection<PresetOption.OutputContChoice>> OutputChoices { get => outputChoices; }
 
         public PresetOptionViewModel()
         {

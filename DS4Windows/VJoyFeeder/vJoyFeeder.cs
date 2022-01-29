@@ -640,7 +640,7 @@ namespace DS4Windows.VJoyFeeder
 
     public class VJoyFeeder
     {
-        private static readonly object vJoyLocker = new object();
+        private static readonly object vJoyLocker = new();
 
         static readonly bool[] vJoyInitialized = new bool[2] { false, false };
         static readonly bool[] vJoyAvailable = new bool[2] { false, false };

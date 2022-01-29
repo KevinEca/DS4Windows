@@ -410,7 +410,7 @@ namespace DS4WinWPF.DS4Forms
         private void MultiTapTrigBtn_Click(object sender, RoutedEventArgs e)
         {
             DS4Windows.DS4ControlSettings settings = multiActButtonVM.PrepareTapSettings();
-            RecordBoxWindow recordWin = new RecordBoxWindow(specialActVM.DeviceNum, settings, false);
+            RecordBoxWindow recordWin = new(specialActVM.DeviceNum, settings, false);
             recordWin.Saved += (sender2, args) =>
             {
                 multiActButtonVM.TapMacro.Clear();
@@ -424,7 +424,7 @@ namespace DS4WinWPF.DS4Forms
         private void MultiHoldTapTrigBtn_Click(object sender, RoutedEventArgs e)
         {
             DS4Windows.DS4ControlSettings settings = multiActButtonVM.PrepareHoldSettings();
-            RecordBoxWindow recordWin = new RecordBoxWindow(specialActVM.DeviceNum, settings, false);
+            RecordBoxWindow recordWin = new(specialActVM.DeviceNum, settings, false);
             recordWin.Saved += (sender2, args) =>
             {
                 multiActButtonVM.HoldMacro.Clear();
@@ -438,7 +438,7 @@ namespace DS4WinWPF.DS4Forms
         private void MultiDoubleTapTrigBtn_Click(object sender, RoutedEventArgs e)
         {
             DS4Windows.DS4ControlSettings settings = multiActButtonVM.PrepareDoubleTapSettings();
-            RecordBoxWindow recordWin = new RecordBoxWindow(specialActVM.DeviceNum, settings, false);
+            RecordBoxWindow recordWin = new(specialActVM.DeviceNum, settings, false);
             recordWin.Saved += (sender2, args) =>
             {
                 multiActButtonVM.DoubleTapMacro.Clear();

@@ -100,8 +100,7 @@ namespace DS4WinWPF.DS4Forms
 
         public AboutImgPathLocations()
         {
-            App current = App.Current as App;
-            if (current != null)
+            if (App.Current is App current)
             {
                 PopulateFromAppResources(current);
             }

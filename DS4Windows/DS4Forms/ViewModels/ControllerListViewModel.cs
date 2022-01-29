@@ -14,11 +14,9 @@ namespace DS4WinWPF.DS4Forms.ViewModels
     public class ControllerListViewModel
     {
         //private object _colLockobj = new object();
-        private readonly ReaderWriterLockSlim _colListLocker = new ReaderWriterLockSlim();
-        private ObservableCollection<CompositeDeviceModel> controllerCol =
-            new ObservableCollection<CompositeDeviceModel>();
-        private Dictionary<int, CompositeDeviceModel> controllerDict =
-            new Dictionary<int, CompositeDeviceModel>();
+        private readonly ReaderWriterLockSlim _colListLocker = new();
+        private ObservableCollection<CompositeDeviceModel> controllerCol = new();
+        private Dictionary<int, CompositeDeviceModel> controllerDict = new();
 
         public ObservableCollection<CompositeDeviceModel> ControllerCol
         { get => controllerCol; set => controllerCol = value; }
@@ -57,7 +55,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             int idx = 0;
             foreach (DS4Device currentDev in controlService.slotManager.ControllerColl)
             {
-                CompositeDeviceModel temp = new CompositeDeviceModel(currentDev,
+                CompositeDeviceModel temp = new(currentDev,
                     idx, Global.ProfilePath[idx], profileListHolder);
                 controllerCol.Add(temp);
                 controllerDict.Add(idx, temp);
@@ -75,14 +73,14 @@ namespace DS4WinWPF.DS4Forms.ViewModels
         {
             if (writeAccess)
             {
-                using (WriteLocker locker = new WriteLocker(_colListLocker))
+                using (WriteLocker locker = new(_colListLocker))
                 {
                     accessMethod?.Invoke();
                 }
             }
             else
             {
-                using (ReadLocker locker = new ReadLocker(_colListLocker))
+                using (ReadLocker locker = new(_colListLocker))
                 {
                     accessMethod?.Invoke();
                 }
@@ -93,12 +91,12 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             DS4Device device, int index)
         {
             // Engage write lock pre-maturely
-            using (WriteLocker readLock = new WriteLocker(_colListLocker))
+            using (WriteLocker readLock = new(_colListLocker))
             {
                 // Look if device exists. Also, check if disconnect might be occurring
                 if (!controllerDict.ContainsKey(index) && !device.IsRemoving)
                 {
-                    CompositeDeviceModel temp = new CompositeDeviceModel(device,
+                    CompositeDeviceModel temp = new(device,
                         index, Global.ProfilePath[index], profileListHolder);
                     controllerCol.Add(temp);
                     controllerDict.Add(index, temp);
@@ -148,7 +146,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
                         //int idx = controllerCol.Count;
                         _colListLocker.EnterWriteLock();
                         int idx = controlService.slotManager.ReverseControllerDict[currentDev];
-                        CompositeDeviceModel temp = new CompositeDeviceModel(currentDev,
+                        CompositeDeviceModel temp = new(currentDev,
                             idx, Global.ProfilePath[idx], profileListHolder);
                         controllerCol.Add(temp);
                         controllerDict.Add(idx, temp);
@@ -487,7 +485,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
         public void AddLightContextItems()
         {
-            MenuItem thing = new MenuItem() { Header = "Use Profile Color", IsChecked = !useCustomColor };
+            MenuItem thing = new() { Header = "Use Profile Color", IsChecked = !useCustomColor };
             thing.Click += ProfileColorMenuClick;
             lightContext.Items.Add(thing);
             thing = new MenuItem() { Header = "Use Custom Color", IsChecked = useCustomColor };

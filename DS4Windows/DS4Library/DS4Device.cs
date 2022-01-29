@@ -190,8 +190,8 @@ namespace DS4Windows
         private const string RAIJU_TE_AUDIO_SEARCHNAME = "Razer Raiju Tournament Edition Wired";
         protected HidDevice hDevice;
         protected string Mac;
-        protected DS4State cState = new DS4State();
-        protected DS4State pState = new DS4State();
+        protected DS4State cState = new();
+        protected DS4State pState = new();
         protected ConnectionType conType;
         protected byte[] accel = new byte[6];
         protected byte[] gyro = new byte[6];
@@ -259,7 +259,7 @@ namespace DS4Windows
         protected bool exitOutputThread = false;
         public bool ExitOutputThread => exitOutputThread;
         protected bool exitInputThread = false;
-        protected object exitLocker = new object();
+        protected object exitLocker = new();
         protected ExclusiveStatus exclusiveStatus = ExclusiveStatus.Shared;
 
         public delegate void ReportHandler<TEventArgs>(DS4Device sender, TEventArgs args);
@@ -333,7 +333,7 @@ namespace DS4Windows
             }
         }
 
-        public object removeLocker = new object();
+        public object removeLocker = new();
 
         public string MacAddress => Mac;
         public event EventHandler MacAddressChanged;
@@ -547,8 +547,8 @@ namespace DS4Windows
             return result;
         }
 
-        protected Queue<Action> eventQueue = new Queue<Action>();
-        protected object eventQueueLock = new object();
+        protected Queue<Action> eventQueue = new();
+        protected object eventQueueLock = new();
 
         protected Thread timeoutCheckThread = null;
         protected bool timeoutExecuted = false;
@@ -562,7 +562,7 @@ namespace DS4Windows
             return runCalib;
         }
 
-        protected ManualResetEventSlim readWaitEv = new ManualResetEventSlim();
+        protected ManualResetEventSlim readWaitEv = new();
         public ManualResetEventSlim ReadWaitEv { get => readWaitEv; }
 
         public virtual byte SerialReportID { get => SERIAL_FEATURE_ID; }
@@ -600,8 +600,8 @@ namespace DS4Windows
         protected event EventHandler DeviceSlotNumberChanged;
         protected byte deviceSlotMask = 0x00;
 
-        protected DS4State jointState = new DS4State();
-        protected DS4State jointPreviousState = new DS4State();
+        protected DS4State jointState = new();
+        protected DS4State jointPreviousState = new();
         public DS4State JointState
         {
             get => jointState;
@@ -1008,12 +1008,12 @@ namespace DS4Windows
             }
         }
 
-        private readonly Stopwatch rumbleAutostopTimer = new Stopwatch(); // Autostop timer to stop rumble motors if those are stuck in a rumble state
+        private readonly Stopwatch rumbleAutostopTimer = new(); // Autostop timer to stop rumble motors if those are stuck in a rumble state
 
         private byte outputPendCount = 0;
         private const int OUTPUT_MIN_COUNT_BT = 3;
         private readonly byte[] outputBTCrc32Head = new byte[] { 0xA2 };
-        protected readonly Stopwatch standbySw = new Stopwatch();
+        protected readonly Stopwatch standbySw = new();
         private unsafe void PerformDs4Output()
         {
             try
@@ -1130,7 +1130,7 @@ namespace DS4Windows
             {
                 firstActive = DateTime.UtcNow;
                 NativeMethods.HidD_SetNumInputBuffers(hDevice.SafeReadHandle.DangerousGetHandle(), 3);
-                Queue<long> latencyQueue = new Queue<long>(21); // Set capacity at max + 1 to avoid any resizing
+                Queue<long> latencyQueue = new(21); // Set capacity at max + 1 to avoid any resizing
                 int tempLatencyCount = 0;
                 long oldtime = 0;
                 string currerror = string.Empty;
@@ -1475,15 +1475,15 @@ namespace DS4Windows
                         //for (int touches = inputReport[-1 + DS4Touchpad.TOUCHPAD_DATA_OFFSET - 1], touchOffset = 0; touches > 0; touches--, touchOffset += 9)
                         {
                             cState.TouchPacketCounter = inputReport[-1 + DS4Touchpad.DS4_TOUCHPAD_DATA_OFFSET + touchOffset];
-                            cState.Touch1 = (inputReport[0 + DS4Touchpad.DS4_TOUCHPAD_DATA_OFFSET + touchOffset] >> 7) != 0 ? false : true; // finger 1 detected
+                            cState.Touch1 = (inputReport[0 + DS4Touchpad.DS4_TOUCHPAD_DATA_OFFSET + touchOffset] >> 7) == 0; // finger 1 detected
                             cState.Touch1Identifier = (byte)(inputReport[0 + DS4Touchpad.DS4_TOUCHPAD_DATA_OFFSET + touchOffset] & 0x7f);
-                            cState.Touch2 = (inputReport[4 + DS4Touchpad.DS4_TOUCHPAD_DATA_OFFSET + touchOffset] >> 7) != 0 ? false : true; // finger 2 detected
+                            cState.Touch2 = (inputReport[4 + DS4Touchpad.DS4_TOUCHPAD_DATA_OFFSET + touchOffset] >> 7) == 0; // finger 2 detected
                             cState.Touch2Identifier = (byte)(inputReport[4 + DS4Touchpad.DS4_TOUCHPAD_DATA_OFFSET + touchOffset] & 0x7f);
                             cState.Touch1Finger = cState.Touch1 || cState.Touch2; // >= 1 touch detected
                             cState.Touch2Fingers = cState.Touch1 && cState.Touch2; // 2 touches detected
                             int touchX = (((inputReport[2 + DS4Touchpad.DS4_TOUCHPAD_DATA_OFFSET + touchOffset] & 0xF) << 8) | inputReport[1 + DS4Touchpad.DS4_TOUCHPAD_DATA_OFFSET + touchOffset]);
-                            cState.TouchLeft = touchX >= DS4Touchpad.RESOLUTION_X_MAX * 2 / 5 ? false : true;
-                            cState.TouchRight = touchX < DS4Touchpad.RESOLUTION_X_MAX * 2 / 5 ? false : true;
+                            cState.TouchLeft = touchX < DS4Touchpad.RESOLUTION_X_MAX * 2 / 5;
+                            cState.TouchRight = touchX >= DS4Touchpad.RESOLUTION_X_MAX * 2 / 5;
                             // Even when idling there is still a touch packet indicating no touch 1 or 2
                             if (synced)
                             {
@@ -1997,7 +1997,7 @@ namespace DS4Windows
             return result;
         }
 
-        protected DS4HapticState testRumble = new DS4HapticState();
+        protected DS4HapticState testRumble = new();
 
         public void SetRumble(byte rightLightFastMotor, byte leftHeavySlowMotor)
         {
@@ -2119,7 +2119,7 @@ namespace DS4Windows
             return true;
         }
 
-        protected DS4HapticState currentHap = new DS4HapticState();
+        protected DS4HapticState currentHap = new();
         public void SetHapticState(ref DS4HapticState hs)
         {
             currentHap = hs;

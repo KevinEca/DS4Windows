@@ -8,9 +8,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 {
     public class MappingListViewModel
     {
-        //private int devIndex;
-        private readonly ObservableCollection<MappedControl> mappings = new ObservableCollection<MappedControl>();
-        public ObservableCollection<MappedControl> Mappings { get => mappings; }
+        public ObservableCollection<MappedControl> Mappings { get; } = new ObservableCollection<MappedControl>();
 
         private int selectedIndex = -1;
         public int SelectedIndex
@@ -29,16 +27,8 @@ namespace DS4WinWPF.DS4Forms.ViewModels
         }
         public event EventHandler SelectedIndexChanged;
 
-        private readonly Dictionary<DS4Controls, MappedControl> controlMap =
-            new Dictionary<DS4Controls, MappedControl>();
-        public Dictionary<DS4Controls, MappedControl> ControlMap { get => controlMap; }
-
-        /// <summary>
-        /// DS4Controls -> Int index map. Store approriate list index for a stored MappedControl instance
-        /// </summary>
-        private readonly Dictionary<DS4Controls, int> controlIndexMap =
-            new Dictionary<DS4Controls, int>();
-        public Dictionary<DS4Controls, int> ControlIndexMap { get => controlIndexMap; }
+        public Dictionary<DS4Controls, MappedControl> ControlMap { get; } = new Dictionary<DS4Controls, MappedControl>();
+        public Dictionary<DS4Controls, int> ControlIndexMap { get; } = new Dictionary<DS4Controls, int>();
 
         private readonly MappedControl l2FullPullControl;
         public MappedControl L2FullPullControl { get => l2FullPullControl; }
@@ -61,58 +51,58 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
         public MappingListViewModel(int devIndex, OutContType devType)
         {
-            mappings.Add(new MappedControl(devIndex, DS4Controls.Cross, "Cross", devType));
-            mappings.Add(new MappedControl(devIndex, DS4Controls.Circle, "Circle", devType));
-            mappings.Add(new MappedControl(devIndex, DS4Controls.Square, "Square", devType));
-            mappings.Add(new MappedControl(devIndex, DS4Controls.Triangle, "Triangle", devType));
-            mappings.Add(new MappedControl(devIndex, DS4Controls.Options, "Options", devType));
-            mappings.Add(new MappedControl(devIndex, DS4Controls.Share, "Share", devType));
-            mappings.Add(new MappedControl(devIndex, DS4Controls.DpadUp, "Up", devType));
-            mappings.Add(new MappedControl(devIndex, DS4Controls.DpadDown, "Down", devType));
-            mappings.Add(new MappedControl(devIndex, DS4Controls.DpadLeft, "Left", devType));
-            mappings.Add(new MappedControl(devIndex, DS4Controls.DpadRight, "Right", devType));
-            mappings.Add(new MappedControl(devIndex, DS4Controls.PS, "PS", devType));
-            mappings.Add(new MappedControl(devIndex, DS4Controls.Mute, "Mute", devType));
-            mappings.Add(new MappedControl(devIndex, DS4Controls.L1, "L1", devType));
-            mappings.Add(new MappedControl(devIndex, DS4Controls.R1, "R1", devType));
-            mappings.Add(new MappedControl(devIndex, DS4Controls.L2, "L2", devType));
-            mappings.Add(new MappedControl(devIndex, DS4Controls.R2, "R2", devType));
-            mappings.Add(new MappedControl(devIndex, DS4Controls.L3, "L3", devType));
-            mappings.Add(new MappedControl(devIndex, DS4Controls.R3, "R3", devType));
-            mappings.Add(new MappedControl(devIndex, DS4Controls.Capture, "Capture", devType));
-            mappings.Add(new MappedControl(devIndex, DS4Controls.SideL, "Side L", devType));
-            mappings.Add(new MappedControl(devIndex, DS4Controls.SideR, "Side R", devType));
+            Mappings.Add(new MappedControl(devIndex, DS4Controls.Cross, "Cross", devType));
+            Mappings.Add(new MappedControl(devIndex, DS4Controls.Circle, "Circle", devType));
+            Mappings.Add(new MappedControl(devIndex, DS4Controls.Square, "Square", devType));
+            Mappings.Add(new MappedControl(devIndex, DS4Controls.Triangle, "Triangle", devType));
+            Mappings.Add(new MappedControl(devIndex, DS4Controls.Options, "Options", devType));
+            Mappings.Add(new MappedControl(devIndex, DS4Controls.Share, "Share", devType));
+            Mappings.Add(new MappedControl(devIndex, DS4Controls.DpadUp, "Up", devType));
+            Mappings.Add(new MappedControl(devIndex, DS4Controls.DpadDown, "Down", devType));
+            Mappings.Add(new MappedControl(devIndex, DS4Controls.DpadLeft, "Left", devType));
+            Mappings.Add(new MappedControl(devIndex, DS4Controls.DpadRight, "Right", devType));
+            Mappings.Add(new MappedControl(devIndex, DS4Controls.PS, "PS", devType));
+            Mappings.Add(new MappedControl(devIndex, DS4Controls.Mute, "Mute", devType));
+            Mappings.Add(new MappedControl(devIndex, DS4Controls.L1, "L1", devType));
+            Mappings.Add(new MappedControl(devIndex, DS4Controls.R1, "R1", devType));
+            Mappings.Add(new MappedControl(devIndex, DS4Controls.L2, "L2", devType));
+            Mappings.Add(new MappedControl(devIndex, DS4Controls.R2, "R2", devType));
+            Mappings.Add(new MappedControl(devIndex, DS4Controls.L3, "L3", devType));
+            Mappings.Add(new MappedControl(devIndex, DS4Controls.R3, "R3", devType));
+            Mappings.Add(new MappedControl(devIndex, DS4Controls.Capture, "Capture", devType));
+            Mappings.Add(new MappedControl(devIndex, DS4Controls.SideL, "Side L", devType));
+            Mappings.Add(new MappedControl(devIndex, DS4Controls.SideR, "Side R", devType));
 
-            mappings.Add(new MappedControl(devIndex, DS4Controls.TouchLeft, "Left Touch", devType));
-            mappings.Add(new MappedControl(devIndex, DS4Controls.TouchRight, "Right Touch", devType));
-            mappings.Add(new MappedControl(devIndex, DS4Controls.TouchMulti, "Multitouch", devType));
-            mappings.Add(new MappedControl(devIndex, DS4Controls.TouchUpper, "Upper Touch", devType));
+            Mappings.Add(new MappedControl(devIndex, DS4Controls.TouchLeft, "Left Touch", devType));
+            Mappings.Add(new MappedControl(devIndex, DS4Controls.TouchRight, "Right Touch", devType));
+            Mappings.Add(new MappedControl(devIndex, DS4Controls.TouchMulti, "Multitouch", devType));
+            Mappings.Add(new MappedControl(devIndex, DS4Controls.TouchUpper, "Upper Touch", devType));
 
-            mappings.Add(new MappedControl(devIndex, DS4Controls.LYNeg, "LS Up", devType));
-            mappings.Add(new MappedControl(devIndex, DS4Controls.LYPos, "LS Down", devType));
-            mappings.Add(new MappedControl(devIndex, DS4Controls.LXNeg, "LS Left", devType));
-            mappings.Add(new MappedControl(devIndex, DS4Controls.LXPos, "LS Right", devType));
+            Mappings.Add(new MappedControl(devIndex, DS4Controls.LYNeg, "LS Up", devType));
+            Mappings.Add(new MappedControl(devIndex, DS4Controls.LYPos, "LS Down", devType));
+            Mappings.Add(new MappedControl(devIndex, DS4Controls.LXNeg, "LS Left", devType));
+            Mappings.Add(new MappedControl(devIndex, DS4Controls.LXPos, "LS Right", devType));
 
-            mappings.Add(new MappedControl(devIndex, DS4Controls.RYNeg, "RS Up", devType));
-            mappings.Add(new MappedControl(devIndex, DS4Controls.RYPos, "RS Down", devType));
-            mappings.Add(new MappedControl(devIndex, DS4Controls.RXNeg, "RS Left", devType));
-            mappings.Add(new MappedControl(devIndex, DS4Controls.RXPos, "RS Right", devType));
+            Mappings.Add(new MappedControl(devIndex, DS4Controls.RYNeg, "RS Up", devType));
+            Mappings.Add(new MappedControl(devIndex, DS4Controls.RYPos, "RS Down", devType));
+            Mappings.Add(new MappedControl(devIndex, DS4Controls.RXNeg, "RS Left", devType));
+            Mappings.Add(new MappedControl(devIndex, DS4Controls.RXPos, "RS Right", devType));
 
-            mappings.Add(new MappedControl(devIndex, DS4Controls.GyroZNeg, "Tilt Up", devType));
-            mappings.Add(new MappedControl(devIndex, DS4Controls.GyroZPos, "Tilt Down", devType));
-            mappings.Add(new MappedControl(devIndex, DS4Controls.GyroXPos, "Tilt Left", devType));
-            mappings.Add(new MappedControl(devIndex, DS4Controls.GyroXNeg, "Tilt Right", devType));
+            Mappings.Add(new MappedControl(devIndex, DS4Controls.GyroZNeg, "Tilt Up", devType));
+            Mappings.Add(new MappedControl(devIndex, DS4Controls.GyroZPos, "Tilt Down", devType));
+            Mappings.Add(new MappedControl(devIndex, DS4Controls.GyroXPos, "Tilt Left", devType));
+            Mappings.Add(new MappedControl(devIndex, DS4Controls.GyroXNeg, "Tilt Right", devType));
 
-            mappings.Add(new MappedControl(devIndex, DS4Controls.SwipeUp, "Swipe Up", devType));
-            mappings.Add(new MappedControl(devIndex, DS4Controls.SwipeDown, "Swipe Down", devType));
-            mappings.Add(new MappedControl(devIndex, DS4Controls.SwipeLeft, "Swipe Left", devType));
-            mappings.Add(new MappedControl(devIndex, DS4Controls.SwipeRight, "Swipe Right", devType));
+            Mappings.Add(new MappedControl(devIndex, DS4Controls.SwipeUp, "Swipe Up", devType));
+            Mappings.Add(new MappedControl(devIndex, DS4Controls.SwipeDown, "Swipe Down", devType));
+            Mappings.Add(new MappedControl(devIndex, DS4Controls.SwipeLeft, "Swipe Left", devType));
+            Mappings.Add(new MappedControl(devIndex, DS4Controls.SwipeRight, "Swipe Right", devType));
 
             int controlIndex = 0;
-            foreach (MappedControl mapped in mappings)
+            foreach (MappedControl mapped in Mappings)
             {
-                controlMap.Add(mapped.Control, mapped);
-                controlIndexMap.Add(mapped.Control, controlIndex);
+                ControlMap.Add(mapped.Control, mapped);
+                ControlIndexMap.Add(mapped.Control, controlIndex);
                 controlIndex++;
             }
 
@@ -139,19 +129,19 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             extraControls.Add(gyroSwipeUpControl);
             extraControls.Add(gyroSwipeDownControl);
 
-            controlMap.Add(DS4Controls.LSOuter, lsOuterBindControl);
-            controlMap.Add(DS4Controls.RSOuter, rsOuterBindControl);
-            controlMap.Add(DS4Controls.L2FullPull, l2FullPullControl);
-            controlMap.Add(DS4Controls.R2FullPull, r2FullPullControl);
-            controlMap.Add(DS4Controls.GyroSwipeLeft, gyroSwipeLeftControl);
-            controlMap.Add(DS4Controls.GyroSwipeRight, gyroSwipeRightControl);
-            controlMap.Add(DS4Controls.GyroSwipeUp, gyroSwipeUpControl);
-            controlMap.Add(DS4Controls.GyroSwipeDown, gyroSwipeDownControl);
+            ControlMap.Add(DS4Controls.LSOuter, lsOuterBindControl);
+            ControlMap.Add(DS4Controls.RSOuter, rsOuterBindControl);
+            ControlMap.Add(DS4Controls.L2FullPull, l2FullPullControl);
+            ControlMap.Add(DS4Controls.R2FullPull, r2FullPullControl);
+            ControlMap.Add(DS4Controls.GyroSwipeLeft, gyroSwipeLeftControl);
+            ControlMap.Add(DS4Controls.GyroSwipeRight, gyroSwipeRightControl);
+            ControlMap.Add(DS4Controls.GyroSwipeUp, gyroSwipeUpControl);
+            ControlMap.Add(DS4Controls.GyroSwipeDown, gyroSwipeDownControl);
         }
 
         public void UpdateMappingDevType(OutContType devType)
         {
-            foreach (MappedControl mapped in mappings)
+            foreach (MappedControl mapped in Mappings)
             {
                 mapped.DevType = devType;
             }
@@ -164,7 +154,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
         public void UpdateMappings()
         {
-            foreach (MappedControl mapped in mappings)
+            foreach (MappedControl mapped in Mappings)
             {
                 mapped.UpdateMappingName();
             }

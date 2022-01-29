@@ -12,7 +12,6 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 {
     public class RecordBoxViewModel
     {
-        private readonly Stopwatch sw = new Stopwatch();
         private readonly int deviceNum;
         public int DeviceNum { get => deviceNum; }
 
@@ -41,10 +40,9 @@ namespace DS4WinWPF.DS4Forms.ViewModels
         private bool toggle5thMouse;
         private int appendIndex = -1;
 
-        private readonly object _colLockobj = new object();
-        private readonly ObservableCollection<MacroStepItem> macroSteps =
-            new ObservableCollection<MacroStepItem>();
-        public ObservableCollection<MacroStepItem> MacroSteps { get => macroSteps; }
+        private readonly object _colLockobj = new();
+
+        public ObservableCollection<MacroStepItem> MacroSteps { get; } = new ObservableCollection<MacroStepItem>();
 
         private int macroStepIndex;
         public int MacroStepIndex
@@ -62,7 +60,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             }
         }
         public event EventHandler MacroStepIndexChanged;
-        public Stopwatch Sw { get => sw; }
+        public Stopwatch Sw { get; } = new Stopwatch();
         public bool Toggle4thMouse { get => toggle4thMouse; set => toggle4thMouse = value; }
         public bool Toggle5thMouse { get => toggle5thMouse; set => toggle5thMouse = value; }
         public int AppendIndex { get => appendIndex; set => appendIndex = value; }
@@ -131,7 +129,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
             this.repeatable = repeatable;
 
-            BindingOperations.EnableCollectionSynchronization(macroSteps, _colLockobj);
+            BindingOperations.EnableCollectionSynchronization(MacroSteps, _colLockobj);
 
             // By default RECORD button appends new steps. User must select (click) an existing step to insert new steps in front of the selected step
             this.MacroStepIndex = -1;
@@ -169,15 +167,15 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             foreach (MacroStep step in macroParser.MacroSteps)
             {
                 MacroStepItem item = new MacroStepItem(step);
-                macroSteps.Add(item);
+                MacroSteps.Add(item);
             }
         }
 
         public void ExportMacro()
         {
-            int[] outmac = new int[macroSteps.Count];
+            int[] outmac = new int[MacroSteps.Count];
             int index = 0;
-            foreach (MacroStepItem step in macroSteps)
+            foreach (MacroStepItem step in MacroSteps)
             {
                 outmac[index] = step.Step.Value;
                 index++;
@@ -215,31 +213,31 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
         public void WriteCycleProgramsPreset()
         {
-            MacroStep step = new MacroStep(18, KeyInterop.KeyFromVirtualKey(18).ToString(),
+            MacroStep step = new(18, KeyInterop.KeyFromVirtualKey(18).ToString(),
                 MacroStep.StepType.ActDown, MacroStep.StepOutput.Key);
-            macroSteps.Add(new MacroStepItem(step));
+            MacroSteps.Add(new MacroStepItem(step));
 
             step = new MacroStep(9, KeyInterop.KeyFromVirtualKey(9).ToString(),
                 MacroStep.StepType.ActDown, MacroStep.StepOutput.Key);
-            macroSteps.Add(new MacroStepItem(step));
+            MacroSteps.Add(new MacroStepItem(step));
 
             step = new MacroStep(9, KeyInterop.KeyFromVirtualKey(9).ToString(),
                 MacroStep.StepType.ActUp, MacroStep.StepOutput.Key);
-            macroSteps.Add(new MacroStepItem(step));
+            MacroSteps.Add(new MacroStepItem(step));
 
             step = new MacroStep(18, KeyInterop.KeyFromVirtualKey(18).ToString(),
                 MacroStep.StepType.ActUp, MacroStep.StepOutput.Key);
-            macroSteps.Add(new MacroStepItem(step));
+            MacroSteps.Add(new MacroStepItem(step));
 
             step = new MacroStep(1300, $"Wait 1000ms",
                 MacroStep.StepType.Wait, MacroStep.StepOutput.None);
-            macroSteps.Add(new MacroStepItem(step));
+            MacroSteps.Add(new MacroStepItem(step));
         }
 
         public void LoadPresetFromFile(string filepath)
         {
             string[] macs = File.ReadAllText(filepath).Split('/');
-            List<int> tmpmacro = new List<int>();
+            List<int> tmpmacro = new();
             int temp;
             foreach (string s in macs)
             {
@@ -249,59 +247,59 @@ namespace DS4WinWPF.DS4Forms.ViewModels
                 }
             }
 
-            MacroParser macroParser = new MacroParser(tmpmacro.ToArray());
+            MacroParser macroParser = new(tmpmacro.ToArray());
             macroParser.LoadMacro();
             foreach (MacroStep step in macroParser.MacroSteps)
             {
-                MacroStepItem item = new MacroStepItem(step);
-                macroSteps.Add(item);
+                MacroStepItem item = new(step);
+                MacroSteps.Add(item);
             }
         }
 
         public void SavePreset(string filepath)
         {
-            int[] outmac = new int[macroSteps.Count];
+            int[] outmac = new int[MacroSteps.Count];
             int index = 0;
-            foreach (MacroStepItem step in macroSteps)
+            foreach (MacroStepItem step in MacroSteps)
             {
                 outmac[index] = step.Step.Value;
                 index++;
             }
 
             string macro = string.Join("/", outmac);
-            StreamWriter sw = new StreamWriter(filepath);
+            StreamWriter sw = new(filepath);
             sw.Write(macro);
             sw.Close();
         }
 
         public void AddMacroStep(MacroStep step, bool ignoreDelay = false)
         {
-            if (recordDelays && macroSteps.Count > 0 && !ignoreDelay)
+            if (recordDelays && MacroSteps.Count > 0 && !ignoreDelay)
             {
-                int elapsed = (int)sw.ElapsedMilliseconds + 300;
-                MacroStep waitstep = new MacroStep(elapsed, $"Wait {elapsed - 300}ms",
+                int elapsed = (int)Sw.ElapsedMilliseconds + 300;
+                MacroStep waitstep = new(elapsed, $"Wait {elapsed - 300}ms",
                     MacroStep.StepType.Wait, MacroStep.StepOutput.None);
-                MacroStepItem waititem = new MacroStepItem(waitstep);
+                MacroStepItem waititem = new(waitstep);
                 if (appendIndex == -1)
                 {
-                    macroSteps.Add(waititem);
+                    MacroSteps.Add(waititem);
                 }
                 else
                 {
-                    macroSteps.Insert(appendIndex, waititem);
+                    MacroSteps.Insert(appendIndex, waititem);
                     appendIndex++;
                 }
             }
 
-            sw.Restart();
-            MacroStepItem item = new MacroStepItem(step);
+            Sw.Restart();
+            MacroStepItem item = new(step);
             if (appendIndex == -1)
             {
-                macroSteps.Add(item);
+                MacroSteps.Add(item);
             }
             else
             {
-                macroSteps.Insert(appendIndex, item);
+                MacroSteps.Insert(appendIndex, item);
                 appendIndex++;
             }
         }
@@ -309,7 +307,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
         public void InsertMacroStep(int index, MacroStep step)
         {
             MacroStepItem item = new MacroStepItem(step);
-            macroSteps.Insert(index, item);
+            MacroSteps.Insert(index, item);
         }
 
         public void StartForcedColor(Color color)

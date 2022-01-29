@@ -132,7 +132,7 @@ namespace DS4Windows.InputDevices
         private uint timeStampPrevious = 0;
         private uint deltaTimeCurrent = 0;
         private bool outputDirty = false;
-        private DS4HapticState previousHapticState = new DS4HapticState();
+        private DS4HapticState previousHapticState = new();
         private readonly byte[] outputBTCrc32Head = new byte[] { 0xA2 };
         //private byte outputPendCount = 0;
         private new GyroMouseSensDualSense gyroMouseSensSettings;
@@ -388,7 +388,7 @@ namespace DS4Windows.InputDevices
             {
                 firstActive = DateTime.UtcNow;
                 NativeMethods.HidD_SetNumInputBuffers(hDevice.SafeReadHandle.DangerousGetHandle(), 3);
-                Queue<long> latencyQueue = new Queue<long>(21); // Set capacity at max + 1 to avoid any resizing
+                Queue<long> latencyQueue = new(21); // Set capacity at max + 1 to avoid any resizing
                 int tempLatencyCount = 0;
                 long oldtime = 0;
                 string currerror = string.Empty;
@@ -715,15 +715,15 @@ namespace DS4Windows.InputDevices
                         int touchOffset = 0;
 
                         cState.TouchPacketCounter = inputReport[-1 + TOUCHPAD_DATA_OFFSET + reportOffset + touchOffset];
-                        cState.Touch1 = (inputReport[0 + TOUCHPAD_DATA_OFFSET + reportOffset + touchOffset] >> 7) != 0 ? false : true; // finger 1 detected
+                        cState.Touch1 = (inputReport[0 + TOUCHPAD_DATA_OFFSET + reportOffset + touchOffset] >> 7) == 0; // finger 1 detected
                         cState.Touch1Identifier = (byte)(inputReport[0 + TOUCHPAD_DATA_OFFSET + reportOffset + touchOffset] & 0x7f);
-                        cState.Touch2 = (inputReport[4 + TOUCHPAD_DATA_OFFSET + reportOffset + touchOffset] >> 7) != 0 ? false : true; // finger 2 detected
+                        cState.Touch2 = (inputReport[4 + TOUCHPAD_DATA_OFFSET + reportOffset + touchOffset] >> 7) == 0; // finger 2 detected
                         cState.Touch2Identifier = (byte)(inputReport[4 + TOUCHPAD_DATA_OFFSET + reportOffset + touchOffset] & 0x7f);
                         cState.Touch1Finger = cState.Touch1 || cState.Touch2; // >= 1 touch detected
                         cState.Touch2Fingers = cState.Touch1 && cState.Touch2; // 2 touches detected
                         int touchX = (((inputReport[2 + TOUCHPAD_DATA_OFFSET + reportOffset + touchOffset] & 0xF) << 8) | inputReport[1 + TOUCHPAD_DATA_OFFSET + reportOffset + touchOffset]);
-                        cState.TouchLeft = touchX >= DS4Touchpad.RESOLUTION_X_MAX * 2 / 5 ? false : true;
-                        cState.TouchRight = touchX < DS4Touchpad.RESOLUTION_X_MAX * 2 / 5 ? false : true;
+                        cState.TouchLeft = touchX < DS4Touchpad.RESOLUTION_X_MAX * 2 / 5;
+                        cState.TouchRight = touchX >= DS4Touchpad.RESOLUTION_X_MAX * 2 / 5;
                         // Even when idling there is still a touch packet indicating no touch 1 or 2
                         if (synced)
                         {
